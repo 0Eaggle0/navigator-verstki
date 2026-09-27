@@ -1,0 +1,52 @@
+---
+// Кнопка «Я застрял»: частые ошибки по шагу из поля mistakes
+const { mistakes } = Astro.locals.starlightRoute.entry.data;
+---
+
+<details class="stuck not-content">
+	<summary>😵 Я застрял</summary>
+	<div class="stuck__body">
+		{
+			mistakes.length > 0 && (
+				<>
+					<p>Частые ошибки на этом шаге:</p>
+					<dl>
+						{mistakes.map((m) => (
+							<>
+								<dt>{m.q}</dt>
+								<dd>{m.a}</dd>
+							</>
+						))}
+					</dl>
+				</>
+			)
+		}
+		<p>
+			Не помогло? Сравни свой код с подсказками выше, проверь консоль браузера (F12 → Console) и позови модератора
+			— это нормально.
+		</p>
+	</div>
+</details>
+
+<style>
+	.stuck {
+		margin-block: 1rem;
+		border-radius: 0.5rem;
+		background: var(--sl-color-gray-6);
+	}
+	.stuck summary {
+		padding: 0.6rem 1rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.stuck__body {
+		padding: 0 1rem 0.75rem;
+	}
+	.stuck dt {
+		font-weight: 600;
+		margin-top: 0.5rem;
+	}
+	.stuck dd {
+		margin: 0 0 0 1rem;
+	}
+</style>

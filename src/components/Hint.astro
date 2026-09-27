@@ -1,0 +1,56 @@
+---
+// Подсказка или решение. На странице открываются строго по очереди:
+// следующую можно открыть, только когда открыта предыдущая.
+// <Hint title="Подсказка 1">текст</Hint>
+interface Props {
+	title: string;
+}
+const { title } = Astro.props;
+---
+
+<details class="hint not-content">
+	<summary>{title}</summary>
+	<div class="hint__body sl-markdown-content"><slot /></div>
+</details>
+
+<script>
+	const hints = [...document.querySelectorAll<HTMLDetailsElement>('details.hint')];
+	const lock = () =>
+		hints.forEach((h, i) => {
+			const locked = i > 0 && !hints[i - 1].open;
+			h.classList.toggle('is-locked', locked);
+			h.querySelector('summary')!.setAttribute('aria-disabled', String(locked));
+		});
+	hints.forEach((h) => {
+		h.querySelector('summary')!.addEventListener('click', (e) => {
+			if (h.classList.contains('is-locked')) e.preventDefault();
+		});
+		h.addEventListener('toggle', lock);
+	});
+	lock();
+</script>
+
+<style>
+	.hint {
+		margin-block: 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+	}
+	.hint summary {
+		padding: 0.6rem 1rem;
+		font-weight: 600;
+		cursor: pointer;
+	}
+	.hint.is-locked summary {
+		cursor: not-allowed;
+		color: var(--sl-color-gray-3);
+	}
+	.hint.is-locked summary::after {
+		content: ' — сначала открой предыдущую';
+		font-weight: 400;
+		font-size: var(--sl-text-sm);
+	}
+	.hint__body {
+		padding: 0 1rem 0.75rem;
+	}
+</style>

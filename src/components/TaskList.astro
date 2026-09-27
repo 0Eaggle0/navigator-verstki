@@ -1,0 +1,32 @@
+---
+// Задачник: все разминки из шагов маршрута
+import { getRoute, url } from '~/lib/route';
+const { steps } = await getRoute();
+const tasks = steps.filter((s) => s.data.warmup);
+---
+
+<ol class="not-content tasks">
+	{
+		tasks.map((s) => (
+			<li>
+				<a href={url(s.id + '/#разминка')}>
+					{s.data.lesson}.{s.data.sidebar.order} · {s.data.title}
+				</a>
+				<p>{s.data.warmup!.task}</p>
+			</li>
+		))
+	}
+</ol>
+
+<style>
+	.tasks {
+		padding-left: 1.5rem;
+	}
+	.tasks li {
+		margin-bottom: 1rem;
+	}
+	.tasks p {
+		margin: 0.25rem 0 0;
+		color: var(--sl-color-gray-2);
+	}
+</style>

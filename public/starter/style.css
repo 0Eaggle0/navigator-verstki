@@ -1,0 +1,53 @@
+/* ===== Переменные: цвета и шрифты из макета =====
+   что менять: подставь значения из Figma (занятие 2).
+   Использовать так: color: var(--color-accent); */
+:root {
+  --color-text: #222222;
+  --color-bg: #ffffff;
+  --color-accent: #e8741a;
+  --font-main: system-ui, Arial, sans-serif;
+  --container: 1200px;
+}
+
+/* ===== Сброс: убираем стандартные отступы браузера ===== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;   /* padding не увеличивает ширину блока */
+}
+
+body,
+h1, h2, h3, h4,
+p, ul, ol, figure {
+  margin: 0;
+}
+
+ul,
+ol {
+  padding: 0;
+  list-style: none;
+}
+
+img {
+  display: block;
+  max-width: 100%;          /* картинка не вылезает за край */
+}
+
+a {
+  color: inherit;
+}
+
+button {
+  font: inherit;
+  cursor: pointer;
+}
+
+/* ===== Общие стили страницы ===== */
+body {
+  font-family: var(--font-main);
+  line-height: 1.5;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* ===== Стили блоков — ниже ===== */

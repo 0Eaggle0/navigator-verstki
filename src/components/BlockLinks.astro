@@ -1,0 +1,44 @@
+---
+// Для раздела «Делаем свой сайт»: ссылки на готовые блоки из поля blocks
+// и подсказка под выбранный кейс команды.
+import blocks from '~/data/blocks.json';
+import cases from '~/data/cases.json';
+import { url } from '~/lib/route';
+
+const ids = Astro.locals.starlightRoute.entry.data.blocks as (keyof typeof blocks)[];
+---
+
+<div class="block-links not-content">
+	{
+		ids.length > 0 && (
+			<p>
+				🧩 Готовые блоки:{' '}
+				{ids.map((id, i) => (
+					<>
+						{i > 0 && ', '}
+						{blocks[id]?.ready ? <a href={url(`blocks/${id}/`)}>{blocks[id].title}</a> : <span>{blocks[id]?.title ?? id} (скоро)</span>}
+					</>
+				))}
+			</p>
+		)
+	}
+	{
+		cases.map((c) => (
+			<p class="case-note" data-case={c.id} hidden>
+				💡 {c.title}: {c.note}
+			</p>
+		))
+	}
+</div>
+
+<script>
+	import { load } from '~/lib/storage';
+	const chosen = load().case;
+	document.querySelectorAll<HTMLElement>('.case-note').forEach((el) => (el.hidden = el.dataset.case !== chosen));
+</script>
+
+<style>
+	.block-links p {
+		margin: 0.5rem 0;
+	}
+</style>

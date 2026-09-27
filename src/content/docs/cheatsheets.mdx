@@ -1,0 +1,74 @@
+---
+title: Шпаргалки и ссылки
+description: Самое нужное про HTML и CSS на одной странице + где почитать подробнее.
+---
+
+## Скелет страницы
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Название сайта</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>…</header>
+  <main>
+    <section>…</section>
+  </main>
+  <footer>…</footer>
+</body>
+</html>
+```
+
+## Частые теги
+
+| Тег | Для чего |
+|---|---|
+| `header`, `main`, `footer` | шапка, основное содержимое, подвал |
+| `section` | смысловой блок с заголовком |
+| `nav` | меню |
+| `h1`–`h3` | заголовки: h1 один на страницу |
+| `p` | абзац |
+| `ul` + `li` | список (меню, пункты) |
+| `a href="…"` | ссылка |
+| `img src="…" alt="…"` | картинка, alt обязателен |
+| `button` | кнопка, которая что-то делает на странице |
+| `article` | карточка — законченный повторяющийся кусок |
+
+## CSS: как устроено правило
+
+```css
+/* селектор { свойство: значение; } */
+.card {
+  padding: 16px;          /* внутренний отступ */
+  margin-bottom: 24px;    /* внешний отступ снизу */
+  background: #fff5ec;    /* фон */
+  border-radius: 12px;    /* скругление углов */
+}
+```
+
+Селекторы: `h1` — все h1, `.card` — все с классом card, `.card h3` — h3 внутри .card.
+
+## Горячие клавиши VS Code
+
+| Клавиши | Что делают |
+|---|---|
+| `!` + Tab | заготовка HTML-страницы |
+| `section.pets` + Tab | `<section class="pets"></section>` |
+| Ctrl+S | сохранить |
+| Ctrl+/ | закомментировать строку |
+| Alt+Shift+F | выровнять отступы |
+| Alt+↑ / Alt+↓ | переместить строку |
+
+## Если хочешь глубже
+
+- [Дока](https://doka.guide/) — понятный справочник по HTML, CSS и JS на русском.
+- [MDN на русском](https://developer.mozilla.org/ru/) — подробная документация.
+- [HTML Academy](https://htmlacademy.ru/) — интерактивные курсы, первые главы бесплатно.
+- [Flexbox Froggy](https://flexboxfroggy.com/#ru) — игра про Flexbox (понадобится в занятии 3).
+- [Grid Garden](https://cssgridgarden.com/#ru) — игра про Grid (тоже занятие 3).
+- [learn.javascript.ru](https://learn.javascript.ru/) — учебник по JavaScript, когда закончите вёрстку.

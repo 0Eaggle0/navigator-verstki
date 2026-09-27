@@ -1,0 +1,181 @@
+---
+// Песочница-разминка. Задача, стартовый код и автопроверки берутся из поля warmup во frontmatter.
+// Черновик сохраняется в браузере, «Сбросить» возвращает стартовый код.
+const { entry } = Astro.locals.starlightRoute;
+const w = entry.data.warmup;
+---
+
+{
+	w && (
+		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)}>
+			<p class="sandbox__task">
+				<strong>Задача:</strong> {w.task}
+			</p>
+			<div class="sandbox__grid">
+				<div class="sandbox__editors">
+					<label>
+						HTML
+						<textarea name="html" spellcheck="false" autocapitalize="off" rows="10" />
+					</label>
+					<label>
+						CSS
+						<textarea name="css" spellcheck="false" autocapitalize="off" rows="8" />
+					</label>
+					<p class="sandbox__tip">Tab — отступ. Чтобы уйти из поля клавиатурой: Esc, потом Tab.</p>
+				</div>
+				<div class="sandbox__result">
+					<iframe title="Результат разминки" sandbox="allow-same-origin" />
+					<div class="sandbox__checks" aria-live="polite" />
+					<button type="button" class="sandbox__reset">Сбросить к началу</button>
+				</div>
+			</div>
+		</nav-sandbox>
+	)
+}
+
+<script>
+	import { load, update } from '~/lib/storage';
+	import { runChecks, type Check } from '~/lib/checks';
+	import { srcdoc } from '~/lib/srcdoc';
+
+	class Sandbox extends HTMLElement {
+		connectedCallback() {
+			const { id = '', html = '', css = '' } = this.dataset;
+			const checks: Check[] = JSON.parse(this.dataset.checks || '[]');
+			const fields = [...this.querySelectorAll('textarea')];
+			const [htmlBox, cssBox] = fields;
+			const frame = this.querySelector('iframe')!;
+			const out = this.querySelector<HTMLElement>('.sandbox__checks')!;
+
+			const draft = load().drafts[id];
+			htmlBox.value = draft?.html ?? html;
+			cssBox.value = draft?.css ?? css;
+
+			// Проверяем, когда iframe загрузил новый код
+			frame.addEventListener('load', () => {
+				if (!checks.length || !frame.contentDocument) return;
+				const results = runChecks(frame.contentDocument, checks);
+				const failed = results.filter((r) => !r.ok);
+				out.className = 'sandbox__checks ' + (failed.length ? 'is-wip' : 'is-ok');
+				out.innerHTML = '';
+				const head = document.createElement('p');
+				head.textContent = failed.length
+					? `Проверка: ${results.length - failed.length} из ${results.length}. Осталось:`
+					: '✅ Всё верно! Разминка пройдена.';
+				out.append(head);
+				if (failed.length) {
+					const ul = document.createElement('ul');
+					for (const f of failed) ul.append(Object.assign(document.createElement('li'), { textContent: f.message }));
+					out.append(ul);
+				}
+			});
+
+			const render = () => (frame.srcdoc = srcdoc(htmlBox.value, cssBox.value));
+			let timer: number;
+			const onInput = () => {
+				clearTimeout(timer);
+				timer = window.setTimeout(() => {
+					render();
+					update((p) => (p.drafts[id] = { html: htmlBox.value, css: cssBox.value }));
+				}, 400);
+			};
+
+			let escaped = false; // после Esc Tab снова переводит фокус, а не вставляет отступ
+			for (const box of fields) {
+				box.addEventListener('input', onInput);
+				box.addEventListener('keydown', (e) => {
+					if (e.key === 'Escape') return void (escaped = true);
+					if (e.key !== 'Tab' || escaped) return void (escaped = false);
+					e.preventDefault();
+					box.setRangeText('  ', box.selectionStart, box.selectionEnd, 'end');
+					onInput();
+				});
+			}
+
+			this.querySelector('.sandbox__reset')!.addEventListener('click', () => {
+				htmlBox.value = html;
+				cssBox.value = css;
+				update((p) => delete p.drafts[id]);
+				render();
+			});
+
+			render();
+		}
+	}
+	customElements.define('nav-sandbox', Sandbox);
+</script>
+
+<style>
+	.sandbox {
+		display: block;
+		margin-block: 1.5rem;
+		padding: 1rem;
+		border: 2px solid var(--sl-color-accent);
+		border-radius: 0.75rem;
+	}
+	.sandbox__task {
+		margin: 0 0 1rem;
+	}
+	.sandbox__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+		gap: 1rem;
+	}
+	.sandbox label {
+		display: block;
+		font-weight: 600;
+		font-size: var(--sl-text-sm);
+		margin-bottom: 0.75rem;
+	}
+	.sandbox textarea {
+		display: block;
+		width: 100%;
+		margin-top: 0.25rem;
+		padding: 0.5rem;
+		font: 0.875rem/1.5 var(--__sl-font-mono, ui-monospace, Consolas, monospace);
+		tab-size: 2;
+		resize: vertical;
+		color: var(--sl-color-white);
+		background: var(--sl-color-gray-6);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+	}
+	.sandbox__tip {
+		margin: 0;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+	.sandbox iframe {
+		width: 100%;
+		height: 16rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		background: #fff;
+		resize: vertical;
+	}
+	.sandbox__checks {
+		margin-top: 0.75rem;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.5rem;
+	}
+	.sandbox__checks:empty {
+		display: none;
+	}
+	.sandbox__checks p {
+		margin: 0;
+		font-weight: 600;
+	}
+	.sandbox__checks ul {
+		margin: 0.25rem 0 0;
+		padding-left: 1.25rem;
+	}
+	.is-wip {
+		background: var(--sl-color-orange-low);
+	}
+	.is-ok {
+		background: var(--sl-color-green-low);
+	}
+	.sandbox__reset {
+		margin-top: 0.75rem;
+	}
+</style>

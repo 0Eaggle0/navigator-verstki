@@ -1,0 +1,70 @@
+---
+// Готовый блок: превью + код + кнопки «Скопировать». Код лежит в src/blocks/<id>.html и <id>.css
+import { Code } from '@astrojs/starlight/components';
+import { srcdoc } from '~/lib/srcdoc';
+
+interface Props {
+	id: string;
+	height?: number;
+}
+const { id, height = 320 } = Astro.props;
+const files = import.meta.glob<string>('/src/blocks/*', { query: '?raw', import: 'default', eager: true });
+const html = files[`/src/blocks/${id}.html`];
+const css = files[`/src/blocks/${id}.css`];
+if (html === undefined || css === undefined) throw new Error(`Нет файлов блока src/blocks/${id}.html / .css`);
+---
+
+<nav-block class="block not-content" data-html={html} data-css={css}>
+	<iframe title="Превью блока" srcdoc={srcdoc(html, css)} sandbox="allow-same-origin" style={`height:${height}px`}></iframe>
+	<p class="block__buttons">
+		<button type="button" data-copy="html">Скопировать HTML</button>
+		<button type="button" data-copy="css">Скопировать CSS</button>
+		<span class="block__status" aria-live="polite"></span>
+	</p>
+	<Code code={html} lang="html" title={`${id}.html → вставь в index.html`} />
+	<Code code={css} lang="css" title={`${id}.css → вставь в style.css`} />
+</nav-block>
+
+<script>
+	class Block extends HTMLElement {
+		connectedCallback() {
+			const status = this.querySelector('.block__status')!;
+			this.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) =>
+				btn.addEventListener('click', async () => {
+					const kind = btn.dataset.copy as 'html' | 'css';
+					try {
+						await navigator.clipboard.writeText(this.dataset[kind]!);
+						status.textContent = `${kind.toUpperCase()} скопирован ✓`;
+					} catch {
+						status.textContent = 'Не получилось скопировать — выдели код ниже и нажми Ctrl+C';
+					}
+				})
+			);
+		}
+	}
+	customElements.define('nav-block', Block);
+</script>
+
+<style>
+	.block iframe {
+		width: 100%;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		background: #fff;
+		resize: vertical;
+	}
+	.block__buttons {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+		margin-block: 0.75rem;
+	}
+	.block__status {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-green);
+	}
+	.block :global(.expressive-code) {
+		margin-top: 1rem;
+	}
+</style>

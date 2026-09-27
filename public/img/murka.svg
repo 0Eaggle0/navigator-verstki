@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Серая кошка Мурка">
+  <rect width="300" height="200" fill="#dcfce7"/>
+  <circle cx="150" cy="115" r="55" fill="#78716c"/>
+  <path d="M105 85 L112 35 L140 68 Z M195 85 L188 35 L160 68 Z" fill="#78716c"/>
+  <circle cx="130" cy="108" r="7" fill="#fef08a"/>
+  <circle cx="170" cy="108" r="7" fill="#fef08a"/>
+  <path d="M143 128 L157 128 L150 136 Z" fill="#1c1917"/>
+</svg>

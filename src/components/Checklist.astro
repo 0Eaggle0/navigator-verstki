@@ -1,0 +1,85 @@
+---
+// Чек-лист «готово» из поля checklist + кнопка «Шаг пройден». Всё запоминается в браузере.
+const { entry } = Astro.locals.starlightRoute;
+const items = entry.data.checklist;
+---
+
+<nav-checklist class="checklist not-content" data-id={entry.id}>
+	{
+		items.length > 0 && (
+			<fieldset>
+				<legend>✅ Проверь себя перед следующим шагом</legend>
+				{items.map((text, i) => (
+					<label>
+						<input type="checkbox" value={i} /> {text}
+					</label>
+				))}
+			</fieldset>
+		)
+	}
+	<button type="button" class="checklist__done" aria-pressed="false">Шаг пройден</button>
+</nav-checklist>
+
+<script>
+	import { load, update } from '~/lib/storage';
+
+	class Checklist extends HTMLElement {
+		connectedCallback() {
+			const id = this.dataset.id!;
+			const boxes = [...this.querySelectorAll<HTMLInputElement>('input')];
+			const btn = this.querySelector<HTMLButtonElement>('.checklist__done')!;
+			const p = load();
+			const show = (done: boolean) => {
+				btn.setAttribute('aria-pressed', String(done));
+				btn.textContent = done ? '✓ Шаг пройден' : 'Отметить шаг пройденным';
+			};
+			boxes.forEach((b) => (b.checked = (p.checklist[id] ?? []).includes(+b.value)));
+			show(p.done.includes(id));
+
+			this.addEventListener('change', () =>
+				update((p) => (p.checklist[id] = boxes.filter((b) => b.checked).map((b) => +b.value)))
+			);
+			btn.addEventListener('click', () => {
+				const next = update((p) => {
+					p.done = p.done.includes(id) ? p.done.filter((d) => d !== id) : [...p.done, id];
+				});
+				show(next.done.includes(id));
+			});
+		}
+	}
+	customElements.define('nav-checklist', Checklist);
+</script>
+
+<style>
+	.checklist {
+		display: block;
+		margin-block: 2rem 1rem;
+	}
+	.checklist fieldset {
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		padding: 0.75rem 1rem;
+	}
+	.checklist legend {
+		font-weight: 600;
+		padding-inline: 0.25rem;
+	}
+	.checklist label {
+		display: flex;
+		gap: 0.5rem;
+		align-items: baseline;
+		padding-block: 0.25rem;
+	}
+	.checklist input {
+		width: 1.1rem;
+		height: 1.1rem;
+		accent-color: var(--sl-color-accent);
+	}
+	.checklist__done {
+		margin-top: 1rem;
+	}
+	.checklist__done[aria-pressed='true'] {
+		background: var(--sl-color-green-low);
+		border-color: var(--sl-color-green);
+	}
+</style>

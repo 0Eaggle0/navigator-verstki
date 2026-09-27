@@ -1,0 +1,48 @@
+/* СЕТКА КАРТОЧЕК. Вставь в конец style.css */
+.cards-section {
+  padding: 48px 24px;          /* что менять: отступы секции */
+}
+
+.cards {
+  display: grid;
+  /* Колонок столько, сколько влезет, но каждая не уже 240px.
+     что менять: 240px — минимальная ширина карточки */
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 24px;                   /* что менять: расстояние между карточками */
+}
+
+.card {
+  display: flex;
+  flex-direction: column;      /* содержимое карточки — сверху вниз */
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;         /* что менять: скругление углов */
+  background: #fff5ec;         /* что менять: фон карточки */
+}
+
+.card__img {
+  width: 100%;
+  aspect-ratio: 3 / 2;         /* все картинки одинаковой высоты */
+  object-fit: cover;           /* картинка заполняет рамку без искажений */
+  border-radius: 12px;
+}
+
+.card__title {
+  margin: 0;
+  font-size: 20px;
+}
+
+.card__text {
+  margin: 0;
+  color: #555555;
+}
+
+.card__button {
+  margin-top: auto;            /* кнопка прижата к низу карточки */
+  align-self: flex-start;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: #e8741a;         /* что менять: цвет кнопки */
+  color: #ffffff;
+  text-decoration: none;
+}

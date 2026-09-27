@@ -1,0 +1,38 @@
+---
+// «Если хочешь глубже» — ссылки из поля links во frontmatter шага
+const { links } = Astro.locals.starlightRoute.entry.data;
+---
+
+{
+	links.length > 0 && (
+		<aside class="deeper not-content" aria-label="Если хочешь глубже">
+			<p class="deeper__title">📚 Если хочешь глубже</p>
+			<ul>
+				{links.map((l) => (
+					<li>
+						<a href={l.url} target="_blank" rel="noopener">
+							{l.title}
+						</a>
+					</li>
+				))}
+			</ul>
+		</aside>
+	)
+}
+
+<style>
+	.deeper {
+		margin-block: 1.5rem;
+		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
+		background: var(--sl-color-gray-6);
+	}
+	.deeper__title {
+		font-weight: 600;
+		margin: 0 0 0.25rem;
+	}
+	.deeper ul {
+		margin: 0;
+		padding-left: 1.25rem;
+	}
+</style>

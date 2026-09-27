@@ -1,0 +1,59 @@
+---
+// Заменяет стандартный заголовок Starlight. У страниц-шагов (есть поле minutes)
+// под заголовком показываем цель и время, а в прогресс пишем «последний открытый шаг».
+import Default from '@astrojs/starlight/components/PageTitle.astro';
+import { LESSONS } from '~/lib/route';
+
+const { entry } = Astro.locals.starlightRoute;
+const { lesson, minutes, goal, soon } = entry.data;
+const isStep = minutes !== undefined;
+---
+
+<Default />
+{
+	isStep && (
+		<p class="step-meta" data-path={Astro.url.pathname}>
+			<span class="step-meta__lesson">Занятие {lesson} · {LESSONS[lesson!]}</span>
+			<span class="step-meta__goal">🎯 {goal ?? entry.data.title}</span>
+			<span class="step-meta__time">⏱ {minutes} мин</span>
+		</p>
+	)
+}
+{
+	soon && (
+		<p class="step-soon" role="note">
+			🚧 Этот шаг ещё пишется. Пока загляни в «Шпаргалки и ссылки» или спроси модератора.
+		</p>
+	)
+}
+
+<script>
+	import { update } from '~/lib/storage';
+	const meta = document.querySelector<HTMLElement>('.step-meta');
+	if (meta) update((p) => (p.last = meta.dataset.path));
+</script>
+
+<style>
+	.step-meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+		margin-top: 0.75rem;
+		font-size: var(--sl-text-sm);
+	}
+	.step-meta span {
+		padding: 0.2rem 0.6rem;
+		border-radius: 999px;
+		background: var(--sl-color-gray-6);
+	}
+	.step-meta__time {
+		font-weight: 600;
+		background: var(--sl-color-accent-low) !important;
+	}
+	.step-soon {
+		margin-top: 1rem;
+		padding: 0.75rem 1rem;
+		border-left: 4px solid var(--sl-color-orange);
+		background: var(--sl-color-orange-low);
+	}
+</style>

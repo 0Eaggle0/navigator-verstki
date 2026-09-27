@@ -1,0 +1,9 @@
+{
+	"header": { "title": "Шапка с меню", "ready": true },
+	"cards": { "title": "Сетка карточек", "ready": true },
+	"hero": { "title": "Первый экран", "ready": false },
+	"footer": { "title": "Подвал", "ready": false },
+	"form": { "title": "Форма", "ready": false },
+	"filters": { "title": "Фильтры", "ready": false },
+	"steps": { "title": "Как это работает (шаги)", "ready": false }
+}

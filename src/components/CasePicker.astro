@@ -1,0 +1,98 @@
+---
+// Главная: выбор кейса команды и кнопка «Начать / Продолжить»
+import cases from '~/data/cases.json';
+import { getRoute, url } from '~/lib/route';
+
+const { steps } = await getRoute();
+const first = url(steps[0].id + '/');
+---
+
+<nav-case-picker class="picker not-content" data-first={first}>
+	<fieldset>
+		<legend>Какой у вашей команды кейс?</legend>
+		<div class="picker__grid">
+			{
+				cases.map((c) => (
+					<label class="picker__card">
+						<input type="radio" name="case" value={c.id} />
+						<strong>{c.title}</strong>
+						<span>{c.about}</span>
+					</label>
+				))
+			}
+		</div>
+	</fieldset>
+	<a class="picker__go" href={first}>Начать с первого шага →</a>
+</nav-case-picker>
+
+<script>
+	import { load, update } from '~/lib/storage';
+
+	class CasePicker extends HTMLElement {
+		connectedCallback() {
+			const p = load();
+			const go = this.querySelector<HTMLAnchorElement>('.picker__go')!;
+			if (p.last) {
+				go.href = p.last;
+				go.textContent = 'Продолжить с того же места →';
+			}
+			const radio = this.querySelector<HTMLInputElement>(`input[value="${p.case}"]`);
+			if (radio) radio.checked = true;
+			this.addEventListener('change', (e) => update((p) => (p.case = (e.target as HTMLInputElement).value)));
+		}
+	}
+	customElements.define('nav-case-picker', CasePicker);
+</script>
+
+<style>
+	.picker fieldset {
+		border: 0;
+		padding: 0;
+		margin: 0;
+	}
+	.picker legend {
+		font-size: var(--sl-text-h4);
+		font-weight: 600;
+		margin-bottom: 0.75rem;
+	}
+	.picker__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+		gap: 0.75rem;
+	}
+	.picker__card {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		padding: 1rem;
+		border: 2px solid var(--sl-color-gray-5);
+		border-radius: 0.75rem;
+		cursor: pointer;
+	}
+	.picker__card:has(input:checked) {
+		border-color: var(--sl-color-accent);
+		background: var(--sl-color-accent-low);
+	}
+	.picker__card:has(input:focus-visible) {
+		outline: 3px solid var(--sl-color-accent-high);
+		outline-offset: 2px;
+	}
+	.picker__card input {
+		position: absolute;
+		opacity: 0;
+	}
+	.picker__card span {
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+	.picker__go {
+		display: inline-block;
+		margin-top: 1.5rem;
+		padding: 0.75rem 1.5rem;
+		border-radius: 999px;
+		font-weight: 600;
+		text-decoration: none;
+		color: var(--sl-color-black);
+		background: var(--sl-color-accent-high);
+	}
+</style>

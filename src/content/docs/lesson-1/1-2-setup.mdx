@@ -1,0 +1,112 @@
+---
+title: VS Code, Live Server, index.html и style.css
+lesson: 1
+minutes: 10
+goal: Заводим папку проекта и видим страницу в браузере
+sidebar:
+  order: 2
+links:
+  - title: "VS Code: скачать"
+    url: https://code.visualstudio.com/
+  - title: "Live Server в каталоге расширений"
+    url: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+warmup:
+  task: Страница уже подключена к стилям. Напиши заголовок h1 с названием вашего проекта и в CSS покрась его в любой цвет, кроме чёрного.
+  html: |
+    <!-- Напиши заголовок ниже -->
+  css: |
+    /* Стили для h1 */
+  checks:
+    - exists: "h1"
+      fail: "На странице пока нет заголовка <h1>"
+    - js: "const h1 = doc.querySelector('h1'); return h1 && h1.textContent.trim().length > 0"
+      fail: "Заголовок <h1> пустой — напиши в нём название проекта"
+    - js: "const h1 = doc.querySelector('h1'); return h1 && getComputedStyle(h1).color !== 'rgb(0, 0, 0)'"
+      fail: "Заголовок пока чёрный. Добавь в CSS: h1 { color: ... }"
+checklist:
+  - Есть папка проекта, в ней index.html, style.css и папка img
+  - Папка открыта в VS Code через «Файл → Открыть папку»
+  - Live Server запущен, страница открылась в браузере
+  - После сохранения файла (Ctrl+S) браузер обновился сам
+mistakes:
+  - q: Нет кнопки Go Live
+    a: Расширение Live Server не установлено или VS Code не перезапущен. Установи его на вкладке Extensions (Ctrl+Shift+X) и открой папку заново.
+  - q: Стили не применяются
+    a: "Проверь строку <link rel=\"stylesheet\" href=\"style.css\"> в <head>. Имя файла должно совпадать до буквы, и style.css должен лежать рядом с index.html."
+  - q: Изменения не видны в браузере
+    a: Файл не сохранён — на вкладке файла горит точка. Нажми Ctrl+S. Можно включить автосохранение в меню «Файл → Автосохранение».
+  - q: Открыл файл двойным кликом, адрес начинается с file://
+    a: Так тоже работает, но без автообновления. Лучше запускать через Go Live — адрес будет вида http://127.0.0.1:5500.
+blocks: []
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Сайт — это просто папка с файлами. В `index.html` лежит содержимое страницы: тексты, картинки, ссылки. В `style.css` — оформление: цвета, размеры, расположение. Картинки кладём в папку `img`.
+
+Писать код будем в **VS Code** — это бесплатный редактор. Расширение **Live Server** запускает страницу в браузере и обновляет её после каждого сохранения. Не нужно каждый раз нажимать F5.
+
+Файл стилей подключается к странице одной строкой внутри `<head>`. Без неё браузер не узнает про `style.css`:
+
+```html
+<link rel="stylesheet" href="style.css">
+```
+
+Лайфхак: в пустом `index.html` набери `!` и нажми Tab. VS Code сам напишет заготовку страницы. Останется поменять `lang="en"` на `lang="ru"` и добавить строку со стилями.
+
+<Preview
+  html={`<h1>ХВОСТ_ДОМОЙ</h1>
+<p>Страница работает, стили подключены.</p>`}
+  css={`h1 { color: #e8741a; }`}
+  height={140}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+Каждый участник делает это у себя на компьютере:
+
+1. Установите [VS Code](https://code.visualstudio.com/) и в нём расширение **Live Server** (вкладка Extensions, Ctrl+Shift+X).
+2. Скачайте стартовый шаблон — три файла:
+   <a href="../../starter/index.html" download>index.html</a>,
+   <a href="../../starter/style.css" download>style.css</a> и создайте рядом пустую папку `img`.
+   Положите всё в одну папку, например `hvost-domoy`.
+3. В VS Code: «Файл → Открыть папку» и выберите эту папку.
+4. Откройте `index.html` и нажмите **Go Live** внизу справа. Страница откроется в браузере.
+5. Поменяйте текст в `<title>` и `<h1>` на название своего проекта, сохраните (Ctrl+S) — браузер обновится сам.
+
+<Hint title="Подсказка 1">
+Кнопка **Go Live** появляется в синей полосе внизу окна VS Code, только когда открыта папка, а не один файл.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если браузер показывает список файлов вместо страницы — значит, Live Server запущен не в той папке. Файл должен называться ровно `index.html`, маленькими буквами.
+</Hint>
+
+<Hint title="Решение">
+Так выглядит минимальный `index.html` с подключёнными стилями:
+
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ХВОСТ_ДОМОЙ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <h1>ХВОСТ_ДОМОЙ</h1>
+</body>
+</html>
+```
+</Hint>
+
+<Checklist />
+<Stuck />

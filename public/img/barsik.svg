@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Рыжий кот Барсик">
+  <rect width="300" height="200" fill="#ffe3c9"/>
+  <circle cx="150" cy="115" r="55" fill="#e8741a"/>
+  <path d="M105 85 L112 35 L140 68 Z M195 85 L188 35 L160 68 Z" fill="#e8741a"/>
+  <circle cx="130" cy="108" r="7" fill="#2b1a0a"/>
+  <circle cx="170" cy="108" r="7" fill="#2b1a0a"/>
+  <path d="M143 128 L157 128 L150 136 Z" fill="#2b1a0a"/>
+  <path d="M90 125 H125 M90 135 H125 M175 125 H210 M175 135 H210" stroke="#2b1a0a" stroke-width="2"/>
+</svg>

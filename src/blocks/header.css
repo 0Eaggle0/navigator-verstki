@@ -1,0 +1,44 @@
+/* ШАПКА С МЕНЮ. Вставь в конец style.css */
+.header {
+  display: flex;               /* логотип, меню и кнопка в одну строку */
+  flex-wrap: wrap;             /* на узком экране переносятся */
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px 32px;
+  padding: 16px 24px;          /* что менять: отступы по макету */
+  background: #ffffff;         /* что менять: цвет фона шапки */
+}
+
+.header__logo {
+  font-size: 24px;             /* что менять: размер логотипа */
+  font-weight: 800;
+  color: #e8741a;              /* что менять: цвет логотипа */
+  text-decoration: none;
+}
+
+.header__menu ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;               /* что менять: расстояние между пунктами */
+  margin: 0;
+  padding: 0;
+  list-style: none;            /* убираем точки у списка */
+}
+
+.header__menu a {
+  color: #222222;              /* что менять: цвет пунктов меню */
+  text-decoration: none;
+}
+
+.header__menu a:hover {
+  color: #e8741a;
+}
+
+.header__button {
+  padding: 10px 20px;
+  border-radius: 999px;        /* что менять: 999px — «таблетка», 8px — слегка скруглённая */
+  background: #e8741a;         /* что менять: цвет кнопки */
+  color: #ffffff;
+  font-weight: 600;
+  text-decoration: none;
+}

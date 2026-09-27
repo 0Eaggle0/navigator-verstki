@@ -1,0 +1,38 @@
+---
+// Рекомендуемые блоки главной для выбранного кейса
+import cases from '~/data/cases.json';
+import blocks from '~/data/blocks.json';
+import { url } from '~/lib/route';
+type Id = keyof typeof blocks;
+---
+
+<div class="case-blocks not-content">
+	<p class="case-blocks__empty">Выбери кейс на <a href={url('/')}>главной</a> — здесь появится список блоков для твоей главной страницы.</p>
+	{
+		cases.map((c) => (
+			<section data-case={c.id} hidden>
+				<h2>Главная для кейса {c.title}</h2>
+				<ol>
+					{(c.blocks as Id[]).map((id) => (
+						<li>{blocks[id].ready ? <a href={url(`blocks/${id}/`)}>{blocks[id].title}</a> : <>{blocks[id].title} <em>(скоро)</em></>}</li>
+					))}
+				</ol>
+				<p>{c.note}</p>
+			</section>
+		))
+	}
+</div>
+
+<script>
+	import { load } from '~/lib/storage';
+	const chosen = load().case;
+	const sections = document.querySelectorAll<HTMLElement>('.case-blocks section');
+	sections.forEach((s) => (s.hidden = s.dataset.case !== chosen));
+	if (chosen) document.querySelector<HTMLElement>('.case-blocks__empty')!.hidden = true;
+</script>
+
+<style>
+	.case-blocks h2 {
+		font-size: var(--sl-text-h3);
+	}
+</style>

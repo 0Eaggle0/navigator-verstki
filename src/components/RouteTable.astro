@@ -1,0 +1,73 @@
+---
+// Маршрут: занятия, шаги, минуты. Суммы считаются из полей minutes в файлах шагов.
+import { getRoute, url, LIMIT_MINUTES } from '~/lib/route';
+
+const { lessons, total } = await getRoute();
+---
+
+<div class="route not-content" data-total={total} data-limit={LIMIT_MINUTES}>
+	<p class="route__total">
+		Весь маршрут: <strong>{total} мин</strong> из {LIMIT_MINUTES} доступных (7 пар × 80 мин).
+	</p>
+	{
+		lessons.map((l) => (
+			<section>
+				<h2>
+					Занятие {l.n} · {l.title} <span class="route__sum">{l.minutes} мин</span>
+				</h2>
+				<ol>
+					{l.steps.map((s) => (
+						<li data-id={s.id}>
+							<a href={url(s.id + '/')}>{s.data.title}</a>
+							<span class="route__min">{s.data.minutes} мин</span>
+							{s.data.soon && <span class="route__soon">скоро</span>}
+						</li>
+					))}
+				</ol>
+			</section>
+		))
+	}
+</div>
+
+<script>
+	import { load } from '~/lib/storage';
+	const route = document.querySelector<HTMLElement>('.route')!;
+	if (+route.dataset.total! > +route.dataset.limit!) console.warn(`Маршрут длиннее лимита: ${route.dataset.total} мин`);
+	const done = load().done;
+	route.querySelectorAll<HTMLElement>('li[data-id]').forEach((li) => li.classList.toggle('is-done', done.includes(li.dataset.id!)));
+</script>
+
+<style>
+	.route h2 {
+		font-size: var(--sl-text-h3);
+		margin: 2rem 0 0.5rem;
+	}
+	.route__sum {
+		font-size: var(--sl-text-sm);
+		font-weight: 400;
+		color: var(--sl-color-gray-3);
+	}
+	.route ol {
+		padding-left: 1.5rem;
+	}
+	.route li {
+		padding-block: 0.3rem;
+	}
+	.route__min {
+		margin-left: 0.5rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.route__soon {
+		margin-left: 0.5rem;
+		padding: 0 0.4rem;
+		font-size: var(--sl-text-xs);
+		border-radius: 999px;
+		background: var(--sl-color-orange-low);
+	}
+	.route li.is-done > a::before {
+		content: '✓ ';
+		color: var(--sl-color-green);
+		font-weight: 700;
+	}
+</style>

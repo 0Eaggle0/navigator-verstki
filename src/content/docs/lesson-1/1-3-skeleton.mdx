@@ -1,0 +1,154 @@
+---
+title: HTML-скелет на семантических тегах
+lesson: 1
+minutes: 25
+goal: Собираем скелет страницы из header, main, section и footer
+sidebar:
+  order: 3
+links:
+  - title: "Дока: тег header"
+    url: https://doka.guide/html/header/
+  - title: "Дока: тег section"
+    url: https://doka.guide/html/section/
+warmup:
+  task: Замени безликие div на смысловые теги. Шапка — header с меню nav внутри, основное содержимое — main с двумя section, подвал — footer. Классы оставь как есть.
+  html: |
+    <div class="header">
+      <div class="logo">ХВОСТ_ДОМОЙ</div>
+      <div class="menu">О нас · Питомцы · Помочь</div>
+    </div>
+    <div class="content">
+      <div class="hero">
+        <h1>Найди друга в приюте</h1>
+      </div>
+      <div class="pets">
+        <h2>Ищут дом</h2>
+      </div>
+    </div>
+    <div class="footer">Омск, 2026</div>
+  css: |
+    header, main, footer, section, nav {
+      outline: 2px dashed tomato;
+      padding: 8px;
+      margin: 4px;
+    }
+  checks:
+    - exists: "header"
+      fail: "Нет тега <header> — оберни в него шапку"
+    - exists: "header nav"
+      fail: "Меню внутри шапки должно быть в теге <nav>"
+    - exists: "main"
+      fail: "Нет тега <main> — оберни в него основное содержимое"
+    - count: { selector: "main > section", min: 2 }
+      fail: "Внутри <main> нужно две секции <section> — для первого экрана и для питомцев"
+    - exists: "footer"
+      fail: "Нет тега <footer> — оберни в него подвал"
+    - js: "return doc.querySelectorAll('h1').length === 1"
+      fail: "На странице должен быть ровно один <h1>"
+checklist:
+  - На странице есть header, main и footer
+  - Меню лежит в nav внутри header
+  - Каждый крупный блок макета — отдельный section с классом
+  - На странице ровно один h1, у секций заголовки h2
+  - Отступы в коде ровные — видно, что внутри чего
+mistakes:
+  - q: Всё вложилось в header
+    a: "Забыл закрыть тег: после шапки должен стоять </header>. VS Code подсвечивает пару тега — кликни по открывающему и посмотри, где закрывающий."
+  - q: Где ставить h1?
+    a: h1 — главный заголовок страницы, обычно самый крупный текст на первом экране. Он один. Заголовки секций — h2, заголовки карточек — h3.
+  - q: section или div?
+    a: section — для смысловой части страницы, у которой есть свой заголовок. div — для всего остального, например обёрток для оформления.
+  - q: Зачем эти теги, если выглядит так же?
+    a: Их понимают поисковики и программы экранного доступа для незрячих. И код читать проще — сразу видно, где что.
+blocks: [header]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Можно сверстать страницу из одних `<div>` — браузер покажет её так же. Но тогда ни человек, ни программа не поймёт, где шапка, а где подвал. Поэтому для крупных частей есть **семантические** (смысловые) теги.
+
+Главные теги скелета:
+- `<header>` — шапка: логотип и меню. Меню кладём в `<nav>`.
+- `<main>` — основное содержимое. Он на странице один.
+- `<section>` — смысловой блок внутри `main`: первый экран, карточки, «о нас». У секции обычно есть заголовок.
+- `<footer>` — подвал: контакты, соцсети.
+
+Заголовки идут по уровням. `<h1>` — один на страницу, главный. У секций — `<h2>`, внутри них, например у карточек, — `<h3>`. Уровни не выбирают по размеру шрифта: размер потом зададим в CSS.
+
+Каждой секции дай класс из списка, который вы составили в шаге 1.1: `<section class="pets">`. По классам будем писать стили.
+
+<Preview
+  html={`<header class="header">
+  <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+  <nav class="menu">О нас · Питомцы · Помочь</nav>
+</header>
+<main>
+  <section class="hero"><h1>Найди друга в приюте</h1></section>
+  <section class="pets"><h2>Ищут дом</h2></section>
+</main>
+<footer class="footer">Омск, 2026</footer>`}
+  css={`header, main, footer, section, nav { outline: 2px dashed tomato; padding: 6px; margin: 4px; }`}
+  height={300}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Откройте `index.html` своего проекта.
+2. Внутри `<body>` соберите скелет: `header` → `main` → `footer`.
+3. В `main` сделайте по одной `section` с классом на каждый крупный блок из вашего списка (шаг 1.1). В каждую секцию пока поставьте только заголовок.
+4. Сохраните и проверьте в браузере: заголовки идут в том же порядке, что на макете.
+
+Контент (тексты, картинки, кнопки) переносим в следующем шаге — сейчас только каркас.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Пишите сначала пару тегов, потом содержимое: `<section class="pets"></section>`, и уже затем курсор внутрь. Так не потеряете закрывающий тег. В VS Code можно набрать `section.pets` и нажать Tab.
+</Hint>
+
+<Hint title="Подсказка 2">
+Проверьте вложенность: `header`, `main` и `footer` лежат прямо в `body` рядом друг с другом. Все `section` — внутри `main`. Удобно временно добавить в `style.css` строку `section { outline: 2px dashed red; }` — будут видны границы секций.
+</Hint>
+
+<Hint title="Решение">
+Скелет для кейса ХВОСТ_ДОМОЙ:
+
+```html
+<body>
+  <header class="header">
+    <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+    <nav class="menu">
+      <!-- пункты меню добавим в шаге 1.4 -->
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h1>Найди друга в приюте</h1>
+    </section>
+
+    <section class="pets">
+      <h2>Ищут дом</h2>
+    </section>
+
+    <section class="steps">
+      <h2>Как забрать питомца</h2>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <!-- контакты -->
+  </footer>
+</body>
+```
+</Hint>
+
+<Checklist />
+<Stuck />
