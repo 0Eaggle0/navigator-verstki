@@ -42,32 +42,49 @@ const isStep = minutes !== undefined;
 </script>
 
 <style>
+	/* Карточка «миссии»: цель крупно, занятие и время — плашками */
 	.step-meta {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem 1rem;
-		margin-top: 0.75rem;
+		gap: 0.5rem;
+		margin-top: 1rem;
+		padding: 0.875rem 1rem;
 		font-size: var(--sl-text-sm);
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: var(--nav-radius);
+		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
 	}
 	.step-meta span {
-		padding: 0.2rem 0.6rem;
+		padding: 0.2rem 0.7rem;
 		border-radius: 999px;
+		font-weight: 600;
 		background: var(--sl-color-gray-6);
 	}
-	.step-meta__time {
-		font-weight: 600;
-		background: var(--sl-color-accent-low) !important;
+	.step-meta .step-meta__goal {
+		order: -1;
+		flex-basis: 100%;
+		padding: 0;
+		font-size: var(--sl-text-lg);
+		color: var(--sl-color-white);
+		background: none;
+	}
+	.step-meta .step-meta__lesson,
+	.step-meta .step-meta__time {
+		color: var(--sl-color-accent-high);
+		background: var(--sl-color-accent-low);
 	}
 	.step-fast {
 		margin-top: 1rem;
 		padding: 0.5rem 1rem;
 		font-size: var(--sl-text-sm);
 		border-left: 4px solid var(--sl-color-blue);
+		border-radius: 0.5rem;
 		background: var(--sl-color-blue-low);
 	}
 	.step-soon {
 		margin-top: 1rem;
 		padding: 0.75rem 1rem;
+		border-radius: 0.5rem;
 		border-left: 4px solid var(--sl-color-orange);
 		background: var(--sl-color-orange-low);
 	}

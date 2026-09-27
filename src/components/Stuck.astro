@@ -31,8 +31,9 @@ const { mistakes } = Astro.locals.starlightRoute.entry.data;
 <style>
 	.stuck {
 		margin-block: 1rem;
-		border-radius: 0.5rem;
-		background: var(--sl-color-gray-6);
+		border: 1px solid var(--sl-color-red);
+		border-radius: var(--nav-radius);
+		background: var(--sl-color-red-low);
 	}
 	.stuck summary {
 		padding: 0.6rem 1rem;

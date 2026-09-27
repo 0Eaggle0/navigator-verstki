@@ -57,7 +57,7 @@ const items = entry.data.checklist;
 	}
 	.checklist fieldset {
 		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 0.5rem;
+		border-radius: var(--nav-radius);
 		padding: 0.75rem 1rem;
 	}
 	.checklist legend {
@@ -74,6 +74,10 @@ const items = entry.data.checklist;
 		width: 1.1rem;
 		height: 1.1rem;
 		accent-color: var(--sl-color-accent);
+	}
+	.checklist label:has(input:checked) {
+		color: var(--sl-color-gray-3);
+		text-decoration: line-through;
 	}
 	.checklist__done {
 		margin-top: 1rem;

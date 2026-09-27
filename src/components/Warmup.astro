@@ -110,7 +110,9 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 				if (!checks.length || !checker.contentDocument) return;
 				const results = runChecks(checker.contentDocument, checks);
 				const failed = results.filter((r) => !r.ok);
-				out.className = 'sandbox__checks ' + (failed.length ? 'is-wip' : 'is-ok');
+				// classList, а не className: иначе стирается класс, по которому Astro применяет стили
+				out.classList.toggle('is-wip', failed.length > 0);
+				out.classList.toggle('is-ok', failed.length === 0);
 				out.innerHTML = '';
 				const head = document.createElement('p');
 				head.textContent = failed.length
@@ -173,8 +175,9 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		display: block;
 		margin-block: 1.5rem;
 		padding: 1rem;
-		border: 2px solid var(--sl-color-accent);
-		border-radius: 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: var(--nav-radius);
+		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
 	}
 	.sandbox__task {
 		margin: 0 0 1rem;
@@ -198,10 +201,11 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		font: 0.875rem/1.5 var(--__sl-font-mono, ui-monospace, Consolas, monospace);
 		tab-size: 2;
 		resize: vertical;
-		color: var(--sl-color-white);
-		background: var(--sl-color-gray-6);
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 0.5rem;
+		color: #e2e8f0;
+		background: #0f172a;
+		border: 1px solid #334155;
+		border-radius: 0.625rem;
+		caret-color: #a5b4fc;
 	}
 	.sandbox__tip {
 		margin: 0;
@@ -260,13 +264,13 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		content: 'Пока пусто. Напиши console.log("привет")';
 		color: #9ca3af;
 	}
-	.sandbox__console li + li {
+	.sandbox__console :global(li + li) {
 		border-top: 1px solid #374151;
 	}
-	.sandbox__console .is-error {
+	.sandbox__console :global(.is-error) {
 		color: #fca5a5;
 	}
-	.sandbox__console .is-warn {
+	.sandbox__console :global(.is-warn) {
 		color: #fde68a;
 	}
 	.sandbox__checks {
@@ -277,18 +281,37 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 	.sandbox__checks:empty {
 		display: none;
 	}
-	.sandbox__checks p {
+	.sandbox__checks :global(p) {
 		margin: 0;
 		font-weight: 600;
 	}
-	.sandbox__checks ul {
-		margin: 0.25rem 0 0;
-		padding-left: 1.25rem;
+	/* Невыполненные проверки — плашками */
+	.sandbox__checks :global(ul) {
+		display: grid;
+		gap: 0.375rem;
+		margin: 0.5rem 0 0;
+		padding: 0;
+		list-style: none;
+	}
+	.sandbox__checks :global(li) {
+		margin: 0;
+		padding: 0.375rem 0.625rem;
+		font-size: var(--sl-text-sm);
+		border: 1px solid var(--sl-color-red);
+		border-radius: 0.5rem;
+		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+	}
+	.sandbox__checks :global(li)::before {
+		content: '✗ ';
+		color: var(--sl-color-red);
+		font-weight: 700;
 	}
 	.is-wip {
+		border: 1px solid var(--sl-color-orange);
 		background: var(--sl-color-orange-low);
 	}
 	.is-ok {
+		border: 1px solid var(--sl-color-green);
 		background: var(--sl-color-green-low);
 	}
 	.sandbox__reset {
