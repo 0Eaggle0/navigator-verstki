@@ -1,0 +1,129 @@
+---
+title: "Медиазапросы и режим телефона в DevTools"
+lesson: 5
+minutes: 25
+goal: Учимся менять стили для узких экранов и проверять сайт «как на телефоне»
+sidebar:
+  order: 1
+links:
+  - title: "Дока: медиазапросы"
+    url: https://doka.guide/css/media/
+  - title: "Дока: мета-тег viewport"
+    url: https://doka.guide/html/meta/
+warmup:
+  width: 375
+  task: "Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 600px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column)."
+  html: |
+    <h1>Куда сходить в Омске</h1>
+    <div class="row">
+      <a class="button" href="#">Афиша</a>
+      <a class="button" href="#">Бесплатно</a>
+    </div>
+  css: |
+    h1 {
+      font-size: 40px;
+    }
+
+    .row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .button {
+      padding: 12px;
+      background: #111827;
+      color: #fff;
+      text-align: center;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+
+    /* медиазапрос для телефона */
+  checks:
+    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
+      fail: "В CSS пока нет медиазапроса @media (max-width: 600px) { … }"
+    - selector: "h1"
+      style: { font-size: "24px" }
+      fail: "На телефоне заголовок должен быть 24px — задай это внутри медиазапроса"
+    - selector: ".row"
+      style: { flex-direction: "column" }
+      fail: "На телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса"
+checklist:
+  - В head есть meta viewport
+  - Умею включать режим устройства в DevTools (Ctrl+Shift+M)
+  - Понимаю, как работает @media (max-width …)
+  - Знаю, что медиазапросы пишутся в конце style.css
+mistakes:
+  - q: На телефоне сайт выглядит как уменьшенная копия
+    a: "Нет строки <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> в <head>. Без неё телефон притворяется широким экраном."
+  - q: Медиазапрос не срабатывает
+    a: "Проверь скобки: после @media (max-width: 600px) идёт {, внутри — обычные правила со своими { }, и в конце закрывающая }. И медиазапрос должен стоять ниже обычных правил."
+  - q: Какую ширину писать в max-width?
+    a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. Частые значения — 768px (планшет) и 600px (телефон).
+blocks: []
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+**Адаптив** — это когда один сайт хорошо выглядит и на компьютере, и на телефоне. Основной инструмент — **медиазапрос**: блок CSS, который работает только при нужной ширине экрана.
+
+```css
+@media (max-width: 600px) {
+  h1 { font-size: 24px; }
+}
+```
+
+Читается так: «если ширина экрана не больше 600 px, заголовку — 24 px». На широком экране правило внутри просто игнорируется. Медиазапросы ставят в самый конец `style.css`: так они перекрывают обычные правила выше.
+
+Чтобы телефон не притворялся широким экраном, в `<head>` нужна строка `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. В стартовом шаблоне она уже есть.
+
+Проверять адаптив удобно без телефона: F12 → значок телефона слева вверху (или Ctrl+Shift+M). Сверху появится выбор устройства и ширины — поставьте 375 px, это ширина обычного смартфона.
+
+<Preview
+  html={`<h1>Куда сходить</h1>
+<p>Сузь окно браузера — на ширине меньше 600 px заголовок станет синим.</p>`}
+  css={`h1 { font-size: 32px; }
+@media (max-width: 600px) {
+  h1 { color: #2563EB; }
+}`}
+  height={140}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Проверьте, что в `<head>` вашего `index.html` есть meta viewport.
+2. Откройте сайт, включите режим устройства в DevTools и поставьте ширину 375 px.
+3. Пролистайте страницу сверху вниз и запишите, что сломалось: где горизонтальная прокрутка, что вылезает, что слишком мелко или крупно.
+4. Добавьте в конец `style.css` пустой медиазапрос `@media (max-width: 768px) { }` — в следующем шаге будем его наполнять.
+
+<Hint title="Подсказка 1">
+В режиме устройства удобно выбрать **Dimensions: Responsive** и тянуть край страницы мышкой — видно, на какой ширине вёрстка начинает ломаться.
+</Hint>
+
+<Hint title="Подсказка 2">
+Горизонтальную прокрутку обычно дают: картинки без `max-width: 100%`, фиксированные `width` в px больше 375, сетки с тремя колонками по 300 px.
+</Hint>
+
+<Hint title="Решение">
+```css
+@media (max-width: 600px) {
+  h1 {
+    font-size: 24px;
+  }
+
+  .row {
+    flex-direction: column;
+  }
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

@@ -1,0 +1,127 @@
+---
+title: "Ряды кнопок и иконок"
+lesson: 3
+minutes: 15
+optional: true
+goal: Выравниваем все ряды на странице — кнопки, иконки, преимущества
+sidebar:
+  order: 4
+fast: "пропусти шаг: ряды выровняет блок «Как это работает» из библиотеки."
+links:
+  - title: "Дока: flex-wrap"
+    url: https://doka.guide/css/flex-wrap/
+  - title: "Flexbox Froggy — уровни 11–24"
+    url: https://flexboxfroggy.com/#ru
+warmup:
+  task: "Сделай ряд преимуществ: у .features — flex с переносом (wrap) и промежутком 16px. Каждый .feature — столбик (flex-direction: column), всё по центру."
+  html: |
+    <div class="features">
+      <div class="feature"><span class="icon">🎬</span><p>Создай комнату</p></div>
+      <div class="feature"><span class="icon">👆</span><p>Свайпай фильмы</p></div>
+      <div class="feature"><span class="icon">🍿</span><p>Смотрите вместе</p></div>
+    </div>
+  css: |
+    .features {
+      /* ряд с переносом */
+    }
+
+    .feature {
+      width: 120px;
+      padding: 12px;
+      background: #F3E8FF;
+      border-radius: 12px;
+      /* столбик по центру */
+    }
+
+    .feature p {
+      margin: 8px 0 0;
+    }
+
+    .icon {
+      font-size: 32px;
+    }
+  checks:
+    - selector: ".features"
+      style: { display: "flex", flex-wrap: "wrap" }
+      fail: "У .features нужны display: flex и flex-wrap: wrap"
+    - selector: ".features"
+      style: { row-gap: "16px", column-gap: "16px" }
+      fail: "Между преимуществами нет промежутка gap: 16px"
+    - selector: ".feature"
+      style: { display: "flex", flex-direction: "column" }
+      fail: "Каждый .feature должен быть столбиком: display: flex; flex-direction: column;"
+    - selector: ".feature"
+      style: { align-items: "center" }
+      fail: "Иконка и текст не по центру: align-items: center;"
+checklist:
+  - Все ряды на странице выровнены через flex и gap
+  - Одинаковые элементы в ряду одной ширины
+  - Узкий экран — элементы переносятся, а не сжимаются
+mistakes:
+  - q: Элементы в ряду разной ширины
+    a: "Задай им одинаковую ширину (width) или flex: 1. Без этого ширина зависит от длины текста."
+  - q: Текст под иконкой не по центру
+    a: "align-items: center выравнивает сами блоки. Если строк текста несколько, добавь text-align: center."
+blocks: [steps]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+На странице много маленьких рядов: две кнопки рядом, иконки соцсетей, «три шага», преимущества. Все они делаются одним приёмом: `display: flex` + `gap`.
+
+Если элементов много, на узком экране они не поместятся. `flex-wrap: wrap` разрешает перенос: лишние элементы уедут на следующую строку, а не сожмутся в кашу. Это пригодится в занятии 5, когда будем делать версию для телефона.
+
+Внутри элемента (иконка сверху, подпись снизу) флекс тоже работает — только развёрнутый: `flex-direction: column`. Тогда `align-items: center` ставит всё по центру по горизонтали.
+
+<Preview
+  html={`<div class="features">
+  <div class="feature"><span>🎬</span><p>Создай комнату</p></div>
+  <div class="feature"><span>👆</span><p>Свайпай</p></div>
+  <div class="feature"><span>🍿</span><p>Смотрите</p></div>
+</div>`}
+  css={`.features { display: flex; flex-wrap: wrap; gap: 16px; }
+.feature { display: flex; flex-direction: column; align-items: center; width: 100px; padding: 12px; background: #F3E8FF; border-radius: 12px; }
+.feature span { font-size: 28px; } .feature p { margin: 8px 0 0; }`}
+  height={140}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+Найдите на макете оставшиеся ряды — кнопки, иконки, преимущества, соцсети — и выровняйте каждый через flex и `gap`. Шаг можно пропустить, если команда отстаёт: эти ряды не главное для минимума.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Две кнопки рядом: оберните их в `<div class="buttons">` и дайте ему `display: flex; gap: 16px;`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Иконки соцсетей — это ссылки с картинками внутри. Картинкам задайте одинаковую высоту: `height: 32px`.
+</Hint>
+
+<Hint title="Решение">
+```css
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.feature {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

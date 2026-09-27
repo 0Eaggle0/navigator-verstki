@@ -1,8 +1,131 @@
 ---
-title: "Блочная модель"
+title: "Блочная модель и контейнер"
 lesson: 2
 minutes: 20
-soon: true
+goal: Задаём отступы и ширину блоков как в макете
 sidebar:
   order: 3
+links:
+  - title: "Дока: блочная модель"
+    url: https://doka.guide/css/box-model/
+  - title: "Дока: box-sizing"
+    url: https://doka.guide/css/box-sizing/
+warmup:
+  task: "Сделай карточку .card ровно 200 px шириной вместе с рамкой и отступами: width 200px, padding 16px, рамка 2px, box-sizing: border-box, снизу внешний отступ 24px. Затем ограничь .container шириной 320px и поставь по центру."
+  html: |
+    <div class="container">
+      <div class="card">Барсик, 2 года</div>
+      <div class="card">Шарик, 4 года</div>
+    </div>
+  css: |
+    .container {
+      /* max-width и выравнивание по центру */
+    }
+
+    .card {
+      background: #FFF8F0;
+      /* ширина, отступы, рамка */
+    }
+  checks:
+    - js: "return doc.querySelector('.card').offsetWidth === 200"
+      fail: "Карточка пока не 200 px в ширину вместе с рамкой. Проверь width: 200px и box-sizing: border-box"
+    - selector: ".card"
+      style: { padding-left: "16px", padding-top: "16px" }
+      fail: "У .card нет внутреннего отступа padding: 16px"
+    - js: "const s = getComputedStyle(doc.querySelector('.card')); return s.borderLeftStyle !== 'none' && parseFloat(s.borderLeftWidth) >= 1"
+      fail: "У .card нет рамки 2px. Например: border: 2px solid #FF6B35;"
+    - selector: ".card"
+      style: { margin-bottom: "24px" }
+      fail: "Между карточками нет отступа margin-bottom: 24px"
+    - selector: ".container"
+      style: { max-width: "320px" }
+      fail: "У .container нет max-width: 320px"
+    - js: "const c = doc.querySelector('.container').getBoundingClientRect(); const w = doc.documentElement.clientWidth; return Math.abs(c.left - (w - c.right)) < 2"
+      fail: "Контейнер не по центру. Нужно: margin: 0 auto;"
+checklist:
+  - "На всей странице стоит box-sizing: border-box (есть в сбросе)"
+  - "Контент лежит в .container с max-width из макета и margin: 0 auto"
+  - Отступы секций и элементов взяты из Figma, а не на глаз
+  - В DevTools видно, откуда берётся каждый отступ
+mistakes:
+  - q: Блок шире, чем задано
+    a: "Без box-sizing: border-box padding и рамка прибавляются к width. Добавь box-sizing: border-box — в стартовом сбросе он уже есть для всех элементов."
+  - q: "margin: 0 auto не центрирует"
+    a: У блока должна быть ширина — width или max-width. Без неё блок и так занимает всю строку, центрировать нечего.
+  - q: Не понимаю, откуда отступ
+    a: "Правый клик по элементу → «Просмотреть код» (F12). Внизу вкладки Styles есть схема блока: оранжевое — margin, зелёное — padding. Наведи на элемент — отступы подсветятся на странице."
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Каждый элемент на странице — прямоугольник из четырёх слоёв: **контент** → **padding** (внутренний отступ) → **border** (рамка) → **margin** (внешний отступ до соседей). Это и есть блочная модель.
+
+По умолчанию `width` задаёт ширину только контента, а padding и рамка прибавляются сверху: `width: 200px` + `padding: 16px` превращается в 234 px. Строка `box-sizing: border-box` меняет правило: `width` — это ширина вместе с padding и рамкой. С ней считать проще, поэтому её ставят всем элементам в сбросе.
+
+Отступы пишутся одной строкой по часовой стрелке от верха: `padding: 16px 24px` — сверху и снизу 16, слева и справа 24.
+
+**Контейнер** — обёртка, которая не даёт контенту растянуться на весь широкий экран. Ширина из макета (например, 1200 px) записывается в `max-width`, а `margin: 0 auto` ставит контейнер по центру. На узком экране `max-width` не мешает: контейнер просто сужается.
+
+<Preview
+  html={`<div class="container">
+  <div class="card">Карточка 200 px</div>
+</div>`}
+  css={`* { box-sizing: border-box; }
+.container { max-width: 320px; margin: 0 auto; outline: 2px dashed #aaa; }
+.card { width: 200px; padding: 16px; border: 2px solid #FF6B35; margin-bottom: 24px; background: #FFF8F0; }`}
+  height={130}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Внутри каждой секции оберните содержимое в `<div class="container">`. Секция даёт фон на всю ширину, а контейнер держит контент по центру.
+2. Задайте `.container` ширину контейнера из паспорта стиля и `margin: 0 auto`. Добавьте боковые отступы `padding: 0 16px`, чтобы на телефоне текст не прилипал к краю.
+3. Задайте секциям вертикальные отступы из макета: `padding: 80px 0`.
+4. Откройте DevTools (F12) и сравните отступы с Figma.
+
+<Hint title="Подсказка 1">
+Контейнер один раз описывается в CSS, а в HTML используется в каждой секции:
+`<section class="pets"><div class="container">…</div></section>`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если в макете между секциями 80 px, а у вас больше, проверьте margin у заголовков и абзацев внутри. Сброс убирает их отступы, поэтому задавайте их явно.
+</Hint>
+
+<Hint title="Решение">
+```css
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+section {
+  padding: 80px 0;
+}
+
+h2 {
+  margin-bottom: 32px;
+}
+```
+
+```html
+<section class="pets">
+  <div class="container">
+    <h2>Ищут дом</h2>
+    <!-- карточки -->
+  </div>
+</section>
+```
+</Hint>
+
+<Checklist />
+<Stuck />

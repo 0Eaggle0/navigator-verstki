@@ -1,9 +1,38 @@
 {
-	"header": { "title": "Шапка с меню", "ready": true },
-	"cards": { "title": "Сетка карточек", "ready": true },
-	"hero": { "title": "Первый экран", "ready": false },
-	"footer": { "title": "Подвал", "ready": false },
-	"form": { "title": "Форма", "ready": false },
-	"filters": { "title": "Фильтры", "ready": false },
-	"steps": { "title": "Как это работает (шаги)", "ready": false }
+	"header": {
+		"title": "Шапка с меню",
+		"ready": true
+	},
+	"hero": {
+		"title": "Первый экран",
+		"ready": true
+	},
+	"steps": {
+		"title": "Как это работает (3 шага)",
+		"ready": true
+	},
+	"cards": {
+		"title": "Сетка карточек",
+		"ready": true
+	},
+	"form": {
+		"title": "Форма",
+		"ready": true
+	},
+	"footer": {
+		"title": "Подвал",
+		"ready": true
+	},
+	"filters": {
+		"title": "Фильтры",
+		"ready": false
+	},
+	"reviews": {
+		"title": "Отзывы",
+		"ready": false
+	},
+	"progress": {
+		"title": "Пример сбора с прогрессом",
+		"ready": false
+	}
 }

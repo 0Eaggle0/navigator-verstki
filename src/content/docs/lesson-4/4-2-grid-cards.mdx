@@ -1,0 +1,160 @@
+---
+title: "Сетка карточек под ваш кейс"
+lesson: 4
+minutes: 30
+goal: Ставим карточки в сетку, которая сама подстраивается под ширину
+sidebar:
+  order: 2
+fast: "возьми блок «Сетка карточек» и поменяй картинки, заголовки и тексты на свои."
+links:
+  - title: "Дока: grid-template-columns"
+    url: https://doka.guide/css/grid-template-columns/
+  - title: "Дока: object-fit"
+    url: https://doka.guide/css/object-fit/
+warmup:
+  task: "Поставь карточки в сетку: у .cards — grid, колонки через repeat(auto-fill, minmax(140px, 1fr)) и промежуток 16px. Картинкам карточек задай object-fit: cover, чтобы они не сплющивались."
+  html: |
+    <div class="cards">
+      <article class="card">
+        <img src="img/barsik.svg" alt="Рыжий кот Барсик">
+        <h3>Барсик</h3>
+      </article>
+      <article class="card">
+        <img src="img/sharik.svg" alt="Пёс Шарик">
+        <h3>Шарик</h3>
+      </article>
+      <article class="card">
+        <img src="img/murka.svg" alt="Серая кошка Мурка">
+        <h3>Мурка</h3>
+      </article>
+    </div>
+  css: |
+    .cards {
+      /* сетка */
+    }
+
+    .card {
+      padding: 8px;
+      background: #FFF8F0;
+      border-radius: 12px;
+    }
+
+    .card img {
+      width: 100%;
+      height: 100px;
+      /* картинка без искажений */
+    }
+
+    .card h3 {
+      margin: 8px 0 0;
+    }
+  checks:
+    - selector: ".cards"
+      style: { display: "grid" }
+      fail: "У .cards пока нет display: grid"
+    - js: "return /minmax\\(\\s*140px/.test([...doc.querySelectorAll('style')].pop().textContent)"
+      fail: "Колонки задаются через repeat(auto-fill, minmax(140px, 1fr))"
+    - selector: ".cards"
+      style: { column-gap: "16px", row-gap: "16px" }
+      fail: "Между карточками нет промежутка gap: 16px"
+    - selector: ".card img"
+      style: { object-fit: "cover" }
+      fail: "Картинки сплющены. Нужно: object-fit: cover;"
+checklist:
+  - Карточки стоят в сетке, колонок столько же, сколько в макете
+  - Сетка сама перестраивается при сужении окна
+  - Все картинки в карточках одного размера и не искажены
+  - "Карточка оформлена по макету: фон, скругление, отступы"
+mistakes:
+  - q: Колонок больше, чем в макете
+    a: "Увеличь минимальную ширину в minmax: minmax(280px, 1fr). Колонок станет меньше."
+  - q: Картинки разной высоты, карточки «прыгают»
+    a: "Задай картинкам одинаковую высоту или aspect-ratio: 3 / 2 и object-fit: cover."
+  - q: Кнопки в карточках на разной высоте
+    a: "Сделай карточку флекс-столбиком (display: flex; flex-direction: column;), а кнопке добавь margin-top: auto — она прижмётся к низу."
+blocks: [cards]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+В шаге 4.1 колонок было ровно три. Но на телефоне три колонки не поместятся. Есть запись, при которой сетка сама решает, сколько колонок влезает:
+
+```css
+grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+```
+
+Читается так: «сделай столько колонок, сколько влезет (`auto-fill`), каждая не уже 240 px и не шире доли свободного места (`minmax(240px, 1fr)`)». На компьютере получится 3–4 колонки, на телефоне — одна. И без единого медиазапроса.
+
+Картинки в карточках обычно разного размера. Чтобы все были одинаковыми, им задают размер (`height` или `aspect-ratio: 3 / 2`), а `object-fit: cover` обрезает лишнее без сплющивания — как фото в рамке.
+
+Сама карточка внутри — флекс-столбик: картинка, заголовок, текст, кнопка. `margin-top: auto` у кнопки прижимает её к низу, и кнопки во всех карточках стоят на одной линии.
+
+<Preview
+  html={`<div class="cards">
+  <article class="card"><img src="img/barsik.svg" alt="Рыжий кот Барсик"><h3>Барсик</h3></article>
+  <article class="card"><img src="img/sharik.svg" alt="Пёс Шарик"><h3>Шарик</h3></article>
+  <article class="card"><img src="img/murka.svg" alt="Серая кошка Мурка"><h3>Мурка</h3></article>
+</div>`}
+  css={`.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
+.card { padding: 8px; background: #FFF8F0; border-radius: 12px; }
+.card img { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border-radius: 8px; }
+.card h3 { margin: 8px 0 0; }`}
+  height={200}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Проверьте HTML: все карточки лежат в одном контейнере (`.cards`), каждая — `article` с одинаковой разметкой.
+2. Поставьте их в сетку через `repeat(auto-fill, minmax(…, 1fr))`. Минимальную ширину подберите так, чтобы на компьютере колонок было столько же, сколько в макете.
+3. Оформите одну карточку по макету, остальные подтянутся сами.
+4. Сузьте окно браузера — сетка должна перестраиваться без горизонтальной прокрутки.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Как подобрать minmax: ширина контейнера 1200 px, промежутки 24 px, в макете 3 колонки → (1200 − 2 × 24) / 3 ≈ 384. Минимум возьмите чуть меньше, например 300 px.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если нужно ровно N колонок на компьютере, можно написать `repeat(3, 1fr)`, а перестройку для телефона сделать в занятии 5 медиазапросом. Оба способа нормальные.
+</Hint>
+
+<Hint title="Решение">
+```css
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  border-radius: 16px;
+  background: var(--color-bg-card, #FFF5EC);
+}
+
+.card img {
+  width: 100%;
+  aspect-ratio: 3 / 2;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.card .button {
+  margin-top: auto;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

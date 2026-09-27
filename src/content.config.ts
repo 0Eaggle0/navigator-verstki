@@ -22,12 +22,15 @@ const step = z.object({
 	minutes: z.number().optional(),
 	goal: z.string().optional(),
 	soon: z.boolean().default(false), // шаг ещё не написан — показываем «Скоро»
+	optional: z.boolean().default(false), // шаг можно пропустить, если команда отстаёт
+	fast: z.string().optional(), // «быстрый путь» для отстающих: что взять готовым
 	links: z.array(z.object({ title: z.string(), url: z.string().url() })).default([]),
 	warmup: z
 		.object({
 			task: z.string(),
 			html: z.string().default(''),
 			css: z.string().default(''),
+			width: z.number().optional(), // ширина превью в px, например 375 — «как на телефоне»
 			checks: z.array(check).default([]),
 		})
 		.optional(),

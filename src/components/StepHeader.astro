@@ -5,7 +5,7 @@ import Default from '@astrojs/starlight/components/PageTitle.astro';
 import { LESSONS } from '~/lib/route';
 
 const { entry } = Astro.locals.starlightRoute;
-const { lesson, minutes, goal, soon } = entry.data;
+const { lesson, minutes, goal, soon, optional, fast } = entry.data;
 const isStep = minutes !== undefined;
 ---
 
@@ -16,6 +16,14 @@ const isStep = minutes !== undefined;
 			<span class="step-meta__lesson">Занятие {lesson} · {LESSONS[lesson!]}</span>
 			<span class="step-meta__goal">🎯 {goal ?? entry.data.title}</span>
 			<span class="step-meta__time">⏱ {minutes} мин</span>
+			{optional && <span>можно пропустить</span>}
+		</p>
+	)
+}
+{
+	fast && (
+		<p class="step-fast" role="note">
+			🏃 <strong>Быстрый путь</strong>, если команда отстаёт: {fast}
 		</p>
 	)
 }
@@ -49,6 +57,13 @@ const isStep = minutes !== undefined;
 	.step-meta__time {
 		font-weight: 600;
 		background: var(--sl-color-accent-low) !important;
+	}
+	.step-fast {
+		margin-top: 1rem;
+		padding: 0.5rem 1rem;
+		font-size: var(--sl-text-sm);
+		border-left: 4px solid var(--sl-color-blue);
+		background: var(--sl-color-blue-low);
 	}
 	.step-soon {
 		margin-top: 1rem;

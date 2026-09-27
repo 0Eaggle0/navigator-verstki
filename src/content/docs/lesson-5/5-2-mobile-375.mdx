@@ -1,0 +1,170 @@
+---
+title: "Перестраиваем сетки и меню под 375 px"
+lesson: 5
+minutes: 30
+goal: Убираем горизонтальную прокрутку и собираем версию для телефона
+sidebar:
+  order: 2
+fast: "возьми блоки «Шапка с меню» и «Сетка карточек» — они уже адаптивные. Проверь остальные секции на 375 px."
+links:
+  - title: "MDN: адаптивный дизайн"
+    url: https://developer.mozilla.org/ru/docs/Learn_web_development/Core/CSS_layout/Responsive_Design
+  - title: "Дока: медиазапросы"
+    url: https://doka.guide/css/media/
+warmup:
+  width: 375
+  task: "На телефоне страница уехала вбок. В медиазапросе @media (max-width: 600px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно."
+  html: |
+    <header class="header">
+      <a class="logo" href="#">ТИММЕЙТ</a>
+      <nav class="menu">
+        <a href="#">Анкеты</a>
+        <a href="#">Рейтинг</a>
+        <a href="#">Отзывы</a>
+        <a href="#">Войти</a>
+      </nav>
+    </header>
+    <div class="cards">
+      <div class="card">Аня · дизайн</div>
+      <div class="card">Петя · код</div>
+      <div class="card">Оля · тексты</div>
+    </div>
+  css: |
+    body { margin: 0; }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding: 12px;
+      background: #EEF2FF;
+    }
+
+    .menu {
+      display: flex;
+      gap: 32px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(3, 200px);
+      gap: 12px;
+      padding: 12px;
+    }
+
+    .card {
+      padding: 24px;
+      background: #DBEAFE;
+      border-radius: 8px;
+    }
+
+    /* медиазапрос для телефона */
+  checks:
+    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
+      fail: "В CSS пока нет медиазапроса @media (max-width: 600px) { … }"
+    - selector: ".header"
+      style: { flex-direction: "column" }
+      fail: "Шапка на телефоне должна быть столбиком: flex-direction: column;"
+    - js: "return getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 1"
+      fail: "Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;"
+    - js: "return doc.documentElement.scrollWidth <= doc.documentElement.clientWidth"
+      fail: "Есть горизонтальная прокрутка — что-то шире экрана. Проверь меню и сетку"
+checklist:
+  - На 375 px нет горизонтальной прокрутки
+  - Сетки перестроены в 1–2 колонки
+  - Шапка и меню помещаются в экран
+  - Текст читается без увеличения, кнопки удобно нажимать пальцем
+mistakes:
+  - q: Прокрутка вбок осталась, но не видно из-за чего
+    a: "В DevTools в консоли выполни: [...document.querySelectorAll('*')].filter(e => e.offsetWidth > innerWidth) — покажет элементы шире экрана."
+  - q: Меню не помещается даже столбиком
+    a: "Разреши перенос: flex-wrap: wrap и уменьши gap. Полноценное бургер-меню сделаем на JavaScript в занятии 6."
+  - q: Стили из медиазапроса не применяются
+    a: Медиазапрос должен стоять ниже обычных правил. Если он выше, обычные правила его перебивают.
+blocks: [header, cards]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Версию для телефона строят от главного правила: **ничего не должно быть шире экрана**. Горизонтальная прокрутка на телефоне — главный признак сломанного адаптива.
+
+Что обычно меняют в медиазапросе:
+- **Ряды → столбики.** Флекс-строке пишут `flex-direction: column`: первый экран «текст — картинка» становится «текст над картинкой».
+- **Сетки → меньше колонок.** `grid-template-columns: 1fr` — одна колонка, `1fr 1fr` — две.
+- **Размеры → меньше.** Крупные заголовки и большие отступы уменьшают, иначе на экран влезет одно слово.
+
+Если сетка сделана через `repeat(auto-fill, minmax(…))`, медиазапрос ей не нужен: она перестроится сама. Но проверить всё равно нужно — минимальная ширина в minmax не должна быть больше 343 px (375 минус отступы).
+
+<Preview
+  html={`<div class="cards"><div>1</div><div>2</div><div>3</div></div>
+<p>Сузь окно — колонок станет меньше.</p>`}
+  css={`.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.cards div { padding: 16px; background: #DBEAFE; border-radius: 8px; }
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; }
+}`}
+  height={170}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Откройте сайт в режиме устройства на 375 px.
+2. Идите по списку поломок из шага 5.1 сверху вниз. Для каждой секции решите: что встаёт столбиком, сколько колонок у сеток, что уменьшить.
+3. Всё пишите в один медиазапрос в конце `style.css`.
+4. Прокрутите страницу вбок — если она двигается, найдите виновника (подсказка в «Я застрял»).
+5. Проверьте ещё ширину 768 px (планшет): там часто хорошо смотрятся две колонки.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Делите работу: каждый участник проверяет на 375 px свою секцию и пишет для неё правила. Модератор собирает все в один медиазапрос.
+</Hint>
+
+<Hint title="Подсказка 2">
+Большие отступы секций (`padding: 80px 0`) на телефоне съедают полэкрана. В медиазапросе уменьшите их вдвое: `section { padding: 40px 0; }`.
+</Hint>
+
+<Hint title="Решение">
+```css
+@media (max-width: 600px) {
+  .header .container {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .menu {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px 16px;
+  }
+
+  .hero .container {
+    flex-direction: column;
+  }
+
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .cards,
+  .footer__cols {
+    grid-template-columns: 1fr;
+  }
+
+  section {
+    padding: 40px 0;
+  }
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

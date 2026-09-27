@@ -1,0 +1,158 @@
+---
+title: "Остальные секции и футер"
+lesson: 4
+minutes: 30
+goal: Доделываем все секции главной — десктопная версия готова
+sidebar:
+  order: 3
+fast: "возьми блоки «Как это работает», «Форма» и «Подвал», вставь нужные и поменяй тексты."
+links:
+  - title: "Дока: grid-template-columns"
+    url: https://doka.guide/css/grid-template-columns/
+  - title: "Дока: тег footer"
+    url: https://doka.guide/html/footer/
+warmup:
+  task: "Сверстай подвал: тёмный фон, светлый текст, отступы 24px. Колонки .footer__cols разложи сеткой на 3 колонки (repeat(3, 1fr)) с промежутком 24px."
+  html: |
+    <footer class="footer">
+      <div class="footer__cols">
+        <div>
+          <b>СКИНЕМСЯ</b>
+          <p>Честно делим общие траты</p>
+        </div>
+        <div>
+          <b>Разделы</b>
+          <p>Сборы · Как это работает</p>
+        </div>
+        <div>
+          <b>Контакты</b>
+          <p>hello@skinemsya.ru</p>
+        </div>
+      </div>
+    </footer>
+  css: |
+    body { margin: 0; }
+
+    .footer {
+      /* фон, цвет текста, отступы */
+    }
+
+    .footer__cols {
+      /* три колонки */
+    }
+
+    .footer p {
+      margin: 4px 0 0;
+    }
+  checks:
+    - js: "const s = getComputedStyle(doc.querySelector('.footer')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && s.backgroundColor !== 'rgb(255, 255, 255)'"
+      fail: "У подвала нет тёмного фона (background)"
+    - js: "const s = getComputedStyle(doc.querySelector('.footer')); const [r, g, b] = s.color.match(/\\d+/g).map(Number); return r + g + b > 450"
+      fail: "Текст в подвале тёмный — на тёмном фоне его не видно. Сделай color светлым, например #FFFFFF"
+    - js: "return parseFloat(getComputedStyle(doc.querySelector('.footer')).paddingTop) >= 24"
+      fail: "У подвала нет внутреннего отступа хотя бы 24px"
+    - selector: ".footer__cols"
+      style: { display: "grid" }
+      fail: "У .footer__cols пока нет display: grid"
+    - js: "const c = getComputedStyle(doc.querySelector('.footer__cols')).gridTemplateColumns.split(' '); return c.length === 3"
+      fail: "Нужно три колонки: grid-template-columns: repeat(3, 1fr);"
+    - selector: ".footer__cols"
+      style: { column-gap: "24px" }
+      fail: "Между колонками нет промежутка gap: 24px"
+checklist:
+  - Все секции макета свёрстаны сверху донизу
+  - Подвал разбит на колонки, как в макете
+  - Отступы между секциями одинаковые и совпадают с макетом
+  - На ширине 1280 px страница похожа на макет — десктоп готов
+mistakes:
+  - q: Не успеваем все секции
+    a: Сначала те, что есть у всех, — первый экран, карточки, подвал. Остальные возьмите из библиотеки блоков и поменяйте тексты.
+  - q: Футер не прижат к низу, под ним пустое место
+    a: Это нормально, если контента мало. На готовой странице с контентом футер и так окажется внизу.
+  - q: Колонки в футере разной ширины
+    a: "У fr делится свободное место. Если у колонки длинный текст, задай ей minmax(0, 1fr) или просто сократи текст."
+blocks: [steps, form, footer]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Все инструменты уже у вас в руках: семантика, стили, Flexbox, Grid. Остальные секции — это комбинации того же. Посмотрите на секцию и спросите: это **ряд** (Flexbox) или **сетка** (Grid)? «Как это работает» из трёх шагов — сетка из трёх колонок. Отзывы — тоже сетка. Форма — столбик полей.
+
+**Подвал** обычно состоит из колонок: логотип с описанием, ссылки, контакты. Это Grid на 3–4 колонки. Под колонками часто есть строка копирайта — она просто идёт следующим блоком.
+
+Тёмный подвал — частый приём. На тёмном фоне текст делают светлым, а второстепенный — полупрозрачным: `color: rgba(255, 255, 255, 0.7)`.
+
+Проверяйте себя сравнением: откройте макет и свою страницу рядом на одном экране, ширину окна поставьте как у макета.
+
+<Preview
+  html={`<footer class="footer">
+  <div class="cols">
+    <div><b>СКИНЕМСЯ</b><p>Честно делим траты</p></div>
+    <div><b>Разделы</b><p>Сборы</p></div>
+    <div><b>Контакты</b><p>hello@skinemsya.ru</p></div>
+  </div>
+</footer>`}
+  css={`body { margin: 0; }
+.footer { padding: 24px; background: #1E1E1E; color: #fff; }
+.cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.footer p { margin: 4px 0 0; color: rgba(255, 255, 255, 0.7); }`}
+  height={120}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Пройдите макет сверху вниз и отметьте секции, которые ещё не оформлены.
+2. Распределите их между участниками. Каждый оформляет свою секцию, модератор собирает CSS в один файл.
+3. Для каждой секции решите: ряд или сетка? Сделайте раскладку, потом оформление.
+4. Сверстайте подвал сеткой из колонок.
+5. Откройте страницу на ширине 1280 px рядом с макетом и поправьте заметные отличия.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Чтобы CSS разных участников не мешал друг другу, каждый пишет стили только со своим классом секции в начале: `.steps h3`, `.steps .icon`. Тогда блоки собираются в один файл без конфликтов.
+</Hint>
+
+<Hint title="Подсказка 2">
+Строку копирайта под колонками сделайте отдельным блоком с верхней линией: `border-top: 1px solid rgba(255, 255, 255, 0.2); margin-top: 24px; padding-top: 16px;`.
+</Hint>
+
+<Hint title="Решение">
+```css
+.footer {
+  padding: 48px 0 24px;
+  background: #1E1E1E;
+  color: #FFFFFF;
+}
+
+.footer__cols {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.footer__copy {
+  margin-top: 24px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+  color: rgba(255, 255, 255, 0.7);
+}
+
+/* «Как это работает»: три шага в ряд */
+.steps__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

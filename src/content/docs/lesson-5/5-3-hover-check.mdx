@@ -1,0 +1,117 @@
+---
+title: "Hover, сверка с макетом и мелочи"
+lesson: 5
+minutes: 25
+goal: Добавляем реакцию на наведение и доводим страницу до макета — минимум выполнен
+sidebar:
+  order: 3
+links:
+  - title: "Дока: псевдокласс :hover"
+    url: https://doka.guide/css/hover/
+  - title: "Дока: transition"
+    url: https://doka.guide/css/transition/
+warmup:
+  task: "Сделай, чтобы кнопка реагировала на наведение: добавь правило .button:hover с другим цветом фона и плавный переход transition: 0.2s у .button. Наведи мышку на превью и проверь."
+  html: |
+    <a class="button" href="#">Стать волонтёром</a>
+  css: |
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #FF6B35;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+      /* плавный переход */
+    }
+
+    /* правило для наведения */
+  checks:
+    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.selectorText && r.selectorText.includes('.button:hover')))"
+      fail: "Нет правила .button:hover { … } — стилей при наведении"
+    - js: "const r = [...[...doc.styleSheets].pop().cssRules].find((r) => r.selectorText && r.selectorText.includes('.button:hover')); return !!r && r.style.length > 0"
+      fail: "Правило .button:hover пустое — поменяй в нём, например, background"
+    - js: "return parseFloat(getComputedStyle(doc.querySelector('.button')).transitionDuration) > 0"
+      fail: "Смена цвета резкая. Добавь .button плавный переход: transition: 0.2s;"
+checklist:
+  - У всех кнопок и ссылок есть :hover
+  - Страница сверена с макетом на 1280 px, заметные отличия исправлены
+  - На 375 px нет горизонтальной прокрутки
+  - У всех картинок есть alt, все ссылки работают
+mistakes:
+  - q: Hover не работает
+    a: "Между классом и :hover не должно быть пробела: .button:hover, а не .button :hover."
+  - q: Переход работает только в одну сторону
+    a: "transition пиши обычному правилу (.button), а не :hover — тогда плавно будет и при наведении, и при уходе мышки."
+  - q: На телефоне hover «залипает»
+    a: На сенсорных экранах наведения нет, это нормально. Главное — чтобы без hover всё было понятно и кликабельно.
+blocks: []
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Кнопка, которая не реагирует на мышку, кажется «мёртвой». Псевдокласс `:hover` задаёт стили на время наведения: `.button:hover { background: #E85A24; }`. Чаще всего меняют цвет фона, подчёркивание ссылки или слегка поднимают карточку.
+
+Чтобы смена была плавной, обычному правилу добавляют `transition: 0.2s` — браузер сам нарисует промежуточные кадры. Писать `transition` нужно именно в обычное правило, не в `:hover`.
+
+Для тех, кто ходит по сайту клавиатурой (Tab), есть похожий `:focus-visible`. Удобно писать их вместе: `.button:hover, .button:focus-visible { … }`.
+
+**Сверка с макетом** — финальный проход. Поставьте макет и страницу рядом на одинаковой ширине и идите сверху вниз: шрифты, цвета, отступы, выравнивание. Правьте то, что заметно с первого взгляда, а не каждый пиксель.
+
+<Preview
+  html={`<a class="button" href="#">Наведи на меня</a>`}
+  css={`.button { display: inline-block; padding: 12px 24px; background: #FF6B35; color: #fff; text-decoration: none; border-radius: 8px; transition: 0.2s; }
+.button:hover, .button:focus-visible { background: #C2410C; transform: translateY(-2px); }`}
+  height={90}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Добавьте `:hover` всем кнопкам, пунктам меню и карточкам. Состояния наведения часто нарисованы в макете отдельно — поищите.
+2. Добавьте `transition` к этим элементам.
+3. Сверьте страницу с макетом на 1280 px и на 375 px. Составьте список отличий и исправьте главные.
+4. Пройдите чек-лист ниже — если всё отмечено, **минимум проекта выполнен**. 🎉
+
+<Hint title="Подсказка 1">
+Если в макете нет отдельного состояния наведения, сделайте цвет кнопки чуть темнее. Хватит разницы в 10–15% яркости.
+</Hint>
+
+<Hint title="Подсказка 2">
+Карточки красиво «приподнимаются»: `transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);` при наведении и `transition: 0.2s` в обычном правиле.
+</Hint>
+
+<Hint title="Решение">
+```css
+.button {
+  transition: 0.2s;
+}
+
+.button:hover,
+.button:focus-visible {
+  background: #E85A24;
+}
+
+.menu a:hover {
+  color: var(--color-accent);
+}
+
+.card {
+  transition: 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

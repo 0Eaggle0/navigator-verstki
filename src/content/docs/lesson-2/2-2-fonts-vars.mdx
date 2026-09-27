@@ -1,8 +1,138 @@
 ---
 title: "Шрифты, CSS-переменные и сброс стилей"
 lesson: 2
-minutes: 15
-soon: true
+minutes: 20
+goal: Подключаем шрифты из макета и храним цвета в переменных
 sidebar:
   order: 2
+links:
+  - title: "Дока: кастомные свойства (переменные)"
+    url: https://doka.guide/css/custom-properties/
+  - title: "Google Fonts"
+    url: https://fonts.google.com/
+warmup:
+  task: "Создай в :root переменную --accent со значением #FF6B35 и покрась ею фон кнопки через var(--accent). Убери отступ у body (margin: 0) и задай body шрифт Montserrat, sans-serif."
+  html: |
+    <h1>Скинемся на подарок</h1>
+    <a class="button" href="#">Создать сбор</a>
+  css: |
+    :root {
+      /* переменные */
+    }
+
+    body {
+      /* сброс отступа и шрифт */
+    }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      color: #fff;
+      text-decoration: none;
+    }
+  checks:
+    - js: "return getComputedStyle(doc.documentElement).getPropertyValue('--accent').trim().toLowerCase() === '#ff6b35'"
+      fail: "В :root нет переменной --accent: #FF6B35;"
+    - js: "return [...doc.querySelectorAll('style')].pop().textContent.includes('var(--accent)')"
+      fail: "Переменная нигде не используется. Нужно: background: var(--accent);"
+    - selector: ".button"
+      style: { background-color: "rgb(255, 107, 53)" }
+      fail: "Фон кнопки пока не цвета --accent"
+    - selector: "body"
+      style: { margin-top: "0px", margin-left: "0px" }
+      fail: "У body остался стандартный отступ. Нужно: margin: 0;"
+    - js: "return getComputedStyle(doc.body).fontFamily.includes('Montserrat')"
+      fail: "У body нет шрифта Montserrat. Нужно: font-family: 'Montserrat', sans-serif;"
+checklist:
+  - Шрифты из макета подключены через Google Fonts
+  - Все цвета из паспорта стиля лежат в переменных в :root
+  - В стилях используются var(--…), а не повторяются коды цветов
+  - Сброс стилей стоит в самом начале style.css
+mistakes:
+  - q: Шрифт не поменялся
+    a: "Проверь три вещи: строки <link> от Google Fonts стоят в <head> выше style.css; название шрифта в font-family написано так же, как на сайте Google Fonts; нужное начертание (700, 400) отмечено при выборе."
+  - q: Переменная не работает
+    a: "Имя начинается с двух дефисов (--accent) и совпадает до буквы. Используется через var(--accent), а не просто --accent."
+  - q: Шрифта нет в Google Fonts
+    a: Спроси модератора — шрифт можно скачать файлом. Или замени на похожий из Google Fonts, это нормально.
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+**Шрифт** из макета подключаем с [Google Fonts](https://fonts.google.com/): находим шрифт, выбираем начертания (например, 400 и 700), жмём **Get embed code** и копируем строки `<link>` в `<head>` — выше строки со `style.css`. Потом пишем в CSS `font-family: 'Montserrat', sans-serif;`. Слово `sans-serif` — запасной шрифт на случай, если основной не загрузился.
+
+**CSS-переменная** — это имя для значения. Цвет `#FF6B35` встречается в макете 10 раз? Записываем его один раз в `:root` и дальше пишем `var(--accent)`. Захотели поменять акцент — меняем одну строку.
+
+```css
+:root {
+  --accent: #FF6B35;
+  --text: #1E1E1E;
+}
+.button { background: var(--accent); }
+```
+
+**Сброс стилей.** У браузера есть свои стили: отступы у `body`, `h1`, `p`, точки у списков. Из-за них вёрстка не совпадает с макетом. Сброс убирает их в начале `style.css`. В стартовом шаблоне он уже есть — посмотрите, что там написано.
+
+<Preview
+  html={`<h1>Скинемся на подарок</h1>
+<a class="button" href="#">Создать сбор</a>`}
+  css={`:root { --accent: #FF6B35; --text: #1E1E1E; }
+body { margin: 0; padding: 16px; font-family: Arial, sans-serif; color: var(--text); }
+.button { display: inline-block; padding: 12px 24px; background: var(--accent); color: #fff; text-decoration: none; border-radius: 8px; }`}
+  height={150}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Найдите шрифты из паспорта стиля на Google Fonts и вставьте строки `<link>` в `<head>` своего `index.html`.
+2. В `style.css` в блоке `:root` запишите цвета из паспорта стиля переменными. В стартовом шаблоне уже есть заготовки `--color-text`, `--color-accent`.
+3. Замените `--font-main` на свой шрифт.
+4. Проверьте в браузере: текст сменил шрифт, фон и цвет текста как в макете.
+
+<Hint title="Подсказка 1">
+На Google Fonts: откройте шрифт → **Get font** → **Get embed code**. Справа будут два блока: `<link>` для HTML и `font-family` для CSS. Копируйте оба.
+</Hint>
+
+<Hint title="Подсказка 2">
+Имена переменных придумывайте по роли, а не по цвету: `--accent`, `--bg`, `--text-muted`. Имя `--orange` станет враньём, если дизайнер поменяет цвет на синий.
+</Hint>
+
+<Hint title="Решение">
+В `<head>`:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+```
+
+В `style.css`:
+
+```css
+:root {
+  --color-bg: #FFF8F0;
+  --color-text: #1E1E1E;
+  --color-accent: #FF6B35;
+  --color-muted: #6B6B6B;
+  --font-main: 'Montserrat', sans-serif;
+}
+
+body {
+  font-family: var(--font-main);
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

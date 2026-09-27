@@ -1,6 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import { readFileSync } from 'node:fs';
+
+// Список занятий — в src/data/route.json. Шаги каждого занятия лежат в src/content/docs/lesson-N/
+const route = JSON.parse(readFileSync('./src/data/route.json', 'utf-8'));
 
 // SITE и BASE_PATH подставляет GitHub Actions (см. .github/workflows/deploy.yml).
 // Локально сайт открывается с корня: http://localhost:4321/
@@ -20,10 +24,11 @@ export default defineConfig({
 				{ label: 'Главная', link: '/' },
 				{ label: 'Маршрут', link: '/route/' },
 				// Шаги подтягиваются из папок сами. Порядок — поле sidebar.order в файле шага.
-				{ label: 'Занятие 1 · Каркас', items: [{ autogenerate: { directory: 'lesson-1' } }] },
-				{ label: 'Занятие 2 · Стили', collapsed: true, items: [{ autogenerate: { directory: 'lesson-2' } }] },
-				{ label: 'Занятие 3 · Сетки', collapsed: true, items: [{ autogenerate: { directory: 'lesson-3' } }] },
-				{ label: 'Занятие 4 · Адаптив и сдача', collapsed: true, items: [{ autogenerate: { directory: 'lesson-4' } }] },
+				...route.lessons.map((l) => ({
+					label: `Занятие ${l.n} · ${l.title}`,
+					collapsed: l.n > 1,
+					items: [{ autogenerate: { directory: `lesson-${l.n}` } }],
+				})),
 				{ label: 'Задачник', link: '/tasks/' },
 				{ label: 'Шпаргалки и ссылки', link: '/cheatsheets/' },
 				{ label: 'Блоки для вашего сайта', items: [{ autogenerate: { directory: 'blocks' } }] },

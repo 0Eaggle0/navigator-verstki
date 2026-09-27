@@ -1,0 +1,48 @@
+/* ПЕРВЫЙ ЭКРАН. Вставь в конец style.css */
+.hero {
+  display: flex;
+  flex-wrap: wrap;             /* на узком экране картинка уходит под текст */
+  align-items: center;
+  gap: 32px;
+  padding: 48px 24px;          /* что менять: отступы по макету */
+  background: #FFF8F0;         /* что менять: фон первого экрана */
+}
+
+.hero__text,
+.hero__img {
+  flex: 1 1 280px;             /* колонки поровну, но не уже 280px */
+  min-width: 0;
+}
+
+.hero__title {
+  margin: 0 0 16px;
+  font-size: clamp(32px, 5vw, 48px); /* что менять: 48px — размер на компьютере, 32px — на телефоне */
+  line-height: 1.1;
+}
+
+.hero__lead {
+  margin: 0 0 24px;
+  font-size: 18px;
+  color: #555555;              /* что менять: цвет пояснения */
+}
+
+.hero__button {
+  display: inline-block;
+  padding: 14px 28px;
+  border-radius: 999px;
+  background: #FF6B35;         /* что менять: цвет кнопки */
+  color: #FFFFFF;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.2s;
+}
+
+.hero__button:hover,
+.hero__button:focus-visible {
+  background: #E85A24;         /* что менять: цвет кнопки при наведении */
+}
+
+.hero__img {
+  max-width: 100%;
+  border-radius: 24px;
+}

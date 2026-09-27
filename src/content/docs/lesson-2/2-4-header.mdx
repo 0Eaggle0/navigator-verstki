@@ -1,0 +1,153 @@
+---
+title: "Оформляем шапку"
+lesson: 2
+minutes: 25
+goal: Делаем шапку похожей на макет — цвета, шрифты, кнопка
+sidebar:
+  order: 4
+fast: "возьми блок «Шапка с меню», вставь HTML и CSS в проект и поменяй логотип, пункты меню и цвета на свои."
+links:
+  - title: "Дока: text-decoration"
+    url: https://doka.guide/css/text-decoration/
+  - title: "Дока: border-radius"
+    url: https://doka.guide/css/border-radius/
+warmup:
+  task: "Оформи шапку: фон #FFFFFF и внутренние отступы 16px, логотип крупнее 20px и жирный, у ссылок меню нет подчёркивания, у кнопки есть фон и скруглённые углы. Расположение пока не трогай — это следующее занятие."
+  html: |
+    <header class="header">
+      <a class="logo" href="#">ТИММЕЙТ</a>
+      <nav class="menu">
+        <a href="#">Анкеты</a>
+        <a href="#">Как это работает</a>
+      </nav>
+      <a class="header-button" href="#">Найти команду</a>
+    </header>
+  css: |
+    body {
+      margin: 0;
+      background: #EEF2FF;
+    }
+
+    .header {
+    }
+
+    .logo {
+    }
+
+    .menu a {
+    }
+
+    .header-button {
+    }
+  checks:
+    - selector: ".header"
+      style: { background-color: "rgb(255, 255, 255)" }
+      fail: "У шапки нет белого фона. Нужно: background: #FFFFFF;"
+    - js: "return parseFloat(getComputedStyle(doc.querySelector('.header')).paddingTop) >= 16"
+      fail: "У шапки нет внутреннего отступа хотя бы 16px"
+    - js: "const s = getComputedStyle(doc.querySelector('.logo')); return parseFloat(s.fontSize) > 20 && +s.fontWeight >= 700"
+      fail: "Логотип пока мелкий или не жирный: нужен font-size больше 20px и font-weight: 700"
+    - selector: ".menu a"
+      style: { text-decoration-line: "none" }
+      fail: "У ссылок меню осталось подчёркивание. Нужно: text-decoration: none;"
+    - js: "const s = getComputedStyle(doc.querySelector('.header-button')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(s.borderTopLeftRadius) > 0"
+      fail: "Кнопке нужен фон (background) и скругление углов (border-radius)"
+checklist:
+  - Цвета и шрифты шапки взяты из переменных
+  - Размеры логотипа и пунктов меню совпадают с макетом
+  - У ссылок нет подчёркивания, у кнопки есть фон и скругление
+  - Шапку сравнили с макетом рядом, на одном экране
+mistakes:
+  - q: Кнопка «прилипла» к тексту, padding не работает сверху и снизу
+    a: "Ссылка a — строчный элемент, вертикальный padding у неё «наезжает» на соседей. Добавь display: inline-block."
+  - q: Ссылки фиолетовые
+    a: "Это цвет посещённых ссылок браузера. Задай цвет явно (color: var(--color-text)) или используй a { color: inherit; } из сброса."
+  - q: Логотип — картинка, и она огромная
+    a: "Задай ей высоту из макета: .logo img { height: 40px; } — ширина подстроится сама."
+blocks: [header]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Шапка — первое, что видит человек. Её оформляем первой: на ней проверяем, что шрифты и цвета подключены правильно. Располагать элементы в строку будем в занятии 3 через Flexbox, сейчас — только внешний вид.
+
+Ссылки браузер подчёркивает и красит в синий. Для меню это обычно не нужно: `text-decoration: none` убирает линию, `color` задаёт свой цвет.
+
+Кнопка-ссылка — это `<a>` с фоном и отступами. Ссылка по умолчанию **строчная**: вертикальные отступы у неё работают странно. Поэтому кнопкам пишут `display: inline-block` — и отступы, и ширина начинают работать как у блока.
+
+Скруглённые углы задаёт `border-radius`: `8px` — слегка скруглённые, `999px` — «таблетка».
+
+<Preview
+  html={`<header class="header">
+  <a class="logo" href="#">ТИММЕЙТ</a>
+  <nav class="menu"><a href="#">Анкеты</a> <a href="#">Как это работает</a></nav>
+  <a class="header-button" href="#">Найти команду</a>
+</header>`}
+  css={`body { margin: 0; background: #EEF2FF; }
+.header { padding: 16px 24px; background: #fff; }
+.logo { font-size: 24px; font-weight: 700; color: #4F46E5; text-decoration: none; }
+.menu a { margin-right: 16px; color: #1E1E1E; text-decoration: none; }
+.header-button { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #4F46E5; color: #fff; text-decoration: none; }`}
+  height={160}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Задайте шапке фон и внутренние отступы из макета.
+2. Оформите логотип: размер, начертание, цвет. Если логотип — картинка, задайте ей высоту.
+3. Уберите подчёркивание у пунктов меню, задайте цвет и размер шрифта.
+4. Оформите кнопку в шапке: фон, цвет текста, отступы, скругление.
+
+Шапка может пока стоять «столбиком» — в строку её поставим на следующем занятии.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Пишите стили по классам, которые уже стоят в вашем HTML. Нет класса — добавьте его: `<a class="logo" href="#">`. Стили для тегов вроде `a { … }` поменяют все ссылки на странице сразу.
+</Hint>
+
+<Hint title="Подсказка 2">
+Цвета берите из переменных: `background: var(--color-accent)`. Если нужного цвета нет в `:root`, добавьте туда новую переменную.
+</Hint>
+
+<Hint title="Решение">
+```css
+.header {
+  padding: 16px 0;
+  background: #FFFFFF;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.menu a {
+  margin-right: 24px;
+  color: var(--color-text);
+  text-decoration: none;
+}
+
+.header-button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 999px;
+  background: var(--color-accent);
+  color: #FFFFFF;
+  font-weight: 600;
+  text-decoration: none;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

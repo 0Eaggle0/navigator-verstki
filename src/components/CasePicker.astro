@@ -5,9 +5,11 @@ import { getRoute, url } from '~/lib/route';
 
 const { steps } = await getRoute();
 const first = url(steps[0].id + '/');
+// Для «Продолжить»: шаги по порядку, чтобы найти первый непройденный
+const order = steps.map((s) => [s.id, url(s.id + '/'), s.data.soon]);
 ---
 
-<nav-case-picker class="picker not-content" data-first={first}>
+<nav-case-picker class="picker not-content" data-order={JSON.stringify(order)}>
 	<fieldset>
 		<legend>Какой у вашей команды кейс?</legend>
 		<div class="picker__grid">
@@ -22,6 +24,10 @@ const first = url(steps[0].id + '/');
 			}
 		</div>
 	</fieldset>
+	<div class="picker__progress" hidden>
+		<label for="progress">Пройдено шагов: <strong class="picker__count"></strong> из {steps.length}</label>
+		<progress id="progress" max={steps.length} value="0"></progress>
+	</div>
 	<a class="picker__go" href={first}>Начать с первого шага →</a>
 </nav-case-picker>
 
@@ -32,9 +38,18 @@ const first = url(steps[0].id + '/');
 		connectedCallback() {
 			const p = load();
 			const go = this.querySelector<HTMLAnchorElement>('.picker__go')!;
-			if (p.last) {
-				go.href = p.last;
-				go.textContent = 'Продолжить с того же места →';
+			const order: [string, string, boolean][] = JSON.parse(this.dataset.order!);
+			const done = order.filter(([id]) => p.done.includes(id)).length; // старые id (после переименований) не считаем
+			if (done) {
+				this.querySelector<HTMLElement>('.picker__progress')!.hidden = false;
+				this.querySelector('.picker__count')!.textContent = String(done);
+				this.querySelector('progress')!.value = done;
+			}
+			// «Продолжить» ведёт к первому непройденному шагу (из уже написанных)
+			const next = order.find(([id, , soon]) => !soon && !p.done.includes(id));
+			if (done || p.last) {
+				go.href = next ? next[1] : p.last ?? go.href;
+				go.textContent = next ? 'Продолжить →' : 'Все шаги пройдены 🎉 Открыть последний →';
 			}
 			const radio = this.querySelector<HTMLInputElement>(`input[value="${p.case}"]`);
 			if (radio) radio.checked = true;
@@ -84,6 +99,16 @@ const first = url(steps[0].id + '/');
 	.picker__card span {
 		font-size: var(--sl-text-sm);
 		color: var(--sl-color-gray-2);
+	}
+	.picker__progress {
+		margin-top: 1.5rem;
+	}
+	.picker__progress progress {
+		display: block;
+		width: 100%;
+		max-width: 24rem;
+		height: 0.75rem;
+		accent-color: var(--sl-color-accent);
 	}
 	.picker__go {
 		display: inline-block;

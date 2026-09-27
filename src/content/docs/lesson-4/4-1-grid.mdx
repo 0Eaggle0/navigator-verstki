@@ -1,0 +1,112 @@
+---
+title: "Основы Grid"
+lesson: 4
+minutes: 20
+goal: Разбираемся, как Grid раскладывает элементы по колонкам
+sidebar:
+  order: 1
+links:
+  - title: "Grid Garden — игра (уровни 1–10)"
+    url: https://cssgridgarden.com/#ru
+  - title: "Дока: гайд по Grid"
+    url: https://doka.guide/css/grid-guide/
+warmup:
+  task: "Разложи шесть плиток в сетку из трёх одинаковых колонок: у .grid включи grid, задай три колонки через repeat(3, 1fr) и промежуток 12px."
+  html: |
+    <div class="grid">
+      <div class="tile">1</div>
+      <div class="tile">2</div>
+      <div class="tile">3</div>
+      <div class="tile">4</div>
+      <div class="tile">5</div>
+      <div class="tile">6</div>
+    </div>
+  css: |
+    .grid {
+      /* сетка */
+    }
+
+    .tile {
+      padding: 20px;
+      background: #DBEAFE;
+      border-radius: 8px;
+      text-align: center;
+    }
+  checks:
+    - selector: ".grid"
+      style: { display: "grid" }
+      fail: "У .grid пока нет display: grid"
+    - js: "return getComputedStyle(doc.querySelector('.grid')).gridTemplateColumns.split(' ').length === 3"
+      fail: "В сетке пока не три колонки. Нужно: grid-template-columns: repeat(3, 1fr);"
+    - js: "const c = getComputedStyle(doc.querySelector('.grid')).gridTemplateColumns.split(' '); const w = c.map(parseFloat); return Math.max(...w) - Math.min(...w) < 1"
+      fail: "Колонки разной ширины — используй 1fr для каждой"
+    - selector: ".grid"
+      style: { column-gap: "12px", row-gap: "12px" }
+      fail: "Между плитками нет промежутка gap: 12px"
+checklist:
+  - Знаю, чем Grid отличается от Flexbox
+  - Умею задать колонки через grid-template-columns и fr
+  - Понимаю запись repeat(3, 1fr)
+  - Прошёл первые 10 уровней Grid Garden
+mistakes:
+  - q: Написал grid, а плитки всё равно в столбик
+    a: "Одного display: grid мало — без grid-template-columns сетка из одной колонки. Добавь repeat(3, 1fr)."
+  - q: Что такое fr?
+    a: "Доля свободного места. 1fr 1fr 1fr — три равные колонки; 2fr 1fr — первая вдвое шире второй."
+  - q: Когда Grid, а когда Flexbox?
+    a: Flexbox — для одного ряда (меню, кнопки). Grid — для сетки из рядов и колонок (карточки, галерея, футер из колонок).
+blocks: []
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Flexbox думает рядами: элементы идут друг за другом в строку. **Grid** думает сеткой: сначала рисуем колонки, потом элементы сами раскладываются по ячейкам. Поэтому сетку карточек удобнее делать на Grid — все колонки ровные, даже на последней неполной строке.
+
+Сетка включается у родителя: `display: grid`. Колонки задаёт `grid-template-columns`: `200px 200px 200px` — три колонки по 200 px. Но чаще пишут `1fr 1fr 1fr`: **fr** — доля свободного места, три равные колонки на любую ширину.
+
+Чтобы не повторяться, есть `repeat`: `repeat(3, 1fr)` = `1fr 1fr 1fr`. Промежутки между ячейками, как и во флексе, задаёт `gap`.
+
+Разогреться поможет игра **Grid Garden** — поливаем морковку свойствами Grid (ссылка ниже).
+
+<Preview
+  html={`<div class="grid">
+  <div>1</div><div>2</div><div>3</div><div>4</div><div>5</div>
+</div>`}
+  css={`.grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+.grid div { padding: 16px; background: #DBEAFE; border-radius: 8px; text-align: center; }`}
+  height={140}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Пройдите [Grid Garden](https://cssgridgarden.com/#ru) до 10-го уровня (10 минут).
+2. Найдите на макете всё, что выглядит как сетка: карточки, галерея, колонки в футере. Посчитайте, сколько там колонок и какие промежутки.
+3. Запишите это рядом с паспортом стиля — пригодится в следующих двух шагах.
+
+<Hint title="Подсказка 1">
+Колонок в сетке столько, сколько значений в `grid-template-columns`: `1fr 1fr` — две, `repeat(4, 1fr)` — четыре.
+</Hint>
+
+<Hint title="Подсказка 2">
+В DevTools рядом с элементом с `display: grid` есть значок **grid**. Нажмите — на странице нарисуются линии сетки с номерами.
+</Hint>
+
+<Hint title="Решение">
+```css
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

@@ -1,8 +1,115 @@
 ---
-title: "Flexbox"
+title: "Основы Flexbox"
 lesson: 3
-minutes: 25
-soon: true
+minutes: 20
+goal: Разбираемся, как Flexbox ставит элементы в ряд и выравнивает их
 sidebar:
   order: 1
+links:
+  - title: "Flexbox Froggy — игра (уровни 1–10)"
+    url: https://flexboxfroggy.com/#ru
+  - title: "Дока: гайд по Flexbox"
+    url: https://doka.guide/css/flexbox-guide/
+warmup:
+  task: "Поставь три кружка в ряд: у .row включи flex, разнеси кружки по краям (space-between) и выровняй по центру по вертикали."
+  html: |
+    <div class="row">
+      <div class="dot small"></div>
+      <div class="dot"></div>
+      <div class="dot small"></div>
+    </div>
+  css: |
+    .row {
+      height: 120px;
+      background: #EEF2FF;
+      /* включи flex и выровняй */
+    }
+
+    .dot {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: #4F46E5;
+    }
+
+    .small {
+      width: 30px;
+      height: 30px;
+    }
+  checks:
+    - selector: ".row"
+      style: { display: "flex" }
+      fail: "У .row пока нет display: flex"
+    - selector: ".row"
+      style: { justify-content: "space-between" }
+      fail: "Кружки не разнесены по краям. Нужно: justify-content: space-between;"
+    - selector: ".row"
+      style: { align-items: "center" }
+      fail: "Кружки не по центру по вертикали. Нужно: align-items: center;"
+checklist:
+  - "Понимаю, что display: flex ставится родителю, а не детям"
+  - Знаю разницу justify-content (вдоль ряда) и align-items (поперёк)
+  - Умею задать расстояние между элементами через gap
+  - Прошёл первые 10 уровней Flexbox Froggy
+mistakes:
+  - q: "Написал display: flex, ничего не изменилось"
+    a: Flex пишется контейнеру — тому, у кого внутри нужные элементы. Если написать его самим элементам, в ряд встанут уже их дети.
+  - q: align-items не работает
+    a: Выравнивать по вертикали можно, только если у контейнера есть лишняя высота. Если высота подстраивается под содержимое, центрировать некуда.
+  - q: Элементы сжались
+    a: "Flex по умолчанию сжимает детей, чтобы поместились в ряд. Задай им ширину и flex-shrink: 0 или разреши перенос flex-wrap: wrap."
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Обычные блоки встают друг под другом. **Flexbox** — способ поставить их в ряд и выровнять. Включается одной строкой у **родителя**: `display: flex`. Все его прямые дети становятся флекс-элементами и выстраиваются в строку.
+
+У ряда две оси. **Главная** идёт слева направо, по ней выравнивает `justify-content`: `flex-start` — прижать влево, `center` — по центру, `space-between` — разнести по краям. **Поперечная** идёт сверху вниз, по ней выравнивает `align-items`: `center` — по центру по вертикали.
+
+Расстояние между элементами задаёт `gap: 16px` — это проще, чем margin у каждого. Если элементам тесно, `flex-wrap: wrap` разрешает перенос на новую строку. А `flex-direction: column` разворачивает ряд в столбик.
+
+Лучший способ запомнить — поиграть 10 минут во **Flexbox Froggy** (ссылка ниже): там лягушек расставляют этими же свойствами.
+
+<Preview
+  html={`<div class="row">
+  <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+</div>`}
+  css={`.row { display: flex; justify-content: space-between; align-items: center; gap: 16px; height: 100px; padding: 0 16px; background: #EEF2FF; }
+.dot { width: 50px; height: 50px; border-radius: 50%; background: #4F46E5; }`}
+  height={130}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Пройдите [Flexbox Froggy](https://flexboxfroggy.com/#ru) до 10-го уровня. На это есть 10 минут, дальше — по желанию дома.
+2. Найдите на своём макете все места, где элементы стоят **в ряд**: шапка, первый экран, кнопки, иконки, футер. Запишите их — это задачи на следующие шаги.
+3. Попробуйте на своей странице: поставьте `display: flex` шапке и посмотрите, что изменилось.
+
+<Hint title="Подсказка 1">
+Запомните правило: «flex — родителю, выравнивание — родителю». Детям обычно ничего писать не нужно.
+</Hint>
+
+<Hint title="Подсказка 2">
+В Chrome DevTools рядом с элементом, у которого `display: flex`, есть значок **flex**. Нажмите на него — на странице подсветится ряд и промежутки.
+</Hint>
+
+<Hint title="Решение">
+```css
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

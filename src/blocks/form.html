@@ -1,0 +1,38 @@
+<!-- ФОРМА «СТАТЬ ВОЛОНТЁРОМ». Вставь внутрь <main> -->
+<section class="form-section" id="volunteer">
+  <!-- что менять: заголовок и пояснение -->
+  <h2>Стать волонтёром</h2>
+  <p>Оставь контакты — мы позвоним и расскажем, чем можно помочь.</p>
+
+  <!-- action="#" — пока форма никуда не отправляется. Проверку полей сделаем на JavaScript в занятии 7 -->
+  <form class="form" action="#">
+    <!-- У каждого поля есть подпись label: по клику на неё курсор встаёт в поле -->
+    <label class="form__field">
+      Имя
+      <input type="text" name="name" placeholder="Аня" required>
+    </label>
+
+    <label class="form__field">
+      Телефон
+      <input type="tel" name="phone" placeholder="+7 900 000-00-00" required>
+    </label>
+
+    <label class="form__field">
+      <!-- что менять: варианты под ваш кейс -->
+      Чем хочешь помогать
+      <select name="help">
+        <option>Гулять с собаками</option>
+        <option>Фотографировать животных</option>
+        <option>Привозить корм</option>
+      </select>
+    </label>
+
+    <label class="form__check">
+      <input type="checkbox" name="agree" required>
+      Согласен на обработку данных
+    </label>
+
+    <!-- что менять: текст кнопки -->
+    <button class="form__button" type="submit">Отправить</button>
+  </form>
+</section>

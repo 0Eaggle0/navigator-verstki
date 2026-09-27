@@ -1,0 +1,142 @@
+---
+title: "Первый экран: текст слева, картинка справа"
+lesson: 3
+minutes: 25
+goal: Собираем первый экран из двух колонок, как в макете
+sidebar:
+  order: 3
+fast: "возьми блок «Первый экран», поменяй заголовок, текст, кнопку и картинку на свои."
+links:
+  - title: "Дока: flex"
+    url: https://doka.guide/css/flex/
+  - title: "Дока: align-items"
+    url: https://doka.guide/css/align-items/
+warmup:
+  task: "Поставь текст и картинку первого экрана рядом: у .hero — flex, по центру по вертикали, промежуток 32px. Колонки .hero__text и .hero__img сделай одинаковой ширины через flex: 1."
+  html: |
+    <section class="hero">
+      <div class="hero__text">
+        <h1>Найди друга в приюте</h1>
+        <p>Пройди тест — подскажем, какой питомец тебе подходит.</p>
+        <a class="button" href="#">Пройти тест</a>
+      </div>
+      <img class="hero__img" src="img/sharik.svg" alt="Пёс Шарик">
+    </section>
+  css: |
+    .hero {
+      padding: 16px;
+      background: #FFF8F0;
+      /* две колонки */
+    }
+
+    .hero__img {
+      max-width: 100%;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 10px 20px;
+      background: #FF6B35;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 8px;
+    }
+  checks:
+    - selector: ".hero"
+      style: { display: "flex" }
+      fail: "У .hero пока нет display: flex"
+    - selector: ".hero"
+      style: { align-items: "center" }
+      fail: "Колонки не выровнены по центру по вертикали: align-items: center;"
+    - selector: ".hero"
+      style: { column-gap: "32px" }
+      fail: "Между колонками нет промежутка gap: 32px"
+    - js: "const t = getComputedStyle(doc.querySelector('.hero__text')), i = getComputedStyle(doc.querySelector('.hero__img')); return t.flexGrow === '1' && i.flexGrow === '1'"
+      fail: "Колонкам .hero__text и .hero__img нужно одинаково flex: 1;"
+checklist:
+  - Текст и картинка стоят рядом, как в макете
+  - Колонки выровнены по вертикали, между ними промежуток
+  - Заголовок, текст и кнопка оформлены по паспорту стиля
+  - Картинка не вылезает за край (max-width 100%)
+mistakes:
+  - q: Картинка огромная и выдавила текст
+    a: "Дай картинке max-width: 100% и колонкам flex: 1 — тогда они поделят ширину поровну."
+  - q: Колонки разной ширины, а надо 50/50
+    a: "flex: 1 у обеих колонок. Если в макете текст шире — flex: 3 у текста и flex: 2 у картинки."
+  - q: Картинка в макете справа, а у меня слева
+    a: В HTML поменяй порядок блоков — справа окажется тот, что идёт вторым.
+blocks: [hero]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+«Текст слева — картинка справа» — самый частый первый экран. Это снова Flexbox: у секции два ребёнка — блок с текстом и картинка. `display: flex` ставит их в ряд, `align-items: center` выравнивает по вертикали, `gap` задаёт промежуток.
+
+Кто сколько места займёт, решает свойство детей `flex`. `flex: 1` у обоих — поделить ширину поровну. `flex: 2` и `flex: 1` — две трети и одна треть. Это удобнее, чем считать проценты.
+
+Картинке обязательно `max-width: 100%`: без этого большая фотография из макета вылезет за край. В стартовом сбросе это уже есть для всех `img`.
+
+Текст, заголовок и кнопку внутри колонки трогать не нужно: они стоят друг под другом как обычно. Флекс действует только на прямых детей секции.
+
+<Preview
+  html={`<section class="hero">
+  <div class="hero__text">
+    <h1>Найди друга в приюте</h1>
+    <p>Пройди тест — подскажем, какой питомец тебе подходит.</p>
+  </div>
+  <img class="hero__img" src="img/sharik.svg" alt="Пёс Шарик">
+</section>`}
+  css={`.hero { display: flex; align-items: center; gap: 32px; padding: 16px; background: #FFF8F0; }
+.hero__text, .hero__img { flex: 1; min-width: 0; }
+.hero__img { max-width: 100%; }
+h1 { margin-top: 0; font-size: 28px; }`}
+  height={230}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Проверьте HTML первого экрана: внутри секции (или её `.container`) ровно два блока — текст и картинка.
+2. Поставьте их в ряд через flex, выровняйте, задайте промежуток из макета.
+3. Задайте колонкам ширину через `flex`, чтобы пропорции совпали с макетом.
+4. Оформите заголовок, текст и кнопку по паспорту стиля: размеры, цвета, отступы.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Если секция внутри себя имеет `.container`, флекс ставится контейнеру: `.hero .container { display: flex; }`. Ставить его самой секции бесполезно — у неё один ребёнок.
+</Hint>
+
+<Hint title="Подсказка 2">
+Колонка с текстом не сжимается и ломает ряд? Добавьте колонкам `min-width: 0` — это разрешает им становиться уже своего содержимого.
+</Hint>
+
+<Hint title="Решение">
+```css
+.hero .container {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+.hero__text,
+.hero__img {
+  flex: 1;
+  min-width: 0;
+}
+
+.hero h1 {
+  margin-bottom: 16px;
+  font-size: 48px;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

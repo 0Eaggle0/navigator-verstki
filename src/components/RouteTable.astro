@@ -1,13 +1,14 @@
 ---
-// Маршрут: занятия, шаги, минуты. Суммы считаются из полей minutes в файлах шагов.
-import { getRoute, url, LIMIT_MINUTES } from '~/lib/route';
+// Маршрут: занятия из route.json, шаги и минуты — из файлов шагов. Прогресс — из браузера.
+import { getRoute, url, LIMIT_MINUTES, PER_LESSON } from '~/lib/route';
 
-const { lessons, total } = await getRoute();
+const { lessons, total, warnings } = await getRoute();
 ---
 
-<div class="route not-content" data-total={total} data-limit={LIMIT_MINUTES}>
+<div class="route not-content" data-warnings={JSON.stringify(warnings)}>
 	<p class="route__total">
-		Весь маршрут: <strong>{total} мин</strong> из {LIMIT_MINUTES} доступных (7 пар × 80 мин).
+		Весь маршрут: <strong>{total} мин</strong> из {LIMIT_MINUTES} ({lessons.length} пар × {PER_LESSON} мин).
+		Пройдено шагов: <strong class="route__done">0</strong> из {lessons.reduce((n, l) => n + l.steps.length, 0)}.
 	</p>
 	{
 		lessons.map((l) => (
@@ -15,12 +16,14 @@ const { lessons, total } = await getRoute();
 				<h2>
 					Занятие {l.n} · {l.title} <span class="route__sum">{l.minutes} мин</span>
 				</h2>
+				<p class="route__result">Результат: {l.result}</p>
 				<ol>
 					{l.steps.map((s) => (
 						<li data-id={s.id}>
 							<a href={url(s.id + '/')}>{s.data.title}</a>
 							<span class="route__min">{s.data.minutes} мин</span>
-							{s.data.soon && <span class="route__soon">скоро</span>}
+							{s.data.optional && <span class="route__tag">можно пропустить</span>}
+							{s.data.soon && <span class="route__tag route__tag--soon">скоро</span>}
 						</li>
 					))}
 				</ol>
@@ -32,20 +35,27 @@ const { lessons, total } = await getRoute();
 <script>
 	import { load } from '~/lib/storage';
 	const route = document.querySelector<HTMLElement>('.route')!;
-	if (+route.dataset.total! > +route.dataset.limit!) console.warn(`Маршрут длиннее лимита: ${route.dataset.total} мин`);
+	JSON.parse(route.dataset.warnings!).forEach((w: string) => console.warn('[маршрут] ' + w));
 	const done = load().done;
-	route.querySelectorAll<HTMLElement>('li[data-id]').forEach((li) => li.classList.toggle('is-done', done.includes(li.dataset.id!)));
+	const items = [...route.querySelectorAll<HTMLElement>('li[data-id]')];
+	items.forEach((li) => li.classList.toggle('is-done', done.includes(li.dataset.id!)));
+	route.querySelector('.route__done')!.textContent = String(items.filter((li) => li.classList.contains('is-done')).length);
 </script>
 
 <style>
 	.route h2 {
 		font-size: var(--sl-text-h3);
-		margin: 2rem 0 0.5rem;
+		margin: 2rem 0 0.25rem;
 	}
-	.route__sum {
+	.route__sum,
+	.route__result,
+	.route__min {
 		font-size: var(--sl-text-sm);
 		font-weight: 400;
 		color: var(--sl-color-gray-3);
+	}
+	.route__result {
+		margin: 0 0 0.5rem;
 	}
 	.route ol {
 		padding-left: 1.5rem;
@@ -55,14 +65,15 @@ const { lessons, total } = await getRoute();
 	}
 	.route__min {
 		margin-left: 0.5rem;
-		font-size: var(--sl-text-sm);
-		color: var(--sl-color-gray-3);
 	}
-	.route__soon {
+	.route__tag {
 		margin-left: 0.5rem;
 		padding: 0 0.4rem;
 		font-size: var(--sl-text-xs);
 		border-radius: 999px;
+		background: var(--sl-color-gray-6);
+	}
+	.route__tag--soon {
 		background: var(--sl-color-orange-low);
 	}
 	.route li.is-done > a::before {

@@ -1,0 +1,147 @@
+---
+title: "Меню в шапке на Flexbox"
+lesson: 3
+minutes: 20
+goal: Ставим логотип, меню и кнопку шапки в одну ровную строку
+sidebar:
+  order: 2
+fast: "возьми блок «Шапка с меню» — в нём шапка уже на Flexbox. Поменяй тексты и цвета."
+links:
+  - title: "Дока: justify-content"
+    url: https://doka.guide/css/justify-content/
+  - title: "Дока: gap"
+    url: https://doka.guide/css/gap/
+warmup:
+  task: "Поставь шапку в строку: у .header — flex, логотип слева, кнопка справа, всё по центру по вертикали. Пункты меню (ul) тоже поставь в строку с промежутком 24px и убери у списка точки."
+  html: |
+    <header class="header">
+      <a class="logo" href="#">КУДА_СХОДИТЬ</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Афиша</a></li>
+          <li><a href="#">Бесплатно</a></li>
+          <li><a href="#">Избранное</a></li>
+        </ul>
+      </nav>
+      <a class="header-button" href="#">Войти</a>
+    </header>
+  css: |
+    body { margin: 0; }
+
+    .header {
+      padding: 16px 24px;
+      background: #111827;
+      /* строка */
+    }
+
+    .menu {
+      margin: 0;
+      padding: 0;
+      /* строка и промежутки */
+    }
+
+    .header a {
+      color: #fff;
+      text-decoration: none;
+    }
+  checks:
+    - selector: ".header"
+      style: { display: "flex" }
+      fail: "У .header пока нет display: flex"
+    - selector: ".header"
+      style: { justify-content: "space-between" }
+      fail: "Логотип и кнопка не разнесены по краям: justify-content: space-between;"
+    - selector: ".header"
+      style: { align-items: "center" }
+      fail: "Элементы шапки не выровнены по вертикали: align-items: center;"
+    - selector: ".menu"
+      style: { display: "flex", column-gap: "24px" }
+      fail: "Пункты меню не в строке с промежутком: у .menu нужны display: flex и gap: 24px"
+    - selector: ".menu"
+      style: { list-style-type: "none" }
+      fail: "У списка остались точки. Нужно: list-style: none;"
+checklist:
+  - Логотип, меню и кнопка в одной строке, как в макете
+  - Промежутки между пунктами меню одинаковые (через gap)
+  - Всё выровнено по центру по вертикали
+  - У списка нет точек и лишних отступов
+mistakes:
+  - q: Пункты меню всё равно в столбик
+    a: "Flex нужно поставить списку ul (или nav, если ссылки лежат прямо в нём), а не шапке. У шапки дети — логотип, nav и кнопка, а пункты меню — внуки."
+  - q: Меню прилипло к логотипу
+    a: "Проверь justify-content: space-between у шапки. Если в строке три элемента, средний встанет ровно посередине."
+  - q: Точки у списка пропали, а отступ слева остался
+    a: "У ul есть стандартный padding-left. Сбрось его: padding: 0; margin: 0;"
+blocks: [header]
+---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Шапка почти всегда устроена одинаково: слева логотип, посередине или справа меню, с краю кнопка. Это три ребёнка у `<header>` — и одна строка `display: flex` ставит их в ряд.
+
+`justify-content: space-between` разносит детей по краям и делит свободное место между ними поровну. `align-items: center` выравнивает по вертикали: логотип-картинка и текст меню разной высоты встают на одну линию.
+
+Пункты меню — это внуки шапки: они лежат внутри `ul`. Флекс шапки на них не действует, поэтому списку нужен свой `display: flex`. Промежуток между пунктами задаём через `gap`, а точки списка убираем `list-style: none`.
+
+Такая «матрёшка» из флексов — нормальная практика: у каждого ряда свой flex-контейнер.
+
+<Preview
+  html={`<header class="header">
+  <a class="logo" href="#">КУДА_СХОДИТЬ</a>
+  <nav><ul class="menu"><li><a href="#">Афиша</a></li><li><a href="#">Бесплатно</a></li></ul></nav>
+  <a class="btn" href="#">Войти</a>
+</header>`}
+  css={`body { margin: 0; }
+.header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #111827; }
+.menu { display: flex; gap: 24px; margin: 0; padding: 0; list-style: none; }
+.header a { color: #fff; text-decoration: none; }
+.logo { font-weight: 700; }
+.btn { padding: 8px 16px; border: 1px solid #fff; border-radius: 8px; }`}
+  height={110}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Шапке своего сайта задайте `display: flex`, `justify-content: space-between`, `align-items: center`.
+2. Списку меню — `display: flex` и `gap` из макета, уберите точки и отступы.
+3. Если шапка внутри `.container`, flex ставится контейнеру внутри шапки, а не самой шапке — там лежат логотип и меню.
+4. Сверьте с макетом расстояния между пунктами меню.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Нарисуйте на листке, что лежит в чём: `header` → (`logo`, `nav` → `ul` → `li`, `button`). Flex нужен каждому, чьи дети должны стоять в ряд: это `header` и `ul`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если в макете кнопки в шапке нет и меню должно быть справа, `space-between` на двух элементах так и сработает: логотип слева, меню справа.
+</Hint>
+
+<Hint title="Решение">
+```css
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.menu {
+  display: flex;
+  gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />
