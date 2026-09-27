@@ -27,6 +27,8 @@ warmup:
       /* ученик пишет здесь */
     }
   # width: 375                         # превью шириной с телефон — для шагов про адаптив
+  # js: |                             # поле JavaScript и консоль в песочнице (для занятий 6–7)
+  #   // стартовый код
   # Автопроверки. В каждой обязательно fail — что показать, если не прошло.
   checks:
     - exists: ".box"                                   # элемент есть на странице
@@ -44,6 +46,7 @@ warmup:
       attr: "alt"
       fail: "У картинки нет alt"
     # - js: "return doc.querySelectorAll('li').length === 3"   # для сложных случаев (нужен JS)
+    # - js: "doc.querySelector('.burger').click(); return doc.querySelector('.menu').classList.contains('open')"  # проверка клика
     #   fail: "Нужно ровно 3 пункта"
 
 checklist:                           # 3–4 пункта
@@ -57,7 +60,7 @@ mistakes:
 
 blocks: [header, cards]              # готовые блоки по теме (id из src/data/blocks.json)
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
 
 ## Теория
 
@@ -76,6 +79,14 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <Warmup />
 
 ## Делаем свой сайт
+
+<ForCase>
+Общий текст — для тех, кто не выбрал кейс или для чьего кейса нет варианта.
+</ForCase>
+
+<ForCase id="tail">
+Текст только для команды ХВОСТ_ДОМОЙ. Id кейсов: watch, teammate, where, tail, split. Не нужно — удалите эти блоки.
+</ForCase>
 
 1. Что конкретно сделать в проекте команды.
 2. …

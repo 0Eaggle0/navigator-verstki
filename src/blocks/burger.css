@@ -1,0 +1,60 @@
+/* ШАПКА С БУРГЕР-МЕНЮ. Вставь в конец style.css */
+.bheader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 32px;
+  padding: 16px 24px;
+  background: #ECFDF5;         /* что менять: фон шапки */
+}
+
+.bheader__logo {
+  font-size: 22px;
+  font-weight: 800;
+  color: #047857;              /* что менять: цвет логотипа */
+  text-decoration: none;
+}
+
+.bheader__menu {
+  display: flex;
+  gap: 24px;
+}
+
+.bheader__menu a {
+  color: #1E1E1E;
+  text-decoration: none;
+}
+
+.bheader__menu a:hover,
+.bheader__menu a:focus-visible {
+  color: #047857;
+}
+
+.bheader__burger {
+  display: none;               /* на компьютере бургер не нужен */
+  padding: 4px 10px;
+  font-size: 24px;
+  line-height: 1;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+/* Телефон: меню прячется под кнопку. что менять: 768px — ширина, где включается бургер */
+@media (max-width: 768px) {
+  .bheader__burger {
+    display: block;
+  }
+
+  .bheader__menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+    gap: 12px;
+  }
+
+  .bheader__menu.open {        /* класс open ставит script.js */
+    display: flex;
+  }
+}

@@ -1,0 +1,57 @@
+---
+title: "Кнопка из ссылки"
+description: "Большинство кнопок на сайтах — это ссылки, оформленные как кнопка."
+topic: css
+sidebar:
+  order: 3
+warmup:
+  task: "Оформи ссылку .button как кнопку: display: inline-block, padding 12px 24px, фон #4F46E5, белый текст без подчёркивания, скругление 8px."
+  html: |
+    <a class="button" href="#">Найти команду</a>
+  css: |
+    .button {
+      
+    }
+  checks:
+    - selector: ".button"
+      style: { display: "inline-block" }
+      fail: "Нужно display: inline-block"
+    - selector: ".button"
+      style: { padding-top: "12px", padding-left: "24px" }
+      fail: "Нужен padding: 12px 24px"
+    - selector: ".button"
+      style: { background-color: "rgb(79, 70, 229)", color: "rgb(255, 255, 255)" }
+      fail: "Нужен фон #4F46E5 и белый текст"
+    - selector: ".button"
+      style: { text-decoration-line: "none" }
+      fail: "Убери подчёркивание: text-decoration: none"
+    - selector: ".button"
+      style: { border-top-left-radius: "8px" }
+      fail: "Нужно скругление border-radius: 8px"
+---
+import { Warmup, Hint } from '~/components';
+
+Большинство кнопок на сайтах — это ссылки, оформленные как кнопка.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Порядок в `padding: 12px 24px`: сначала сверху-снизу, потом слева-справа.
+</Hint>
+
+<Hint title="Подсказка 2">
+Без `display: inline-block` вертикальный padding у ссылки работает странно.
+</Hint>
+
+<Hint title="Решение">
+```css
+.button {
+  display: inline-block;
+  padding: 12px 24px;
+  background: #4F46E5;
+  color: #FFFFFF;
+  text-decoration: none;
+  border-radius: 8px;
+}
+```
+</Hint>

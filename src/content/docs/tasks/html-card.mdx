@@ -1,0 +1,56 @@
+---
+title: "Карточка на смысловых тегах"
+description: "Повторяющийся кусок страницы — карточку — удобно делать тегом article: он законченный и самостоятельный."
+topic: html
+sidebar:
+  order: 2
+warmup:
+  task: "Замени div на article, «Заголовок» сделай h3, текст — p, картинке добавь alt «Кошка Мурка», а «Подробнее» сделай ссылкой a с href."
+  html: |
+    <div class="card">
+      <img src="img/murka.svg" width="200">
+      <div>Мурка</div>
+      <div>1 год, спокойная</div>
+      <span>Подробнее</span>
+    </div>
+  css: |
+    .card { max-width: 220px; }
+  checks:
+    - exists: "article.card"
+      fail: "Карточка должна быть тегом article с классом card"
+    - selector: ".card h3"
+      text: "Мурка"
+      fail: "Кличка должна быть в заголовке h3"
+    - exists: ".card p"
+      fail: "Описание должно быть абзацем p"
+    - selector: ".card img"
+      attr: "alt"
+      fail: "У картинки нет alt"
+    - selector: ".card a"
+      attr: "href"
+      fail: "«Подробнее» должно быть ссылкой a с href"
+---
+import { Warmup, Hint } from '~/components';
+
+Повторяющийся кусок страницы — карточку — удобно делать тегом article: он законченный и самостоятельный.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Меняйте теги по одному и смотрите в превью — вид почти не изменится, а смысл станет понятным.
+</Hint>
+
+<Hint title="Подсказка 2">
+Не забудьте поменять и закрывающие теги: `</div>` → `</article>`.
+</Hint>
+
+<Hint title="Решение">
+```html
+<article class="card">
+  <img src="img/murka.svg" width="200" alt="Кошка Мурка">
+  <h3>Мурка</h3>
+  <p>1 год, спокойная</p>
+  <a href="#">Подробнее</a>
+</article>
+```
+</Hint>

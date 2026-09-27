@@ -73,7 +73,7 @@ mistakes:
     a: "У fr делится свободное место. Если у колонки длинный текст, задай ей minmax(0, 1fr) или просто сократи текст."
 blocks: [steps, form, footer]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
 
 ## Теория
 
@@ -107,6 +107,30 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <Warmup />
 
 ## Делаем свой сайт
+
+<ForCase>
+Выберите кейс на главной странице навигатора — здесь появится список оставшихся секций вашего сайта.
+</ForCase>
+
+<ForCase id="watch">
+Осталось: «как это работает» (блок «Как это работает») и подвал.
+</ForCase>
+
+<ForCase id="teammate">
+Осталось: отзывы (сетка из 2–3 карточек с аватаром и текстом) и подвал.
+</ForCase>
+
+<ForCase id="where">
+Осталось: ряд кнопок-фильтров над карточками (flex с переносом) и подвал. Фильтры заработают в занятии 7.
+</ForCase>
+
+<ForCase id="tail">
+Осталось: форма «Стать волонтёром» (блок «Форма») и подвал.
+</ForCase>
+
+<ForCase id="split">
+Осталось: «как это работает», пример сбора с полоской прогресса (`<progress>`) и подвал.
+</ForCase>
 
 1. Пройдите макет сверху вниз и отметьте секции, которые ещё не оформлены.
 2. Распределите их между участниками. Каждый оформляет свою секцию, модератор собирает CSS в один файл.

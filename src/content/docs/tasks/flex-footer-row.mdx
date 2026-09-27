@@ -1,0 +1,65 @@
+---
+title: "Строка подвала"
+description: "Внизу сайтов часто строка: копирайт слева, соцсети справа. На узком экране — переносится."
+topic: flex
+sidebar:
+  order: 6
+warmup:
+  task: "Сделай .bottom строкой: копирайт слева, соцсети справа, по центру по вертикали, с переносом. Ссылки соцсетей .socials — в ряд с промежутком 12px."
+  html: |
+    <div class="bottom">
+      <p>© 2026 ХВОСТ_ДОМОЙ</p>
+      <div class="socials">
+        <a href="#">ВК</a>
+        <a href="#">Telegram</a>
+        <a href="#">YouTube</a>
+      </div>
+    </div>
+  css: |
+    .bottom {
+      padding: 12px;
+      background: #1E1E1E;
+      color: #fff;
+    }
+
+    .bottom a { color: #fff; }
+  checks:
+    - selector: ".bottom"
+      style: { display: "flex", justify-content: "space-between", align-items: "center" }
+      fail: "У .bottom нужны display: flex, justify-content: space-between и align-items: center"
+    - selector: ".bottom"
+      style: { flex-wrap: "wrap" }
+      fail: "Разреши перенос: flex-wrap: wrap"
+    - selector: ".socials"
+      style: { display: "flex", column-gap: "12px" }
+      fail: "У .socials нужны display: flex и gap: 12px"
+---
+import { Warmup, Hint } from '~/components';
+
+Внизу сайтов часто строка: копирайт слева, соцсети справа. На узком экране — переносится.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Здесь два флекса: у `.bottom` (копирайт и блок соцсетей) и у `.socials` (сами ссылки).
+</Hint>
+
+<Hint title="Подсказка 2">
+У `p` есть стандартный margin — если строка получилась высокой, добавьте `.bottom p { margin: 0; }`.
+</Hint>
+
+<Hint title="Решение">
+```css
+.bottom {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.socials {
+  display: flex;
+  gap: 12px;
+}
+```
+</Hint>

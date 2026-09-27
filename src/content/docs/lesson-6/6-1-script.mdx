@@ -2,7 +2,111 @@
 title: "Подключаем script.js: консоль, переменные, функции"
 lesson: 6
 minutes: 20
-soon: true
+goal: Подключаем JavaScript к странице и пишем первые строки кода
 sidebar:
   order: 1
+links:
+  - title: "learn.javascript.ru: переменные"
+    url: https://learn.javascript.ru/variables
+  - title: "learn.javascript.ru: функции"
+    url: https://learn.javascript.ru/function-basics
+warmup:
+  task: "Объяви переменную name со своим именем. Напиши функцию greet(n), которая возвращает строку «Привет, n!». Выведи greet(name) в консоль через console.log и запиши этот же текст в заголовок h1."
+  html: |
+    <h1>Здесь будет приветствие</h1>
+  css: |
+    h1 { color: #4F46E5; }
+  js: |
+    // 1. Переменная с именем
+
+    // 2. Функция greet
+
+    // 3. console.log и запись в заголовок
+  checks:
+    - js: "return typeof doc.defaultView.greet === 'function'"
+      fail: "Нет функции greet. Нужно: function greet(n) { … }"
+    - js: "const greet = doc.defaultView.greet; return typeof greet === 'function' && greet('Оля') === 'Привет, Оля!'"
+      fail: "greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знак"
+    - js: "return doc.querySelector('h1').textContent.startsWith('Привет, ')"
+      fail: "В заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);"
+checklist:
+  - Файл script.js подключён в конце body
+  - В консоли браузера (F12 → Console) видно сообщение из console.log
+  - Понимаю разницу между const и let
+  - Умею написать функцию с параметром и return
+mistakes:
+  - q: В консоли ничего нет
+    a: "Проверь строку <script src=\"script.js\"></script>: она стоит перед </body>, имя файла совпадает. Открой F12 → вкладка Console."
+  - q: "Ошибка «… is not defined»"
+    a: Опечатка в имени или переменная объявлена ниже, чем используется. JavaScript чувствителен к регистру — name и Name разные.
+  - q: Функция есть, но ничего не происходит
+    a: "Функцию нужно вызвать: greet(name). Просто объявить мало."
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+HTML — это содержимое, CSS — оформление, а **JavaScript** — поведение: реакция на клики, открытие меню, фильтры. Код пишем в отдельном файле `script.js` и подключаем в самом конце `<body>`: `<script src="script.js"></script>`. К этому моменту весь HTML уже загружен, и скрипт может с ним работать.
+
+**Консоль** — окно, куда код пишет сообщения. Откройте F12 → вкладка **Console**. Команда `console.log('привет')` выводит туда текст. Так проверяют, что код вообще запустился и что лежит в переменных. Ошибки тоже появляются там, красным.
+
+**Переменная** — коробка с именем: `const name = 'Аня';`. `const` — значение не меняется, `let` — может меняться: `let count = 0; count = count + 1;`. Строки пишутся в кавычках, числа — без.
+
+**Функция** — кусок кода с именем, который можно запускать много раз. В скобках — параметр, `return` возвращает результат:
+
+```js
+function greet(n) {
+  return 'Привет, ' + n + '!';
+}
+console.log(greet('Аня')); // Привет, Аня!
+```
+
+<Preview
+  html={`<h1>…</h1>`}
+  js={`const name = 'Аня';
+function greet(n) {
+  return 'Привет, ' + n + '!';
+}
+document.querySelector('h1').textContent = greet(name);`}
+  height={90}
+/>
+
+<Links />
+
+## Разминка
+
+В песочнице под превью есть своя **консоль** — туда попадает всё из `console.log` и ошибки с номером строки.
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Создайте рядом с `index.html` пустой файл `script.js`.
+2. Подключите его в `index.html` последней строкой перед `</body>`: `<script src="script.js"></script>`.
+3. Напишите в `script.js` строку `console.log('Скрипт подключён!');`, сохраните и откройте консоль браузера (F12 → Console). Сообщение появилось — всё работает.
+4. Договоритесь в команде: JavaScript пишет один человек, остальные присылают ему свои кусочки. Иначе файл сломается от одновременных правок.
+
+<Hint title="Подсказка 1">
+Строки можно склеивать плюсом: `'Привет, ' + n + '!'`. Или использовать обратные кавычки: `` `Привет, ${n}!` `` — внутри `${}` подставится значение переменной.
+</Hint>
+
+<Hint title="Подсказка 2">
+Чтобы записать текст в элемент, найдите его и поменяйте свойство `textContent`: `document.querySelector('h1').textContent = 'новый текст';`.
+</Hint>
+
+<Hint title="Решение">
+```js
+const name = 'Аня';
+
+function greet(n) {
+  return 'Привет, ' + n + '!';
+}
+
+console.log(greet(name));
+document.querySelector('h1').textContent = greet(name);
+```
+</Hint>
+
+<Checklist />
+<Stuck />

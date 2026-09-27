@@ -1,0 +1,46 @@
+---
+title: "Счётчик кликов"
+description: "Переменная, событие и запись в DOM — всё, что нужно для счётчика «лайков» или «иду»."
+topic: js
+sidebar:
+  order: 11
+warmup:
+  task: "По клику на кнопку .plus увеличивай число в .count на 1. Храни значение в переменной let count."
+  html: |
+    <p>Идут: <span class="count">0</span></p>
+    <button class="plus" type="button">Я тоже иду</button>
+  css: |
+    .count { font-weight: 700; }
+  js: |
+    let count = 0;
+
+    // по клику: count + 1 и записать в .count
+  checks:
+    - js: "const b = doc.querySelector('.plus'); b.click(); b.click(); b.click(); return doc.querySelector('.count').textContent.trim() === '3'"
+      fail: "После трёх кликов в .count должно быть 3"
+---
+import { Warmup, Hint } from '~/components';
+
+Переменная, событие и запись в DOM — всё, что нужно для счётчика «лайков» или «иду».
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Увеличить переменную: `count = count + 1;` или короче `count++;`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Записать число на страницу: `document.querySelector('.count').textContent = count;`.
+</Hint>
+
+<Hint title="Решение">
+```js
+let count = 0;
+const countEl = document.querySelector('.count');
+
+document.querySelector('.plus').addEventListener('click', function () {
+  count = count + 1;
+  countEl.textContent = count;
+});
+```
+</Hint>

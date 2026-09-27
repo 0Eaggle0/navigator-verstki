@@ -1,0 +1,65 @@
+---
+title: "Спрятать лишнее на телефоне"
+description: "На телефоне не всё нужно показывать. Длинный слоган или декоративную картинку часто прячут."
+topic: adaptive
+sidebar:
+  order: 9
+warmup:
+  task: "Превью шириной 375 px. В медиазапросе @media (max-width: 600px) спрячь .desktop-only (display: none), а карточки .cards поставь в одну колонку."
+  html: |
+    <p class="desktop-only">Самая большая афиша бесплатных событий Омска для подростков</p>
+    <div class="cards">
+      <div class="card">Концерт</div>
+      <div class="card">Квиз</div>
+    </div>
+  css: |
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .card {
+      padding: 16px;
+      background: #EDE9FE;
+      border-radius: 8px;
+    }
+
+    /* медиазапрос */
+  width: 375
+  checks:
+    - selector: ".desktop-only"
+      style: { display: "none" }
+      fail: "На телефоне .desktop-only должен быть скрыт: display: none; в медиазапросе"
+    - js: "return getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 1"
+      fail: "На телефоне карточки должны быть в одну колонку"
+    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
+      fail: "Правила нужно писать внутри @media (max-width: 600px) { … }"
+---
+import { Warmup, Hint } from '~/components';
+
+На телефоне не всё нужно показывать. Длинный слоган или декоративную картинку часто прячут.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Оба правила — внутри одного медиазапроса.
+</Hint>
+
+<Hint title="Подсказка 2">
+Без медиазапроса `.desktop-only` пропадёт и на компьютере — так нельзя.
+</Hint>
+
+<Hint title="Решение">
+```css
+@media (max-width: 600px) {
+  .desktop-only {
+    display: none;
+  }
+
+  .cards {
+    grid-template-columns: 1fr;
+  }
+}
+```
+</Hint>

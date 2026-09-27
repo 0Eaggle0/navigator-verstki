@@ -1,0 +1,38 @@
+---
+// Вариант текста под кейс команды. Показывается тот, что совпадает с кейсом, выбранным на главной.
+//   <ForCase id="tail">текст для ХВОСТ_ДОМОЙ</ForCase>
+//   <ForCase>общий текст — если кейс не выбран или для него нет варианта</ForCase>
+// id: watch · teammate · where · tail · split (см. src/data/cases.json)
+import cases from '~/data/cases.json';
+
+interface Props {
+	id?: string;
+}
+const { id } = Astro.props;
+const title = cases.find((c) => c.id === id)?.title;
+if (id && !title) throw new Error(`ForCase: нет кейса с id="${id}". Есть: ${cases.map((c) => c.id).join(', ')}`);
+---
+
+<div class="for-case" data-case={id ?? 'default'} hidden={id ? true : undefined}>
+	{id && <p class="for-case__label">Для кейса {title}</p>}
+	<slot />
+</div>
+
+<script>
+	import { load } from '~/lib/storage';
+	const chosen = load().case;
+	const blocks = [...document.querySelectorAll<HTMLElement>('.for-case')];
+	const hasVariant = blocks.some((b) => b.dataset.case === chosen);
+	blocks.forEach((b) => (b.hidden = hasVariant ? b.dataset.case !== chosen : b.dataset.case !== 'default'));
+</script>
+
+<style>
+	.for-case__label {
+		display: inline-block;
+		padding: 0.1rem 0.6rem;
+		border-radius: 999px;
+		font-size: var(--sl-text-sm);
+		font-weight: 600;
+		background: var(--sl-color-accent-low);
+	}
+</style>

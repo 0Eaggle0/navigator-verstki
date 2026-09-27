@@ -1,0 +1,61 @@
+---
+title: "Бейдж-«таблетка» на переменных"
+description: "Маленькие метки — «Бесплатно», «Новое», «Хит» — делаются одним классом. Цвета берём из переменных."
+topic: css
+sidebar:
+  order: 4
+warmup:
+  task: "В :root создай переменную --accent: #16A34A. Сделай .badge: фон var(--accent), белый текст, padding 4px 12px, border-radius 999px, размер шрифта 14px."
+  html: |
+    <p>Концерт в парке <span class="badge">Бесплатно</span></p>
+  css: |
+    :root {
+      
+    }
+
+    .badge {
+      
+    }
+  checks:
+    - js: "return getComputedStyle(doc.documentElement).getPropertyValue('--accent').trim().toLowerCase() === '#16a34a'"
+      fail: "В :root нет переменной --accent: #16A34A"
+    - js: "return [...doc.querySelectorAll('style')].pop().textContent.includes('var(--accent)')"
+      fail: "Фон должен задаваться через var(--accent)"
+    - selector: ".badge"
+      style: { background-color: "rgb(22, 163, 74)", color: "rgb(255, 255, 255)" }
+      fail: "У .badge нужен фон --accent и белый текст"
+    - selector: ".badge"
+      style: { padding-top: "4px", padding-left: "12px", font-size: "14px" }
+      fail: "Нужны padding: 4px 12px и font-size: 14px"
+    - js: "return parseFloat(getComputedStyle(doc.querySelector('.badge')).borderTopLeftRadius) >= 100"
+      fail: "Нужно border-radius: 999px — «таблетка»"
+---
+import { Warmup, Hint } from '~/components';
+
+Маленькие метки — «Бесплатно», «Новое», «Хит» — делаются одним классом. Цвета берём из переменных.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+`999px` — трюк: радиус больше высоты элемента делает края полностью круглыми.
+</Hint>
+
+<Hint title="Подсказка 2">
+Переменная объявляется с двумя дефисами: `--accent: #16A34A;`, используется так: `var(--accent)`.
+</Hint>
+
+<Hint title="Решение">
+```css
+:root {
+  --accent: #16A34A;
+}
+
+.badge {
+  padding: 4px 12px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #FFFFFF;
+  font-size: 14px;
+}
+```
+</Hint>

@@ -2,7 +2,153 @@
 title: "Модальное окно"
 lesson: 6
 minutes: 20
-soon: true
+goal: Открываем окно поверх страницы по кнопке и закрываем его
 sidebar:
   order: 4
+fast: "возьми блок «Модальное окно» и поменяй текст и поля под свой кейс."
+links:
+  - title: "Дока: тег dialog"
+    url: https://doka.guide/html/dialog/
+  - title: "MDN: элемент dialog"
+    url: https://developer.mozilla.org/ru/docs/Web/HTML/Element/dialog
+warmup:
+  task: "По клику на .open-modal открой окно .modal методом showModal(), по клику на .close-modal — закрой методом close()."
+  html: |
+    <button class="open-modal" type="button">Создать сбор</button>
+
+    <dialog class="modal">
+      <h2>Новый сбор</h2>
+      <p>Название, сумма и срок — и можно звать друзей.</p>
+      <button class="close-modal" type="button">Закрыть</button>
+    </dialog>
+  css: |
+    .modal {
+      max-width: 320px;
+      padding: 24px;
+      border: 0;
+      border-radius: 16px;
+    }
+
+    .modal::backdrop {
+      background: rgba(0, 0, 0, 0.5);   /* затемнение под окном */
+    }
+  js: |
+    // Найди окно и обе кнопки
+
+    // Открытие: modal.showModal()
+
+    // Закрытие: modal.close()
+  checks:
+    - js: "return !doc.querySelector('.modal').open"
+      fail: "Окно открыто сразу. Оно должно открываться только по кнопке"
+    - js: "doc.querySelector('.open-modal').click(); return doc.querySelector('.modal').open"
+      fail: "После клика по .open-modal окно не открылось. Нужно: modal.showModal()"
+    - js: "doc.querySelector('.close-modal').click(); return !doc.querySelector('.modal').open"
+      fail: "Кнопка .close-modal не закрывает окно. Нужно: modal.close()"
+checklist:
+  - Окно открывается по кнопке и закрывается кнопкой и клавишей Esc
+  - Под окном затемнение, страница за ним не кликается
+  - Окно оформлено по макету и помещается на экран 375 px
+  - Текст и поля окна подходят под кейс команды
+mistakes:
+  - q: "Ошибка «showModal is not a function»"
+    a: "Метод есть только у тега <dialog>. Проверь, что окно — это <dialog class=\"modal\">, а не <div>."
+  - q: Окно видно сразу при загрузке
+    a: "Убери атрибут open у <dialog> — он открывает окно без затемнения. Открывать нужно только через showModal()."
+  - q: Окно на телефоне шире экрана
+    a: "Задай .modal { max-width: calc(100% - 32px); } — у окна всегда будут отступы по краям."
+blocks: [modal]
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+
+## Теория
+
+**Модальное окно** — окно поверх страницы: форма записи, «создать комнату», подробности события. Пока оно открыто, страница за ним затемнена и не нажимается.
+
+Раньше такие окна собирали из `div` и десятка строк JS. Сейчас в HTML есть готовый тег `<dialog>`. Браузер сам рисует его поверх страницы, затемняет фон, закрывает окно по Esc и держит фокус клавиатуры внутри окна.
+
+Открыть и закрыть — две команды:
+
+```js
+modal.showModal(); // открыть поверх страницы с затемнением
+modal.close();     // закрыть
+```
+
+Цвет затемнения задаёт CSS-псевдоэлемент `::backdrop`: `.modal::backdrop { background: rgba(0, 0, 0, 0.5); }`.
+
+<Preview
+  html={`<button class="open" type="button">Открыть окно</button>
+<dialog class="modal"><p>Привет! Я модальное окно.</p><button class="close" type="button">Закрыть</button></dialog>`}
+  css={`.modal { border: 0; border-radius: 12px; padding: 20px; }
+.modal::backdrop { background: rgba(0, 0, 0, 0.5); }`}
+  js={`const modal = document.querySelector('.modal');
+document.querySelector('.open').addEventListener('click', () => modal.showModal());
+document.querySelector('.close').addEventListener('click', () => modal.close());`}
+  height={200}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+<ForCase>
+Добавьте окно, которое открывает главная кнопка первого экрана. Выберите кейс на главной странице навигатора — здесь появится задание под ваш сайт.
+</ForCase>
+
+<ForCase id="watch">
+Кнопка «Создать комнату» открывает окно: поле «Название комнаты», поле «Твоё имя» и кнопка «Создать». В окне можно показать выдуманную ссылку-приглашение, например `kino.ru/room/42`.
+</ForCase>
+
+<ForCase id="teammate">
+Кнопка «Написать» на карточке анкеты открывает окно: имя и навыки тиммейта, поле для сообщения и кнопка «Отправить». Одно окно на все карточки — текст в нём можно менять позже на JS.
+</ForCase>
+
+<ForCase id="where">
+Кнопка «Подробнее» на карточке события открывает окно: название, дата, место, цена, описание и кнопка «Иду!».
+</ForCase>
+
+<ForCase id="tail">
+Кнопка «Познакомиться» на карточке питомца открывает окно записи: имя, телефон, удобный день и кнопка «Записаться». Если есть кнопка «Пройти тест», пусть она тоже открывает окно с первым вопросом.
+</ForCase>
+
+<ForCase id="split">
+Кнопка «Создать сбор» открывает окно: название сбора, нужная сумма, срок и кнопка «Создать». Это же окно пригодится в занятии 7 для проверки полей.
+</ForCase>
+
+1. Добавьте `<dialog class="modal">` в конец `main` с содержимым по макету.
+2. Оформите окно: отступы, скругление, ширина, затемнение `::backdrop`.
+3. В `script.js` откройте окно по нужной кнопке и закройте по кнопке «Закрыть».
+4. Проверьте на 375 px: окно помещается на экран, закрывается по Esc.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Если окно открывают несколько кнопок (в каждой карточке), найдите их все через `document.querySelectorAll('.open-modal')` и повесьте обработчик на каждую: `buttons.forEach((b) => b.addEventListener('click', () => modal.showModal()));`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Форма внутри `<dialog>` с атрибутом `method="dialog"` сама закрывает окно при нажатии на кнопку отправки — даже без JS.
+</Hint>
+
+<Hint title="Решение">
+```js
+const modal = document.querySelector('.modal');
+const openButton = document.querySelector('.open-modal');
+const closeButton = document.querySelector('.close-modal');
+
+openButton.addEventListener('click', function () {
+  modal.showModal();
+});
+
+closeButton.addEventListener('click', function () {
+  modal.close();
+});
+```
+</Hint>
+
+<Checklist />
+<Stuck />

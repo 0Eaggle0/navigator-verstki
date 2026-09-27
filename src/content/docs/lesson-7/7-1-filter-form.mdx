@@ -2,7 +2,197 @@
 title: "Фильтр карточек или форма с проверкой"
 lesson: 7
 minutes: 30
-soon: true
+goal: Делаем главную «живой» — фильтр карточек или проверку формы, смотря по кейсу
 sidebar:
   order: 1
+fast: "возьми блок «Фильтры» (для фильтра) или «Форма» (для формы) и допиши к нему JS из решения ниже."
+links:
+  - title: "learn.javascript.ru: data-атрибуты"
+    url: https://learn.javascript.ru/dom-attributes-and-properties
+  - title: "learn.javascript.ru: отправка формы"
+    url: https://learn.javascript.ru/forms-submit
+warmup:
+  task: "Сделай фильтр. У каждой кнопки есть data-filter, у каждой карточки — data-type. По клику на кнопку покажи только карточки с тем же типом (остальным поставь hidden = true). Кнопка «Все» (data-filter=\"all\") показывает все карточки."
+  html: |
+    <div class="filters">
+      <button type="button" data-filter="all">Все</button>
+      <button type="button" data-filter="cat">Кошки</button>
+      <button type="button" data-filter="dog">Собаки</button>
+    </div>
+
+    <div class="cards">
+      <article class="card" data-type="cat">Барсик</article>
+      <article class="card" data-type="dog">Шарик</article>
+      <article class="card" data-type="cat">Мурка</article>
+      <article class="card" data-type="dog">Бобик</article>
+    </div>
+  css: |
+    .filters {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+    }
+
+    .card {
+      padding: 16px;
+      background: #FFF8F0;
+      border-radius: 8px;
+    }
+  js: |
+    const buttons = document.querySelectorAll('[data-filter]');
+    const cards = document.querySelectorAll('.card');
+
+    // Для каждой кнопки: по клику пройди по карточкам
+    // и спрячь те, у которых другой data-type
+  checks:
+    - js: "return [...doc.querySelectorAll('.card')].every((c) => !c.hidden)"
+      fail: "До клика должны быть видны все карточки"
+    - js: "doc.querySelector('[data-filter=cat]').click(); return [...doc.querySelectorAll('.card')].every((c) => c.hidden === (c.dataset.type !== 'cat'))"
+      fail: "После клика «Кошки» должны остаться только карточки с data-type=\"cat\" (остальным hidden = true)"
+    - js: "doc.querySelector('[data-filter=dog]').click(); return [...doc.querySelectorAll('.card')].every((c) => c.hidden === (c.dataset.type !== 'dog'))"
+      fail: "После клика «Собаки» должны остаться только собаки — не забудь показывать карточки обратно (hidden = false)"
+    - js: "doc.querySelector('[data-filter=all]').click(); return [...doc.querySelectorAll('.card')].every((c) => !c.hidden)"
+      fail: "Кнопка «Все» должна показывать все карточки"
+checklist:
+  - Фильтр или форма работает на моей главной
+  - Нажатая кнопка фильтра выделена (или форма показывает понятные ошибки)
+  - В консоли нет ошибок
+  - Работает и на 375 px
+mistakes:
+  - q: "Ошибка «forEach is not a function»"
+    a: "Скорее всего, использовал querySelector вместо querySelectorAll — первый возвращает один элемент, а не список."
+  - q: Карточки прячутся, но обратно не появляются
+    a: "Ставь hidden в обе стороны: card.hidden = card.dataset.type !== filter; — это сразу и спрячет, и покажет."
+  - q: Форма перезагружает страницу
+    a: "В обработчике submit первой строкой пиши event.preventDefault(); — это отменяет отправку."
+  - q: hidden не прячет карточку
+    a: "Если у .card в CSS есть display: flex или grid, он перебивает hidden. Добавь правило .card[hidden] { display: none; }."
+blocks: [filters, form]
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+
+## Теория
+
+У любого элемента можно хранить свои данные в атрибутах `data-…`: `<article data-type="cat">`. В JS они доступны через `dataset`: `card.dataset.type` вернёт `"cat"`. Так мы помечаем карточки для фильтра.
+
+Много элементов находит `document.querySelectorAll` — он возвращает список. Пройти по списку помогает `forEach`: «для каждой карточки сделай…».
+
+```js
+cards.forEach(function (card) {
+  card.hidden = card.dataset.type !== 'cat';
+});
+```
+
+Свойство `hidden = true` прячет элемент, `false` — показывает. Выражение `card.dataset.type !== 'cat'` даёт `true` для всех «не кошек» — их и прячем.
+
+Для формы главное событие — `submit`. В обработчике сначала `event.preventDefault()` (не перезагружать страницу), потом проверяем поля: `input.value.trim() === ''` — поле пустое. Ошибку показываем текстом рядом с полем.
+
+<Preview
+  html={`<button type="button" data-filter="all">Все</button>
+<button type="button" data-filter="cat">Кошки</button>
+<p class="card" data-type="cat">🐱 Барсик</p>
+<p class="card" data-type="dog">🐶 Шарик</p>`}
+  js={`const cards = document.querySelectorAll('.card');
+document.querySelectorAll('[data-filter]').forEach(function (button) {
+  button.addEventListener('click', function () {
+    const filter = button.dataset.filter;
+    cards.forEach(function (card) {
+      card.hidden = filter !== 'all' && card.dataset.type !== filter;
+    });
+  });
+});`}
+  height={130}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+<ForCase>
+Задание зависит от кейса: афиша, фильмы и анкеты делают фильтр карточек, приют и сборы — форму с проверкой. Выберите кейс на главной странице навигатора.
+</ForCase>
+
+<ForCase id="where">
+**Фильтр событий.** Кнопки над карточками: «Все», «Бесплатно», «Концерты», «Спорт», «Выставки». У карточек — `data-type`. Нажатая кнопка выделяется классом `active`.
+</ForCase>
+
+<ForCase id="watch">
+**Фильтр фильмов по жанру.** Кнопки «Все», «Комедии», «Ужасы», «Мультфильмы», «Фантастика». У карточек фильмов — `data-genre`, в JS читайте `card.dataset.genre`.
+</ForCase>
+
+<ForCase id="teammate">
+**Фильтр анкет по роли.** Кнопки «Все», «Код», «Дизайн», «Тексты», «Игры». У анкеты — `data-role`. Если у анкеты несколько ролей, запишите их через пробел (`data-role="code design"`) и проверяйте через `includes`.
+</ForCase>
+
+<ForCase id="tail">
+**Форма «Стать волонтёром» с проверкой.** При отправке: имя не пустое, телефон не короче 10 цифр, галочка согласия стоит. Если что-то не так — под полем красный текст ошибки, форма не отправляется. Если всё верно — вместо формы «Спасибо, мы позвоним!». Потренироваться можно на задаче [«Проверка формы»](../../tasks/js-form/) в задачнике.
+</ForCase>
+
+<ForCase id="split">
+**Форма «Создать сбор» с проверкой** (в модальном окне из 6.4). Название не пустое, сумма — число больше 0, срок выбран. Ошибки — текстом под полями. Если всё верно — закрыть окно и показать «Сбор создан!». Потренироваться можно на задаче [«Проверка формы»](../../tasks/js-form/) в задачнике.
+</ForCase>
+
+1. Разметьте карточки атрибутами `data-…` (для фильтра) или добавьте форме места для текста ошибок.
+2. Напишите JS по примеру из теории и разминки.
+3. Проверьте все варианты: каждый фильтр по очереди или форму с пустыми и правильными полями.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Выделить нажатую кнопку фильтра: сначала у всех кнопок `classList.remove('active')`, потом у нажатой `classList.add('active')`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Для формы удобно завести функцию `showError(input, text)`, которая пишет текст в `<p class="error">` после поля. И в начале каждой проверки очищать старые ошибки.
+</Hint>
+
+<Hint title="Решение">
+Фильтр:
+
+```js
+const buttons = document.querySelectorAll('[data-filter]');
+const cards = document.querySelectorAll('.card');
+
+buttons.forEach(function (button) {
+  button.addEventListener('click', function () {
+    const filter = button.dataset.filter;
+    cards.forEach(function (card) {
+      card.hidden = filter !== 'all' && card.dataset.type !== filter;
+    });
+    buttons.forEach((b) => b.classList.remove('active'));
+    button.classList.add('active');
+  });
+});
+```
+
+Форма:
+
+```js
+const form = document.querySelector('.form');
+
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+  const name = form.elements.name;
+  const error = form.querySelector('.error');
+
+  if (name.value.trim() === '') {
+    error.textContent = 'Напиши своё имя';
+    return;
+  }
+  form.innerHTML = '<p>Спасибо, мы позвоним!</p>';
+});
+```
+</Hint>
+
+<Checklist />
+<Stuck />

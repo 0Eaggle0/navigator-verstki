@@ -29,7 +29,7 @@ export default defineConfig({
 					collapsed: l.n > 1,
 					items: [{ autogenerate: { directory: `lesson-${l.n}` } }],
 				})),
-				{ label: 'Задачник', link: '/tasks/' },
+				{ label: "Задачник", collapsed: true, items: [{ autogenerate: { directory: "tasks" } }] },
 				{ label: 'Шпаргалки и ссылки', link: '/cheatsheets/' },
 				{ label: 'Блоки для вашего сайта', items: [{ autogenerate: { directory: 'blocks' } }] },
 				{ label: 'Для модератора', link: '/moderator/' },

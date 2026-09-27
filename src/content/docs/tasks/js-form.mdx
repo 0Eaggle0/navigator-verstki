@@ -1,0 +1,61 @@
+---
+title: "Проверка формы"
+description: "Перед отправкой форму проверяют: заполнены ли поля и правильно ли. Ошибку показывают текстом рядом."
+topic: js
+sidebar:
+  order: 12
+warmup:
+  task: "При отправке формы отмени перезагрузку (preventDefault). Если имя пустое — напиши в .error «Напиши своё имя». Если заполнено — очисти .error и замени содержимое формы на «Спасибо!»."
+  html: |
+    <form class="form">
+      <label>Имя <input name="name"></label>
+      <p class="error"></p>
+      <button type="submit">Отправить</button>
+    </form>
+  css: |
+    .error { color: #DC2626; min-height: 1em; }
+  js: |
+    const form = document.querySelector('.form');
+
+    form.addEventListener('submit', function (event) {
+      // 1. отменить отправку
+      // 2. проверить form.elements.name.value
+    });
+  checks:
+    - js: "const f = doc.querySelector('.form'); f.elements.name.value = '   '; f.requestSubmit(); return doc.querySelector('.error').textContent.trim() !== ''"
+      fail: "С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)"
+    - js: "const f = doc.querySelector('.form'); f.elements.name.value = 'Аня'; f.requestSubmit(); return f.textContent.includes('Спасибо')"
+      fail: "С заполненным именем форма должна показать «Спасибо!»"
+---
+import { Warmup, Hint } from '~/components';
+
+Перед отправкой форму проверяют: заполнены ли поля и правильно ли. Ошибку показывают текстом рядом.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+`value.trim()` убирает пробелы по краям — поле из одних пробелов тоже считается пустым.
+</Hint>
+
+<Hint title="Подсказка 2">
+Заменить содержимое формы: `form.innerHTML = '<p>Спасибо!</p>';`.
+</Hint>
+
+<Hint title="Решение">
+```js
+const form = document.querySelector('.form');
+
+form.addEventListener('submit', function (event) {
+  event.preventDefault();
+  const name = form.elements.name.value.trim();
+  const error = form.querySelector('.error');
+
+  if (name === '') {
+    error.textContent = 'Напиши своё имя';
+    return;
+  }
+  error.textContent = '';
+  form.innerHTML = '<p>Спасибо!</p>';
+});
+```
+</Hint>

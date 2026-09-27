@@ -1,0 +1,53 @@
+---
+title: "Главная карточка на две колонки"
+description: "В сетке карточек первую часто делают крупнее — например, главное событие недели."
+topic: grid
+sidebar:
+  order: 8
+warmup:
+  task: "В сетке из трёх колонок растяни первую карточку .card--big на две колонки через grid-column: span 2."
+  html: |
+    <div class="grid">
+      <div class="card card--big">Главное событие</div>
+      <div class="card">2</div>
+      <div class="card">3</div>
+      <div class="card">4</div>
+      <div class="card">5</div>
+    </div>
+  css: |
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+
+    .card {
+      padding: 16px;
+      background: #FEF3C7;
+      border-radius: 8px;
+    }
+  checks:
+    - js: "const big = doc.querySelector('.card--big').getBoundingClientRect().width, small = doc.querySelectorAll('.card')[1].getBoundingClientRect().width; return big > small * 1.9"
+      fail: "Первая карточка пока шириной в одну колонку. Нужно: .card--big { grid-column: span 2; }"
+---
+import { Warmup, Hint } from '~/components';
+
+В сетке карточек первую часто делают крупнее — например, главное событие недели.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Свойство пишется самой карточке, а не сетке.
+</Hint>
+
+<Hint title="Подсказка 2">
+`span 2` значит «занять две колонки». Остальные карточки сетка расставит сама.
+</Hint>
+
+<Hint title="Решение">
+```css
+.card--big {
+  grid-column: span 2;
+}
+```
+</Hint>

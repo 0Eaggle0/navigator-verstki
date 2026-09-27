@@ -74,7 +74,7 @@ mistakes:
     a: "Сделай карточку флекс-столбиком (display: flex; flex-direction: column;), а кнопке добавь margin-top: auto — она прижмётся к низу."
 blocks: [cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
 
 ## Теория
 
@@ -110,6 +110,30 @@ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 <Warmup />
 
 ## Делаем свой сайт
+
+<ForCase>
+Выберите кейс на главной странице навигатора — здесь появится подсказка про сетку вашего сайта.
+</ForCase>
+
+<ForCase id="watch">
+Постеры фильмов вертикальные: задайте картинкам `aspect-ratio: 2 / 3`. Колонок обычно 4 — `minmax(220px, 1fr)`.
+</ForCase>
+
+<ForCase id="teammate">
+Аватары круглые: `border-radius: 50%` и `aspect-ratio: 1`. Навыки — маленькие «таблетки» в ряд через flex с `flex-wrap`.
+</ForCase>
+
+<ForCase id="where">
+Картинки событий горизонтальные — `aspect-ratio: 16 / 9`. Цену и дату поставьте в одну строку через flex с `space-between`.
+</ForCase>
+
+<ForCase id="tail">
+Фото питомцев — `aspect-ratio: 1` или `4 / 3`, `object-fit: cover`. Кнопку «Познакомиться» прижмите к низу через `margin-top: auto`.
+</ForCase>
+
+<ForCase id="split">
+Вместо карточек у вас «пример сбора» и шаги «как это работает» — сетку из 3 колонок используйте для шагов.
+</ForCase>
 
 1. Проверьте HTML: все карточки лежат в одном контейнере (`.cards`), каждая — `article` с одинаковой разметкой.
 2. Поставьте их в сетку через `repeat(auto-fill, minmax(…, 1fr))`. Минимальную ширину подберите так, чтобы на компьютере колонок было столько же, сколько в макете.

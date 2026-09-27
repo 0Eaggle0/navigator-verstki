@@ -1,0 +1,51 @@
+/* ФИЛЬТРЫ КАРТОЧЕК. Вставь в конец style.css */
+.events {
+  padding: 48px 24px;
+}
+
+.filters {
+  display: flex;
+  flex-wrap: wrap;             /* на телефоне кнопки переносятся */
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.filters__btn {
+  padding: 8px 16px;
+  border: 1px solid #C7D2FE;
+  border-radius: 999px;
+  background: #FFFFFF;
+  font: inherit;
+  cursor: pointer;
+}
+
+.filters__btn.active {         /* нажатая кнопка. что менять: цвета */
+  border-color: #4F46E5;
+  background: #4F46E5;
+  color: #FFFFFF;
+}
+
+.events__cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.event {
+  padding: 16px;
+  border-radius: 12px;
+  background: #EEF2FF;         /* что менять: фон карточки */
+}
+
+.event[hidden] {
+  display: none;               /* чтобы display карточки не мешал hidden */
+}
+
+.event h3 {
+  margin: 0 0 8px;
+}
+
+.event p {
+  margin: 0;
+  color: #555555;
+}

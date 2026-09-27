@@ -35,7 +35,9 @@ export function runChecks(doc: Document, checks: Check[]) {
 		try {
 			ok = pass(doc, c);
 		} catch (e) {
-			console.warn('Ошибка в правиле проверки', c, e);
+			// Недописанный код ученика часто роняет правило — это просто «не прошло».
+			// Модератору при локальной разработке (npm run dev) показываем подробности.
+			if (import.meta.env.DEV) console.warn('Ошибка в правиле проверки', c, e);
 		}
 		return { ok, message: c.fail };
 	});

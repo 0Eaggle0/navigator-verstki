@@ -25,14 +25,22 @@
 	},
 	"filters": {
 		"title": "Фильтры",
-		"ready": false
+		"ready": true
 	},
 	"reviews": {
 		"title": "Отзывы",
-		"ready": false
+		"ready": true
 	},
 	"progress": {
 		"title": "Пример сбора с прогрессом",
-		"ready": false
+		"ready": true
+	},
+	"burger": {
+		"title": "Бургер-меню",
+		"ready": true
+	},
+	"modal": {
+		"title": "Модальное окно",
+		"ready": true
 	}
 }

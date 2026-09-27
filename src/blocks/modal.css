@@ -1,0 +1,62 @@
+/* МОДАЛЬНОЕ ОКНО. Вставь в конец style.css */
+.modal {
+  width: min(420px, calc(100% - 32px)); /* на телефоне — с отступами по краям */
+  padding: 24px;
+  border: 0;
+  border-radius: 16px;
+}
+
+.modal::backdrop {
+  background: rgba(0, 0, 0, 0.5);        /* что менять: затемнение под окном */
+}
+
+.modal h2 {
+  margin: 0 0 16px;
+}
+
+.modal__form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.modal__field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  font-weight: 600;
+}
+
+.modal__field input {
+  padding: 10px 12px;
+  border: 1px solid #CCCCCC;
+  border-radius: 8px;
+  font: inherit;
+  font-weight: 400;
+}
+
+.modal__buttons {
+  display: flex;
+  gap: 12px;
+}
+
+.open-modal,
+.modal__submit {
+  padding: 12px 24px;
+  border: 0;
+  border-radius: 999px;
+  background: #047857;                   /* что менять: цвет кнопок */
+  color: #FFFFFF;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.close-modal {
+  padding: 12px 24px;
+  border: 1px solid #CCCCCC;
+  border-radius: 999px;
+  background: #FFFFFF;
+  font: inherit;
+  cursor: pointer;
+}

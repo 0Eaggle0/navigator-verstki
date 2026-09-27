@@ -1,0 +1,25 @@
+<!-- МОДАЛЬНОЕ ОКНО. Кнопку поставь куда нужно (например, в первый экран), <dialog> — в конец <main> -->
+
+<!-- что менять: текст кнопки. Класс open-modal можно дать любой кнопке на странице -->
+<button class="open-modal" type="button">Создать сбор</button>
+
+<dialog class="modal" aria-labelledby="modal-title">
+  <!-- что менять: заголовок и поля окна под ваш кейс -->
+  <h2 id="modal-title">Новый сбор</h2>
+
+  <!-- method="dialog": кнопка «Создать» сама закроет окно -->
+  <form class="modal__form" method="dialog">
+    <label class="modal__field">
+      Название сбора
+      <input name="title" placeholder="Подарок Лене">
+    </label>
+    <label class="modal__field">
+      Сколько собрать, ₽
+      <input name="sum" type="number" min="1" placeholder="5000">
+    </label>
+    <div class="modal__buttons">
+      <button class="modal__submit" type="submit">Создать</button>
+      <button class="close-modal" type="button">Отмена</button>
+    </div>
+  </form>
+</dialog>

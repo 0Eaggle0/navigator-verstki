@@ -1,0 +1,49 @@
+---
+title: "Две колонки: 2 к 1"
+description: "Раскладка «широкая колонка + узкая» — статья и боковая панель, карточка события и блок покупки."
+topic: grid
+sidebar:
+  order: 7
+warmup:
+  task: "Сделай у .layout сетку из двух колонок: левая вдвое шире правой (2fr 1fr), промежуток 16px."
+  html: |
+    <div class="layout">
+      <div class="main">Описание события</div>
+      <div class="side">Купить билет</div>
+    </div>
+  css: |
+    .main, .side {
+      padding: 16px;
+      background: #DBEAFE;
+      border-radius: 8px;
+    }
+  checks:
+    - selector: ".layout"
+      style: { display: "grid", column-gap: "16px" }
+      fail: "У .layout нужны display: grid и gap: 16px"
+    - js: "const c = getComputedStyle(doc.querySelector('.layout')).gridTemplateColumns.split(' ').map(parseFloat); return c.length === 2 && Math.abs(c[0] / c[1] - 2) < 0.1"
+      fail: "Колонки должны быть в пропорции 2 к 1: grid-template-columns: 2fr 1fr;"
+---
+import { Warmup, Hint } from '~/components';
+
+Раскладка «широкая колонка + узкая» — статья и боковая панель, карточка события и блок покупки.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+`fr` — доля свободного места. `2fr 1fr` — всего 3 доли, левой достаются 2.
+</Hint>
+
+<Hint title="Подсказка 2">
+Промежуток между колонками — `gap`, как во флексе.
+</Hint>
+
+<Hint title="Решение">
+```css
+.layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 16px;
+}
+```
+</Hint>

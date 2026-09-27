@@ -3,11 +3,12 @@
 // Черновик сохраняется в браузере, «Сбросить» возвращает стартовый код.
 const { entry } = Astro.locals.starlightRoute;
 const w = entry.data.warmup;
+const hasJs = w?.js !== undefined; // есть поле js — разминка на JavaScript
 ---
 
 {
 	w && (
-		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)}>
+		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined}>
 			<p class="sandbox__task">
 				<strong>Задача:</strong> {w.task}
 			</p>
@@ -21,13 +22,39 @@ const w = entry.data.warmup;
 						CSS
 						<textarea name="css" spellcheck="false" autocapitalize="off" rows="8" />
 					</label>
+					{hasJs && (
+						<label>
+							JavaScript
+							<textarea name="js" spellcheck="false" autocapitalize="off" rows="10" />
+						</label>
+					)}
 					<p class="sandbox__tip">Tab — отступ. Чтобы уйти из поля клавиатурой: Esc, потом Tab.</p>
 				</div>
 				<div class="sandbox__result">
 					{w.width && <p class="sandbox__width">Превью шириной {w.width} px — как на телефоне</p>}
 					<div class="sandbox__frame">
-						<iframe title="Результат разминки" sandbox="allow-same-origin" style={w.width ? `width:${w.width}px` : undefined} />
+						<iframe
+							title="Результат разминки"
+							sandbox={hasJs ? undefined : 'allow-same-origin'}
+							style={w.width ? `width:${w.width}px` : undefined}
+						/>
+						{/* Для JS-разминок проверки идут в скрытой копии: они нажимают кнопки и не должны менять то, что видит ученик */}
+						{hasJs && (
+							<iframe
+								class="sandbox__checker"
+								title="Проверка"
+								aria-hidden="true"
+								tabindex="-1"
+								style={w.width ? `width:${w.width}px` : undefined}
+							/>
+						)}
 					</div>
+					{hasJs && (
+						<div class="sandbox__console" aria-live="polite">
+							<p class="sandbox__console-title">Консоль</p>
+							<ol />
+						</div>
+					)}
 					<div class="sandbox__checks" aria-live="polite" />
 					<button type="button" class="sandbox__reset">Сбросить к началу</button>
 				</div>
@@ -41,23 +68,47 @@ const w = entry.data.warmup;
 	import { runChecks, type Check } from '~/lib/checks';
 	import { srcdoc } from '~/lib/srcdoc';
 
+	// Частые ошибки JavaScript — переводим на понятный язык
+	const explain = (text: string) =>
+		text
+			.replace(/^(Uncaught )?SyntaxError: /, 'синтаксическая ошибка — проверь скобки и кавычки. ')
+			.replace(/^(Uncaught )?\w*Error: /, '')
+			.replace(/Cannot (read|set) propert(y|ies) of null.*/, 'querySelector ничего не нашёл (получился null) — проверь селектор и что элемент есть в HTML')
+			.replace(/Cannot (read|set) propert(y|ies) of undefined.*/, 'обращение к тому, чего нет (undefined) — проверь имя переменной или свойства')
+			.replace(/(\S+) is not defined/, 'имя «$1» не найдено — опечатка или переменная не объявлена')
+			.replace(/(\S+) is not a function/, '«$1» — не функция: проверь название метода и скобки');
+
 	class Sandbox extends HTMLElement {
 		connectedCallback() {
-			const { id = '', html = '', css = '' } = this.dataset;
+			const { id = '', html = '', css = '', js } = this.dataset;
+			const hasJs = js !== undefined;
 			const checks: Check[] = JSON.parse(this.dataset.checks || '[]');
 			const fields = [...this.querySelectorAll('textarea')];
-			const [htmlBox, cssBox] = fields;
-			const frame = this.querySelector('iframe')!;
+			const [htmlBox, cssBox, jsBox] = fields;
+			const frame = this.querySelector<HTMLIFrameElement>('iframe:not(.sandbox__checker)')!;
+			// Где запускаем проверки: для JS — в скрытой копии, иначе прямо в превью
+			const checker = this.querySelector<HTMLIFrameElement>('.sandbox__checker') ?? frame;
 			const out = this.querySelector<HTMLElement>('.sandbox__checks')!;
+			const logList = this.querySelector('.sandbox__console ol');
 
 			const draft = load().drafts[id];
 			htmlBox.value = draft?.html ?? html;
 			cssBox.value = draft?.css ?? css;
+			if (jsBox) jsBox.value = draft?.js ?? js ?? '';
 
-			// Проверяем, когда iframe загрузил новый код
-			frame.addEventListener('load', () => {
-				if (!checks.length || !frame.contentDocument) return;
-				const results = runChecks(frame.contentDocument, checks);
+			// Консоль: сообщения приходят из превью через postMessage
+			window.addEventListener('message', (e) => {
+				if (!logList || e.source !== frame.contentWindow || !e.data?.sandbox) return;
+				const { kind, text, line } = e.data;
+				const li = document.createElement('li');
+				li.className = 'is-' + kind;
+				li.textContent = kind === 'error' ? `Ошибка${line > 0 ? ` в строке ${line}` : ''}: ${explain(text)}` : text;
+				logList.append(li);
+			});
+
+			checker.addEventListener('load', () => {
+				if (!checks.length || !checker.contentDocument) return;
+				const results = runChecks(checker.contentDocument, checks);
 				const failed = results.filter((r) => !r.ok);
 				out.className = 'sandbox__checks ' + (failed.length ? 'is-wip' : 'is-ok');
 				out.innerHTML = '';
@@ -73,14 +124,22 @@ const w = entry.data.warmup;
 				}
 			});
 
-			const render = () => (frame.srcdoc = srcdoc(htmlBox.value, cssBox.value));
+			const render = () => {
+				if (logList) logList.innerHTML = '';
+				const doc = srcdoc(htmlBox.value, cssBox.value, hasJs ? jsBox.value : undefined);
+				frame.srcdoc = doc;
+				if (checker !== frame) checker.srcdoc = doc;
+			};
 			let timer: number;
 			const onInput = () => {
 				clearTimeout(timer);
-				timer = window.setTimeout(() => {
-					render();
-					update((p) => (p.drafts[id] = { html: htmlBox.value, css: cssBox.value }));
-				}, 400);
+				timer = window.setTimeout(
+					() => {
+						render();
+						update((p) => (p.drafts[id] = { html: htmlBox.value, css: cssBox.value, js: jsBox?.value }));
+					},
+					hasJs ? 800 : 400 // JS ждём дольше: недописанный код почти всегда с ошибкой
+				);
 			};
 
 			let escaped = false; // после Esc Tab снова переводит фокус, а не вставляет отступ
@@ -98,6 +157,7 @@ const w = entry.data.warmup;
 			this.querySelector('.sandbox__reset')!.addEventListener('click', () => {
 				htmlBox.value = html;
 				cssBox.value = css;
+				if (jsBox) jsBox.value = js ?? '';
 				update((p) => delete p.drafts[id]);
 				render();
 			});
@@ -157,6 +217,7 @@ const w = entry.data.warmup;
 		color: var(--sl-color-gray-3);
 	}
 	.sandbox__frame {
+		position: relative;
 		overflow-x: auto; /* узкое превью на телефоне прокручивается внутри, а не всей страницей */
 	}
 	.sandbox iframe {
@@ -167,6 +228,46 @@ const w = entry.data.warmup;
 		border-radius: 0.5rem;
 		background: #fff;
 		resize: vertical;
+	}
+	.sandbox__checker {
+		position: absolute;
+		top: 0;
+		left: 0;
+		visibility: hidden;
+		height: 16rem;
+		pointer-events: none;
+	}
+	.sandbox__console {
+		margin-top: 0.75rem;
+		padding: 0.5rem 0.75rem;
+		border-radius: 0.5rem;
+		font: 0.8125rem/1.4 var(--__sl-font-mono, ui-monospace, Consolas, monospace);
+		color: #e5e7eb;
+		background: #111827;
+	}
+	.sandbox__console-title {
+		margin: 0 0 0.25rem;
+		font-family: var(--__sl-font);
+		font-weight: 600;
+		color: #9ca3af;
+	}
+	.sandbox__console ol {
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.sandbox__console ol:empty::before {
+		content: 'Пока пусто. Напиши console.log("привет")';
+		color: #9ca3af;
+	}
+	.sandbox__console li + li {
+		border-top: 1px solid #374151;
+	}
+	.sandbox__console .is-error {
+		color: #fca5a5;
+	}
+	.sandbox__console .is-warn {
+		color: #fde68a;
 	}
 	.sandbox__checks {
 		margin-top: 0.75rem;

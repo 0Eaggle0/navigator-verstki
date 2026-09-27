@@ -2,7 +2,114 @@
 title: "DOM: querySelector, classList и клики"
 lesson: 6
 minutes: 20
-soon: true
+goal: Находим элемент на странице и меняем его по клику
 sidebar:
   order: 2
+links:
+  - title: "learn.javascript.ru: введение в браузерные события"
+    url: https://learn.javascript.ru/introduction-browser-events
+  - title: "Дока: classList"
+    url: https://doka.guide/js/element-classlist/
+warmup:
+  task: "По клику на кнопку .theme-button переключай у body класс dark: первый клик — тёмная тема, второй — обратно светлая. Используй querySelector, addEventListener и classList.toggle."
+  html: |
+    <h1>Тёмная тема</h1>
+    <button class="theme-button" type="button">Переключить тему</button>
+  css: |
+    body {
+      transition: 0.3s;
+    }
+
+    body.dark {
+      background: #111827;
+      color: #F9FAFB;
+    }
+  js: |
+    // Найди кнопку
+
+    // По клику переключай класс dark у document.body
+  checks:
+    - js: "return !doc.body.classList.contains('dark')"
+      fail: "Тема тёмная сразу при загрузке. Класс dark должен появляться только по клику"
+    - js: "doc.querySelector('.theme-button').click(); const on = doc.body.classList.contains('dark'); doc.querySelector('.theme-button').click(); return on"
+      fail: "После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика"
+    - js: "return !doc.body.classList.contains('dark')"
+      fail: "Второй клик не убирает тёмную тему. Используй toggle, а не add"
+checklist:
+  - Умею найти элемент через document.querySelector
+  - Понимаю, что делает addEventListener('click', …)
+  - Знаю classList.add, remove и toggle
+  - Внешний вид меняю через класс в CSS, а не через style в JS
+mistakes:
+  - q: "Ошибка «Cannot read properties of null»"
+    a: "querySelector ничего не нашёл. Проверь селектор: для класса нужна точка (.theme-button), и скрипт должен быть подключён в конце body."
+  - q: Клик ничего не делает, ошибок нет
+    a: "Проверь, что пишешь классу без точки: classList.toggle('dark'), а не classList.toggle('.dark'). Точка нужна только в селекторах."
+  - q: "Функция сработала сразу, без клика"
+    a: "В addEventListener передают саму функцию, без скобок: addEventListener('click', toggleTheme). Со скобками она вызовется сразу."
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+Для JavaScript страница — это дерево объектов, **DOM**. Каждый тег — объект, который можно найти и поменять. Ищем так же, как в CSS, селектором: `document.querySelector('.menu')` возвращает первый подходящий элемент. Если ничего не нашлось — `null`.
+
+Менять вид элемента лучше всего **классами**. В CSS заранее описываем, как выглядит `.menu.open`, а в JS только добавляем или убираем класс: `classList.add('open')`, `classList.remove('open')` или `classList.toggle('open')` — «было — убери, не было — добавь».
+
+Реакция на действия пользователя — **события**. `addEventListener('click', функция)` говорит элементу: «когда по тебе кликнут, запусти эту функцию».
+
+```js
+const button = document.querySelector('.theme-button');
+
+button.addEventListener('click', function () {
+  document.body.classList.toggle('dark');
+});
+```
+
+Почти весь интерактив на сайтах — это три строки: найти элемент, дождаться события, переключить класс.
+
+<Preview
+  html={`<button class="btn" type="button">Нажми меня</button>`}
+  css={`.btn { padding: 12px 20px; border: 0; border-radius: 8px; background: #E5E7EB; font: inherit; cursor: pointer; }
+.btn.active { background: #4F46E5; color: #fff; }`}
+  js={`const btn = document.querySelector('.btn');
+btn.addEventListener('click', function () {
+  btn.classList.toggle('active');
+});`}
+  height={80}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Найдите на своём макете, что должно меняться по клику: кнопка «в избранное», переключатель, вкладки, раскрывающийся ответ.
+2. Опишите в CSS, как элемент выглядит в «нажатом» состоянии, через дополнительный класс: `.fav.active`.
+3. В `script.js` найдите элемент и переключайте класс по клику.
+4. Проверьте в браузере и в консоли: ошибок нет, класс переключается (видно в DevTools → Elements).
+
+<Hint title="Подсказка 1">
+Порядок всегда один: сначала `const кнопка = document.querySelector(…)`, потом `кнопка.addEventListener('click', function () { … })`, внутри — `classList.toggle`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Класс нужно переключать у `document.body`, а не у кнопки: тема меняется у всей страницы.
+</Hint>
+
+<Hint title="Решение">
+```js
+const themeButton = document.querySelector('.theme-button');
+
+themeButton.addEventListener('click', function () {
+  document.body.classList.toggle('dark');
+});
+```
+</Hint>
+
+<Checklist />
+<Stuck />

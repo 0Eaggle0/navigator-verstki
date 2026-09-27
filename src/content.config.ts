@@ -30,6 +30,7 @@ const step = z.object({
 			task: z.string(),
 			html: z.string().default(''),
 			css: z.string().default(''),
+			js: z.string().optional(), // есть поле (даже пустое) — в песочнице появятся JavaScript и консоль
 			width: z.number().optional(), // ширина превью в px, например 375 — «как на телефоне»
 			checks: z.array(check).default([]),
 		})
@@ -37,6 +38,8 @@ const step = z.object({
 	checklist: z.array(z.string()).default([]),
 	mistakes: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
 	blocks: z.array(z.string()).default([]),
+	// тема для задачника: html, css, flex, grid, adaptive, js. У шагов берётся из занятия (route.json)
+	topic: z.enum(['html', 'css', 'flex', 'grid', 'adaptive', 'js']).optional(),
 });
 
 export const collections = {

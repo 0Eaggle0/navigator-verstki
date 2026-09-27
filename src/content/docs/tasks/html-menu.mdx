@@ -1,0 +1,50 @@
+---
+title: "Меню из списка ссылок"
+description: "Меню сайта почти всегда — список ссылок. Так его понимают поисковики и программы экранного доступа."
+topic: html
+sidebar:
+  order: 1
+warmup:
+  task: "Сделай меню: внутри nav — список ul с тремя пунктами li, в каждом ссылка a с href. Тексты: «Главная», «Каталог», «Контакты»."
+  html: |
+    <nav>
+      <!-- список ссылок -->
+    </nav>
+  css: |
+    a { color: #4F46E5; }
+  checks:
+    - exists: "nav ul"
+      fail: "Внутри nav нет списка ul"
+    - count: { selector: "nav ul > li", min: 3 }
+      fail: "В списке нужно 3 пункта li"
+    - js: "return [...doc.querySelectorAll('nav li')].every((li) => li.querySelector('a[href]'))"
+      fail: "В каждом li должна быть ссылка a с атрибутом href"
+    - selector: "nav"
+      text: "Контакты"
+      fail: "Нет пункта «Контакты»"
+---
+import { Warmup, Hint } from '~/components';
+
+Меню сайта почти всегда — список ссылок. Так его понимают поисковики и программы экранного доступа.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Структура: `nav` → `ul` → три `li` → в каждом `a`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Пока страниц нет, пишите `href="#"`.
+</Hint>
+
+<Hint title="Решение">
+```html
+<nav>
+  <ul>
+    <li><a href="#">Главная</a></li>
+    <li><a href="#">Каталог</a></li>
+    <li><a href="#">Контакты</a></li>
+  </ul>
+</nav>
+```
+</Hint>

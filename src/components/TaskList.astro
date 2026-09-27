@@ -1,29 +1,65 @@
 ---
-// Задачник: все разминки из шагов маршрута
+// Задачник: все задачи с песочницей, сгруппированные по темам.
+// Разминки из шагов маршрута + дополнительные задачи из папки tasks/.
+import { getCollection } from 'astro:content';
+import route from '~/data/route.json';
 import { getRoute, url } from '~/lib/route';
+
 const { steps } = await getRoute();
-const tasks = steps.filter((s) => s.data.warmup);
+const extra = await getCollection('docs', (e) => e.id.startsWith('tasks/') && e.data.warmup);
+const lessonTopic = Object.fromEntries(route.lessons.map((l) => [l.n, l.topic]));
+
+const items = [
+	...steps
+		.filter((s) => s.data.warmup)
+		.map((s) => ({
+			topic: s.data.topic ?? lessonTopic[s.data.lesson!],
+			href: url(s.id + '/#разминка'),
+			title: s.data.title,
+			label: `разминка ${s.data.lesson}.${s.data.sidebar.order}`,
+			task: s.data.warmup!.task,
+		})),
+	...extra
+		.sort((a, b) => (a.data.sidebar.order ?? 0) - (b.data.sidebar.order ?? 0))
+		.map((t) => ({ topic: t.data.topic, href: url(t.id + '/'), title: t.data.title, label: 'доп. задача', task: t.data.warmup!.task })),
+];
+const topics = Object.entries(route.topics).map(([id, name]) => ({ id, name, items: items.filter((i) => i.topic === id) }));
 ---
 
-<ol class="not-content tasks">
+<div class="tasks not-content">
 	{
-		tasks.map((s) => (
-			<li>
-				<a href={url(s.id + '/#разминка')}>
-					{s.data.lesson}.{s.data.sidebar.order} · {s.data.title}
-				</a>
-				<p>{s.data.warmup!.task}</p>
-			</li>
+		topics.map((t) => (
+			<section>
+				<h2 id={'topic-' + t.id}>{t.name}</h2>
+				<ol>
+					{t.items.map((i) => (
+						<li>
+							<a href={i.href}>{i.title}</a> <span class="tasks__label">{i.label}</span>
+							<p>{i.task}</p>
+						</li>
+					))}
+				</ol>
+			</section>
 		))
 	}
-</ol>
+</div>
 
 <style>
-	.tasks {
+	.tasks h2 {
+		margin: 2rem 0 0.5rem;
+		font-size: var(--sl-text-h3);
+	}
+	.tasks ol {
 		padding-left: 1.5rem;
 	}
 	.tasks li {
 		margin-bottom: 1rem;
+	}
+	.tasks__label {
+		padding: 0 0.4rem;
+		font-size: var(--sl-text-xs);
+		border-radius: 999px;
+		background: var(--sl-color-gray-6);
 	}
 	.tasks p {
 		margin: 0.25rem 0 0;

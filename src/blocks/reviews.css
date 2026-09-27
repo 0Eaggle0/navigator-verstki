@@ -1,0 +1,53 @@
+/* ОТЗЫВЫ. Вставь в конец style.css */
+.reviews {
+  padding: 48px 24px;
+}
+
+.reviews__title {
+  margin: 0 0 24px;
+}
+
+.reviews__list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.review {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 0;                   /* у figure есть стандартные отступы — убираем */
+  padding: 20px;
+  border-radius: 16px;
+  background: #F5F3FF;         /* что менять: фон отзыва */
+}
+
+.review blockquote {
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.5;
+}
+
+.review__author {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: auto;            /* автор прижат к низу — у всех отзывов на одной линии */
+}
+
+.review__avatar {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #FFFFFF;
+  font-size: 22px;
+}
+
+.review__stars {
+  margin: 0;
+  color: #F59E0B;              /* что менять: цвет звёзд */
+  letter-spacing: 2px;
+}

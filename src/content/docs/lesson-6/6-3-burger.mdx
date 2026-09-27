@@ -2,7 +2,175 @@
 title: "Бургер-меню для телефона"
 lesson: 6
 minutes: 20
-soon: true
+goal: На телефоне прячем меню под кнопку ☰ и открываем по клику
 sidebar:
   order: 3
+fast: "возьми блок «Бургер-меню» — HTML, CSS и JS уже готовы. Поменяй пункты меню."
+links:
+  - title: "Дока: атрибут aria-expanded"
+    url: https://doka.guide/a11y/aria-expanded/
+  - title: "Дока: медиазапросы"
+    url: https://doka.guide/css/media/
+warmup:
+  width: 375
+  task: "Превью шириной с телефон. По клику на кнопку .burger переключай у .menu класс open (меню показывается). Заодно меняй у кнопки aria-expanded: \"true\", когда меню открыто, и \"false\", когда закрыто."
+  html: |
+    <header class="header">
+      <a class="logo" href="#">СКИНЕМСЯ</a>
+      <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+      <nav class="menu">
+        <a href="#">Мои сборы</a>
+        <a href="#">Как это работает</a>
+        <a href="#">Войти</a>
+      </nav>
+    </header>
+  css: |
+    body { margin: 0; }
+
+    .header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 16px;
+      background: #ECFDF5;
+    }
+
+    .burger {
+      font-size: 24px;
+      background: none;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .menu {
+      display: none;            /* на телефоне меню спрятано */
+      flex-direction: column;
+      width: 100%;
+      gap: 8px;
+      padding-top: 12px;
+    }
+
+    .menu.open {
+      display: flex;            /* класс open его показывает */
+    }
+  js: |
+    // Найди кнопку и меню
+
+    // По клику: переключи класс open у меню
+    // и поставь aria-expanded у кнопки
+  checks:
+    - js: "return getComputedStyle(doc.querySelector('.menu')).display === 'none'"
+      fail: "Меню должно быть скрыто, пока не нажали на бургер"
+    - js: "doc.querySelector('.burger').click(); return doc.querySelector('.menu').classList.contains('open')"
+      fail: "После клика по .burger у .menu нет класса open"
+    - js: "return doc.querySelector('.burger').getAttribute('aria-expanded') === 'true'"
+      fail: "Когда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)"
+    - js: "doc.querySelector('.burger').click(); return !doc.querySelector('.menu').classList.contains('open') && doc.querySelector('.burger').getAttribute('aria-expanded') === 'false'"
+      fail: "Второй клик должен закрыть меню и вернуть aria-expanded=\"false\""
+checklist:
+  - На 375 px меню спрятано, видна кнопка ☰
+  - По клику меню открывается и закрывается
+  - На компьютере бургер не виден, меню стоит в строку
+  - У кнопки есть aria-label и меняется aria-expanded
+mistakes:
+  - q: На компьютере меню тоже пропало
+    a: "Прячь меню только внутри медиазапроса @media (max-width: 768px). Вне его .menu показывается как обычно, а .burger — display: none."
+  - q: Класс переключается, но меню не появляется
+    a: "Проверь CSS: правило .menu.open { display: flex; } должно стоять ниже правила .menu { display: none; } и внутри того же медиазапроса."
+  - q: Зачем aria-expanded?
+    a: Незрячие пользователи с программой экранного доступа услышат «меню развёрнуто» или «свёрнуто». Без этого кнопка ☰ для них — непонятный символ.
+blocks: [burger]
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+На телефоне пять пунктов меню в строку не помещаются. Решение — **бургер**: кнопка ☰, по которой меню выезжает или раскрывается. Это соединение двух прошлых тем: медиазапрос прячет меню на узком экране, а JavaScript по клику переключает класс, который его показывает.
+
+Схема такая. В медиазапросе для телефона: `.menu { display: none; }`, `.menu.open { display: flex; }`, а кнопка `.burger` видна. На компьютере наоборот: бургер спрятан, меню стоит в строку, как раньше.
+
+JavaScript почти такой же, как в шаге 6.2: найти кнопку, по клику сделать `menu.classList.toggle('open')`.
+
+Для доступности кнопке нужны `aria-label="Открыть меню"` (что это за кнопка) и `aria-expanded` (открыто меню или нет). `classList.toggle` возвращает `true`, если класс добавился, — это значение удобно сразу записать в атрибут.
+
+```js
+const isOpen = menu.classList.toggle('open');
+burger.setAttribute('aria-expanded', isOpen);
+```
+
+<Preview
+  html={`<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+<nav class="menu"><a href="#">Сборы</a><a href="#">Войти</a></nav>`}
+  css={`.burger { font-size: 24px; background: none; border: 0; cursor: pointer; }
+.menu { display: none; flex-direction: column; gap: 8px; }
+.menu.open { display: flex; }`}
+  js={`const burger = document.querySelector('.burger');
+const menu = document.querySelector('.menu');
+burger.addEventListener('click', function () {
+  const isOpen = menu.classList.toggle('open');
+  burger.setAttribute('aria-expanded', isOpen);
+});`}
+  height={130}
+/>
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+1. Добавьте в шапку кнопку `<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>`.
+2. В CSS спрячьте её на компьютере: `.burger { display: none; }`.
+3. В медиазапросе для телефона: покажите бургер, спрячьте меню, добавьте правило `.menu.open`.
+4. В `script.js` переключайте класс `open` и `aria-expanded` по клику.
+5. Проверьте на 375 px и на 1280 px.
+
+<BlockLinks />
+
+<Hint title="Подсказка 1">
+Если в медиазапросе из занятия 5 меню стало столбиком, оставьте это: `.menu.open { display: flex; }` покажет его как раз столбиком.
+</Hint>
+
+<Hint title="Подсказка 2">
+`setAttribute('aria-expanded', isOpen)` сам превратит `true` и `false` в строки `"true"` и `"false"`.
+</Hint>
+
+<Hint title="Решение">
+```js
+const burger = document.querySelector('.burger');
+const menu = document.querySelector('.menu');
+
+burger.addEventListener('click', function () {
+  const isOpen = menu.classList.toggle('open');
+  burger.setAttribute('aria-expanded', isOpen);
+});
+```
+
+```css
+.burger {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .burger {
+    display: block;
+  }
+
+  .menu {
+    display: none;
+    flex-direction: column;
+    width: 100%;
+  }
+
+  .menu.open {
+    display: flex;
+  }
+}
+```
+</Hint>
+
+<Checklist />
+<Stuck />

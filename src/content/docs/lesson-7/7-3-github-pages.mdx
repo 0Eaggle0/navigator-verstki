@@ -2,7 +2,87 @@
 title: "Публикация на GitHub Pages через браузер"
 lesson: 7
 minutes: 20
-soon: true
+goal: Выкладываем сайт в интернет — он открывается по ссылке с любого телефона
 sidebar:
   order: 3
+links:
+  - title: "GitHub Pages"
+    url: https://pages.github.com/
+  - title: "GitHub Docs: загрузка файлов в репозиторий"
+    url: https://docs.github.com/ru/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
+warmup:
+  task: "Эта страница сломается в интернете: пути к картинкам и ссылкам ведут на компьютер автора или в корень сайта. Сделай все пути относительными — от папки, где лежит index.html: img/…, about.html."
+  html: |
+    <img src="C:\Users\Anya\Desktop\site\img\barsik.svg" alt="Кот Барсик" width="150">
+    <img src="/img/sharik.svg" alt="Пёс Шарик" width="150">
+    <p><a href="/about.html">О приюте</a></p>
+  css: |
+    img { border-radius: 8px; }
+  checks:
+    - js: "return [...doc.images].every((i) => { const s = i.dataset.src ?? i.getAttribute('src'); return !/^([a-z]:|file:|\\/)/i.test(s) && !s.includes('\\\\'); })"
+      fail: "У картинок остались пути с диском (C:\\…), обратными слешами или слешем в начале. Нужно: src=\"img/barsik.svg\""
+    - js: "return [...doc.images].every((i) => i.complete && i.naturalWidth > 0)"
+      fail: "Какая-то картинка не загрузилась — проверь имя файла: img/barsik.svg и img/sharik.svg"
+    - js: "const h = doc.querySelector('a').getAttribute('href'); return h === 'about.html' || h === './about.html'"
+      fail: "Ссылка должна быть относительной: href=\"about.html\""
+checklist:
+  - Главный файл называется index.html и лежит в корне репозитория
+  - Все пути относительные, имена файлов латиницей без пробелов
+  - В Settings → Pages включена публикация из ветки main
+  - Ссылка на сайт открывается с телефона
+mistakes:
+  - q: По ссылке ошибка 404
+    a: "Подожди 1–2 минуты после включения Pages. Проверь, что index.html лежит в корне репозитория, а не во вложенной папке, и называется именно index.html — маленькими буквами."
+  - q: Сайт открылся без стилей и картинок
+    a: "Пути начинаются со слеша (/style.css) или с диска (C:\\…). Сделай их относительными: style.css, img/logo.png. И проверь регистр: на GitHub Logo.PNG и logo.png — разные файлы."
+  - q: Загрузил папку, а файлы оказались внутри неё
+    a: "Перетаскивай в окно загрузки содержимое папки проекта (index.html, style.css, script.js, папку img), а не саму папку."
+blocks: []
 ---
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+
+## Теория
+
+**GitHub** — сайт, где хранят код, а **GitHub Pages** — его бесплатный хостинг. Кладёте файлы сайта в репозиторий (папку на GitHub), включаете Pages — и через минуту сайт открывается по адресу `https://логин.github.io/название-репозитория/`. Git и командная строка для этого не нужны: всё делается в браузере.
+
+Главная ловушка — **пути к файлам**. На вашем компьютере работает и `C:\Users\Аня\Desktop\site\img\cat.jpg`, но в интернете такого диска нет. Путь `/img/cat.jpg` со слешем в начале ведёт в корень `логин.github.io`, а не в ваш сайт. Правильно — **относительные** пути от `index.html`: `img/cat.jpg`, `style.css`, `about.html`.
+
+Вторая ловушка — **регистр букв**. Windows не различает `Cat.JPG` и `cat.jpg`, а GitHub различает. Называйте файлы латиницей, маленькими буквами, без пробелов: `hero-dog.jpg`.
+
+Главный файл обязательно называется `index.html` и лежит в корне репозитория — его GitHub Pages открывает по адресу сайта.
+
+<Links />
+
+## Разминка
+
+<Warmup />
+
+## Делаем свой сайт
+
+Публикует один человек в команде, остальные смотрят.
+
+1. Зарегистрируйтесь на [github.com](https://github.com) (нужна почта).
+2. Нажмите **+** → **New repository**. Название латиницей, например `hvost-domoy`. Отметьте **Public** → **Create repository**.
+3. На странице репозитория нажмите **uploading an existing file**. Перетащите в окно **содержимое** папки проекта: `index.html`, `style.css`, `script.js`, папку `img`. Нажмите **Commit changes**.
+4. Откройте **Settings** → **Pages**. В **Source** выберите **Deploy from a branch**, ветка `main`, папка `/ (root)` → **Save**.
+5. Через 1–2 минуты вверху страницы Pages появится ссылка на сайт. Откройте её с компьютера и с телефона.
+6. Нашли ошибку? Исправьте файл на компьютере и загрузите его снова через **Add file** → **Upload files** — сайт обновится сам.
+
+<Hint title="Подсказка 1">
+Перед загрузкой откройте `index.html` в VS Code и поищите (Ctrl+F) `C:` и `src="/` — всё найденное нужно исправить на относительные пути.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если сайт открылся, а картинки нет — откройте на сайте DevTools → Console. Ошибка 404 покажет, какой файл браузер искал и не нашёл. Сравните имя с тем, что лежит в репозитории, до буквы.
+</Hint>
+
+<Hint title="Решение">
+```html
+<img src="img/barsik.svg" alt="Кот Барсик" width="150">
+<img src="img/sharik.svg" alt="Пёс Шарик" width="150">
+<p><a href="about.html">О приюте</a></p>
+```
+</Hint>
+
+<Checklist />
+<Stuck />

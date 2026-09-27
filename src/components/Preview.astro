@@ -1,22 +1,25 @@
 ---
 // Пример кода с живым превью. Использование в шаге:
 // <Preview html="<h1>Привет</h1>" css="h1 { color: tomato; }" />
+// С JavaScript: <Preview html={`...`} js={`...`} /> — код выполнится в превью
 import { Code } from '@astrojs/starlight/components';
 import { srcdoc } from '~/lib/srcdoc';
 
 interface Props {
 	html: string;
 	css?: string;
+	js?: string;
 	height?: number;
 }
-const { html, css = '', height = 180 } = Astro.props;
+const { html, css = '', js, height = 180 } = Astro.props;
 ---
 
 <figure class="preview not-content">
 	<Code code={html} lang="html" title="index.html" />
 	{css && <Code code={css} lang="css" title="style.css" />}
+	{js && <Code code={js} lang="js" title="script.js" />}
 	<figcaption>Как это выглядит в браузере:</figcaption>
-	<iframe title="Превью примера" srcdoc={srcdoc(html, css)} sandbox="allow-same-origin" style={`height:${height}px`}></iframe>
+	<iframe title="Превью примера" srcdoc={srcdoc(html, css, js)} sandbox={js ? undefined : 'allow-same-origin'} style={`height:${height}px`}></iframe>
 </figure>
 
 <style>

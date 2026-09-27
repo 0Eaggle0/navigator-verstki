@@ -1,0 +1,32 @@
+<!-- ФИЛЬТРЫ КАРТОЧЕК. Вставь внутрь <main> вместо обычной сетки карточек -->
+<section class="events" id="events">
+  <h2>Куда сходить на выходных</h2>
+
+  <!-- что менять: названия фильтров. data-filter должен совпадать с data-type у карточек -->
+  <div class="filters" role="group" aria-label="Фильтр событий">
+    <button class="filters__btn active" type="button" data-filter="all">Все</button>
+    <button class="filters__btn" type="button" data-filter="free">Бесплатно</button>
+    <button class="filters__btn" type="button" data-filter="music">Концерты</button>
+    <button class="filters__btn" type="button" data-filter="sport">Спорт</button>
+  </div>
+
+  <div class="events__cards">
+    <!-- что менять: карточки. У каждой data-type — тип для фильтра -->
+    <article class="event" data-type="music">
+      <h3>Рок в парке</h3>
+      <p>Суббота, 18:00 · 300 ₽</p>
+    </article>
+    <article class="event" data-type="free">
+      <h3>Квиз в библиотеке</h3>
+      <p>Воскресенье, 14:00 · бесплатно</p>
+    </article>
+    <article class="event" data-type="sport">
+      <h3>Турнир по стритболу</h3>
+      <p>Суббота, 12:00 · 100 ₽</p>
+    </article>
+    <article class="event" data-type="free">
+      <h3>Кино под открытым небом</h3>
+      <p>Пятница, 21:00 · бесплатно</p>
+    </article>
+  </div>
+</section>

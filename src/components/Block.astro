@@ -1,5 +1,6 @@
 ---
-// Готовый блок: превью + код + кнопки «Скопировать». Код лежит в src/blocks/<id>.html и <id>.css
+// Готовый блок: превью + код + кнопки «Скопировать». Код лежит в src/blocks/<id>.html и <id>.css,
+// у блоков с поведением — ещё <id>.js
 import { Code } from '@astrojs/starlight/components';
 import { srcdoc } from '~/lib/srcdoc';
 
@@ -11,18 +12,21 @@ const { id, height = 320 } = Astro.props;
 const files = import.meta.glob<string>('/src/blocks/*', { query: '?raw', import: 'default', eager: true });
 const html = files[`/src/blocks/${id}.html`];
 const css = files[`/src/blocks/${id}.css`];
+const js = files[`/src/blocks/${id}.js`]; // может не быть
 if (html === undefined || css === undefined) throw new Error(`Нет файлов блока src/blocks/${id}.html / .css`);
 ---
 
-<nav-block class="block not-content" data-html={html} data-css={css}>
-	<iframe title="Превью блока" srcdoc={srcdoc(html, css)} sandbox="allow-same-origin" style={`height:${height}px`}></iframe>
+<nav-block class="block not-content" data-html={html} data-css={css} data-js={js}>
+	<iframe title="Превью блока" srcdoc={srcdoc(html, css, js)} sandbox={js ? undefined : 'allow-same-origin'} style={`height:${height}px`}></iframe>
 	<p class="block__buttons">
 		<button type="button" data-copy="html">Скопировать HTML</button>
 		<button type="button" data-copy="css">Скопировать CSS</button>
+		{js && <button type="button" data-copy="js">Скопировать JS</button>}
 		<span class="block__status" aria-live="polite"></span>
 	</p>
 	<Code code={html} lang="html" title={`${id}.html → вставь в index.html`} />
 	<Code code={css} lang="css" title={`${id}.css → вставь в style.css`} />
+	{js && <Code code={js} lang="js" title={`${id}.js → вставь в script.js`} />}
 </nav-block>
 
 <script>
@@ -31,7 +35,7 @@ if (html === undefined || css === undefined) throw new Error(`Нет файло�
 			const status = this.querySelector('.block__status')!;
 			this.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((btn) =>
 				btn.addEventListener('click', async () => {
-					const kind = btn.dataset.copy as 'html' | 'css';
+					const kind = btn.dataset.copy as 'html' | 'css' | 'js';
 					try {
 						await navigator.clipboard.writeText(this.dataset[kind]!);
 						status.textContent = `${kind.toUpperCase()} скопирован ✓`;

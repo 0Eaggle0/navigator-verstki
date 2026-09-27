@@ -8,7 +8,7 @@ export type Progress = {
 	last?: string; // адрес последнего открытого шага
 	done: string[]; // id пройденных шагов (например "lesson-1/1-3-skeleton")
 	checklist: Record<string, number[]>; // отмеченные пункты чек-листа
-	drafts: Record<string, { html: string; css: string }>; // черновики песочницы
+	drafts: Record<string, { html: string; css: string; js?: string }>; // черновики песочницы
 };
 
 export function load(): Progress {
