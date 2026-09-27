@@ -1,0 +1,114 @@
+---
+// Коллекция значков. Полученные — цветные, остальные — силуэты с подсказкой, как их получить.
+// Правила — в src/lib/badges.ts.
+import Icon from './Icon.astro';
+import { BADGES } from '~/lib/badges';
+---
+
+<nav-badges class="badges not-content">
+	<p class="badges__count px-font">Собрано <b>0</b> из {BADGES.length}</p>
+	<ul>
+		{
+			BADGES.map((b) => (
+				<li data-id={b.id}>
+					<span class="badges__medal">
+						<Icon name="star" size={28} />
+					</span>
+					<strong class="px-font">{b.title}</strong>
+					<span>{b.how}</span>
+				</li>
+			))
+		}
+	</ul>
+</nav-badges>
+
+<script>
+	import { load } from '~/lib/storage';
+	import { checkBadges } from '~/lib/badges';
+
+	class Badges extends HTMLElement {
+		connectedCallback() {
+			checkBadges(); // вдруг значок заработан, а тост ещё не показывали
+			const show = () => {
+				const got = load().badges;
+				const items = [...this.querySelectorAll<HTMLElement>('li')];
+				items.forEach((li) => li.classList.toggle('is-got', got.includes(li.dataset.id!)));
+				this.querySelector('.badges__count b')!.textContent = String(items.filter((li) => li.classList.contains('is-got')).length);
+			};
+			show();
+			window.addEventListener('nav-progress', show);
+		}
+	}
+	customElements.define('nav-badges', Badges);
+</script>
+
+<style>
+	.badges {
+		display: block;
+	}
+	.badges__count {
+		margin: 0 0 1rem;
+		font-size: 0.75rem;
+	}
+	.badges__count b {
+		color: var(--sl-color-accent);
+	}
+	.badges ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
+		gap: 1.25rem 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.badges li {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 0.1rem 0.75rem;
+		align-items: start;
+		margin: 0;
+		color: var(--sl-color-gray-3);
+	}
+	.badges li > span:last-child {
+		grid-column: 2;
+		font-size: var(--sl-text-xs);
+		line-height: 1.35;
+	}
+	.badges strong {
+		font-size: 0.65rem;
+		line-height: 1.5;
+		font-weight: 400;
+	}
+	/* Медаль: пиксельный кружок со звездой. Не полученная — тёмный силуэт */
+	.badges__medal {
+		grid-row: span 2;
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		margin: 3px;
+		color: var(--sl-color-gray-5);
+		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--sl-color-gray-5),
+			0 3px 0 0 var(--sl-color-gray-5),
+			-3px 0 0 0 var(--sl-color-gray-5),
+			3px 0 0 0 var(--sl-color-gray-5);
+	}
+	.badges li.is-got {
+		color: var(--sl-color-gray-2);
+	}
+	.badges li.is-got strong {
+		color: var(--sl-color-white);
+	}
+	.badges li.is-got .badges__medal {
+		color: #fff;
+		background: var(--px-coin);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink),
+			inset -5px -5px 0 0 #0003;
+	}
+</style>

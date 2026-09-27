@@ -38,6 +38,11 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 							sandbox={hasJs ? undefined : 'allow-same-origin'}
 							style={w.width ? `width:${w.width}px` : undefined}
 						/>
+						<div class="sandbox__clear px-font" role="status" hidden>
+							<span class="sandbox__coin" aria-hidden="true" />
+							<b>Разминка пройдена!</b>
+							<span>+1 звезда</span>
+						</div>
 						{/* Для JS-разминок проверки идут в скрытой копии: они нажимают кнопки и не должны менять то, что видит ученик */}
 						{hasJs && (
 							<iframe
@@ -90,6 +95,7 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 			const checker = this.querySelector<HTMLIFrameElement>('.sandbox__checker') ?? frame;
 			const out = this.querySelector<HTMLElement>('.sandbox__checks')!;
 			const logList = this.querySelector('.sandbox__console ol');
+			const clear = this.querySelector<HTMLElement>('.sandbox__clear')!;
 
 			const draft = load().drafts[id];
 			htmlBox.value = draft?.html ?? html;
@@ -117,12 +123,18 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 				const head = document.createElement('p');
 				head.textContent = failed.length
 					? `Проверка: ${results.length - failed.length} из ${results.length}. Осталось:`
-					: '✅ Всё верно! Разминка пройдена.';
+					: 'Всё верно! Разминка пройдена.';
 				out.append(head);
 				if (failed.length) {
 					const ul = document.createElement('ul');
 					for (const f of failed) ul.append(Object.assign(document.createElement('li'), { textContent: f.message }));
 					out.append(ul);
+				}
+				// Первое решение: записываем и показываем «Разминка пройдена»
+				if (!failed.length && !load().solved.includes(id)) {
+					update((p) => p.solved.push(id));
+					clear.hidden = false;
+					setTimeout(() => (clear.hidden = true), 2600);
 				}
 			});
 
@@ -171,13 +183,17 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 </script>
 
 <style>
+	/* Песочница — «игровой экран» в пиксельной рамке */
 	.sandbox {
 		display: block;
-		margin-block: 1.5rem;
+		margin: 2rem 3px 1.5rem;
 		padding: 1rem;
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: var(--nav-radius);
-		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
 	}
 	.sandbox__task {
 		margin: 0 0 1rem;
@@ -189,10 +205,10 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 	}
 	.sandbox label {
 		display: block;
-		font-weight: 600;
-		font-size: var(--sl-text-sm);
+		font: 400 0.7rem var(--px-font);
 		margin-bottom: 0.75rem;
 	}
+	/* Редактор всегда тёмный, как экран консоли */
 	.sandbox textarea {
 		display: block;
 		width: 100%;
@@ -201,11 +217,11 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		font: 0.875rem/1.5 var(--__sl-font-mono, ui-monospace, Consolas, monospace);
 		tab-size: 2;
 		resize: vertical;
-		color: #e2e8f0;
-		background: #0f172a;
-		border: 1px solid #334155;
-		border-radius: 0.625rem;
-		caret-color: #a5b4fc;
+		color: #e8e6f5;
+		background: #141333;
+		border: 2px solid var(--px-ink);
+		border-radius: 0;
+		caret-color: var(--px-coin);
 	}
 	.sandbox__tip {
 		margin: 0;
@@ -228,8 +244,7 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		display: block;
 		width: 100%;
 		height: 16rem;
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: 0.5rem;
+		border: 2px solid var(--px-ink);
 		background: #fff;
 		resize: vertical;
 	}
@@ -241,19 +256,63 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		height: 16rem;
 		pointer-events: none;
 	}
+	/* «Разминка пройдена!» — появляется один раз, когда разминка решена впервые */
+	.sandbox__clear {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		color: #fff;
+		background: #1b1a3ff5;
+		animation: clear-in 0.3s steps(3) both;
+	}
+	.sandbox__clear[hidden] {
+		display: none;
+	}
+	.sandbox__clear b {
+		font-size: 1.05rem;
+		font-weight: 400;
+		color: var(--px-coin);
+		text-shadow: 3px 3px 0 #000;
+	}
+	.sandbox__coin {
+		width: 24px;
+		height: 32px;
+		background: var(--px-coin);
+		box-shadow:
+			inset -6px 0 0 #c98f00,
+			0 -3px 0 0 #7a5600,
+			0 3px 0 0 #7a5600,
+			-3px 0 0 0 #7a5600,
+			3px 0 0 0 #7a5600;
+		animation: coin-jump 0.6s steps(6) 2;
+	}
+	@keyframes clear-in {
+		from {
+			opacity: 0;
+		}
+	}
+	@keyframes coin-jump {
+		50% {
+			transform: translateY(-18px);
+		}
+	}
 	.sandbox__console {
 		margin-top: 0.75rem;
 		padding: 0.5rem 0.75rem;
-		border-radius: 0.5rem;
 		font: 0.8125rem/1.4 var(--__sl-font-mono, ui-monospace, Consolas, monospace);
 		color: #e5e7eb;
-		background: #111827;
+		background: #141333;
+		border: 2px solid var(--px-ink);
 	}
 	.sandbox__console-title {
 		margin: 0 0 0.25rem;
-		font-family: var(--__sl-font);
-		font-weight: 600;
-		color: #9ca3af;
+		font: 400 0.65rem var(--px-font);
+		color: #a8a4cc;
 	}
 	.sandbox__console ol {
 		margin: 0;
@@ -262,59 +321,58 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 	}
 	.sandbox__console ol:empty::before {
 		content: 'Пока пусто. Напиши console.log("привет")';
-		color: #9ca3af;
+		color: #a8a4cc;
 	}
+	/* Строки консоли создаёт JS — их стили через :global */
 	.sandbox__console :global(li + li) {
-		border-top: 1px solid #374151;
+		border-top: 1px solid #34326a;
 	}
 	.sandbox__console :global(.is-error) {
-		color: #fca5a5;
+		color: #ffab8a;
 	}
 	.sandbox__console :global(.is-warn) {
-		color: #fde68a;
+		color: #ffe08a;
 	}
 	.sandbox__checks {
 		margin-top: 0.75rem;
-		padding: 0.5rem 0.75rem;
-		border-radius: 0.5rem;
+		padding: 0.6rem 0.75rem;
 	}
 	.sandbox__checks:empty {
 		display: none;
 	}
 	.sandbox__checks :global(p) {
 		margin: 0;
-		font-weight: 600;
+		font: 400 0.75rem/1.6 var(--px-font);
 	}
-	/* Невыполненные проверки — плашками */
+	/* Невыполненные проверки — строками с крестиком */
 	.sandbox__checks :global(ul) {
-		display: grid;
-		gap: 0.375rem;
-		margin: 0.5rem 0 0;
+		margin: 0.4rem 0 0;
 		padding: 0;
 		list-style: none;
 	}
 	.sandbox__checks :global(li) {
 		margin: 0;
-		padding: 0.375rem 0.625rem;
+		padding: 0.2rem 0 0.2rem 1.4rem;
 		font-size: var(--sl-text-sm);
-		border: 1px solid var(--sl-color-red);
-		border-radius: 0.5rem;
-		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+		text-indent: -1.4rem;
 	}
 	.sandbox__checks :global(li)::before {
-		content: '✗ ';
-		color: var(--sl-color-red);
+		content: '✗';
+		display: inline-block;
+		width: 1.4rem;
+		text-indent: 0;
+		color: var(--px-brick);
 		font-weight: 700;
 	}
 	.is-wip {
-		border: 1px solid var(--sl-color-orange);
-		background: var(--sl-color-orange-low);
+		border-left: 6px solid var(--px-brick);
+		background: var(--sl-color-black);
 	}
 	.is-ok {
-		border: 1px solid var(--sl-color-green);
-		background: var(--sl-color-green-low);
+		border-left: 6px solid var(--px-grass);
+		background: var(--sl-color-black);
 	}
 	.sandbox__reset {
-		margin-top: 0.75rem;
+		margin-top: 0.9rem !important;
 	}
 </style>

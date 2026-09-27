@@ -8,7 +8,7 @@ const items = entry.data.checklist;
 	{
 		items.length > 0 && (
 			<fieldset>
-				<legend>✅ Проверь себя перед следующим шагом</legend>
+				<legend class="px-font">Проверь себя перед следующим уровнем</legend>
 				{items.map((text, i) => (
 					<label>
 						<input type="checkbox" value={i} /> {text}
@@ -31,7 +31,7 @@ const items = entry.data.checklist;
 			const p = load();
 			const show = (done: boolean) => {
 				btn.setAttribute('aria-pressed', String(done));
-				btn.textContent = done ? '✓ Шаг пройден' : 'Отметить шаг пройденным';
+				btn.textContent = done ? 'Шаг пройден' : 'Отметить шаг пройденным';
 			};
 			boxes.forEach((b) => (b.checked = (p.checklist[id] ?? []).includes(+b.value)));
 			show(p.done.includes(id));
@@ -53,37 +53,61 @@ const items = entry.data.checklist;
 <style>
 	.checklist {
 		display: block;
-		margin-block: 2rem 1rem;
+		margin-block: 2.5rem 1rem;
 	}
 	.checklist fieldset {
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: var(--nav-radius);
+		margin: 0 3px;
 		padding: 0.75rem 1rem;
+		border: 0;
+		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
 	}
 	.checklist legend {
-		font-weight: 600;
-		padding-inline: 0.25rem;
+		float: left;
+		width: 100%;
+		margin-bottom: 0.6rem;
+		font-size: 0.75rem;
+		line-height: 1.6;
 	}
 	.checklist label {
 		display: flex;
-		gap: 0.5rem;
+		clear: left;
+		gap: 0.6rem;
 		align-items: baseline;
-		padding-block: 0.25rem;
+		padding-block: 0.3rem;
+		cursor: pointer;
 	}
+	/* Квадратный пиксельный флажок */
 	.checklist input {
+		appearance: none;
+		flex: none;
 		width: 1.1rem;
 		height: 1.1rem;
-		accent-color: var(--sl-color-accent);
+		margin: 0;
+		transform: translateY(0.15em);
+		background: var(--sl-color-black);
+		border: 3px solid var(--px-ink);
+		cursor: pointer;
+	}
+	.checklist input:checked {
+		background: var(--px-grass);
+		box-shadow: inset 0 0 0 2px var(--sl-color-black);
 	}
 	.checklist label:has(input:checked) {
 		color: var(--sl-color-gray-3);
 		text-decoration: line-through;
 	}
 	.checklist__done {
-		margin-top: 1rem;
+		margin-top: 1.25rem !important;
+		color: #1e1b3a !important;
+		background: var(--px-coin) !important;
 	}
 	.checklist__done[aria-pressed='true'] {
-		background: var(--sl-color-green-low);
-		border-color: var(--sl-color-green);
+		color: #fff !important;
+		background: var(--px-grass) !important;
 	}
 </style>

@@ -1,84 +1,292 @@
 ---
-// Маршрут: занятия из route.json, шаги и минуты — из файлов шагов. Прогресс — из браузера.
+// Маршрут как карта миров: занятие — мир, шаг — уровень. Минуты и шаги — из файлов шагов,
+// звёзды и «ты тут» — из прогресса в браузере.
+import Icon from './Icon.astro';
 import { getRoute, url, LIMIT_MINUTES, PER_LESSON } from '~/lib/route';
 
 const { lessons, total, warnings } = await getRoute();
+const count = lessons.reduce((n, l) => n + l.steps.length, 0);
+const MINIMUM = 5; // после этого мира — замок «Минимум»
 ---
 
-<div class="route not-content" data-warnings={JSON.stringify(warnings)}>
-	<p class="route__total">
-		Весь маршрут: <strong>{total} мин</strong> из {LIMIT_MINUTES} ({lessons.length} пар × {PER_LESSON} мин).
-		Пройдено шагов: <strong class="route__done">0</strong> из {lessons.reduce((n, l) => n + l.steps.length, 0)}.
+<div class="map not-content" data-warnings={JSON.stringify(warnings)}>
+	<p class="map__score px-font">
+		<span><Icon name="star" size={18} /> Звёзд: <b class="map__stars">0</b> из <b class="map__stars-max">0</b></span>
+		<span>Уровней пройдено: <b class="map__done">0</b> из {count}</span>
 	</p>
-	{
-		lessons.map((l) => (
-			<section>
-				<h2>
-					Занятие {l.n} · {l.title} <span class="route__sum">{l.minutes} мин</span>
-				</h2>
-				<p class="route__result">Результат: {l.result}</p>
-				<ol>
-					{l.steps.map((s) => (
-						<li data-id={s.id}>
-							<a href={url(s.id + '/')}>{s.data.title}</a>
-							<span class="route__min">{s.data.minutes} мин</span>
-							{s.data.optional && <span class="route__tag">можно пропустить</span>}
-							{s.data.soon && <span class="route__tag route__tag--soon">скоро</span>}
-						</li>
-					))}
-				</ol>
-			</section>
-		))
-	}
+	<p class="map__time">
+		Весь маршрут: {total} мин из {LIMIT_MINUTES} — {lessons.length} пар по {PER_LESSON} минут.
+	</p>
+
+	<ol class="map__worlds">
+		{
+			lessons.map((l) => (
+				<li class="world" data-n={l.n}>
+					<h2 class="world__title px-font">
+						Мир {l.n}. {l.title}
+						<span class="world__min">{l.minutes} мин</span>
+					</h2>
+					<p class="world__result">{l.result}</p>
+					<ol class="world__levels">
+						{l.steps.map((s) => (
+							<li class="level" data-id={s.id}>
+								<a href={url(s.id + '/')}>
+									<span class="level__here px-font" aria-hidden="true">
+										<Icon name="arrow" size={14} /> ты тут
+									</span>
+									<span class="level__block px-font">
+										{l.n}-{s.data.sidebar.order}
+									</span>
+									<span class="level__title">{s.data.title}</span>
+									<span class="level__stars" aria-hidden="true">
+										{Array.from({ length: s.data.warmup ? 3 : 2 }, () => (
+											<Icon name="star" size={12} />
+										))}
+									</span>
+								</a>
+								<span class="level__meta">
+									{s.data.minutes} мин{s.data.optional && ', бонус'}
+									{s.data.soon && ', строится'}
+								</span>
+							</li>
+						))}
+					</ol>
+					{l.n === MINIMUM && (
+						<p class="world__gate px-font">
+							<Icon name="castle" size={28} /> Замок «Минимум»: главная свёрстана и работает на телефоне
+						</p>
+					)}
+					{l.n === lessons.length && (
+						<p class="world__gate world__gate--finish px-font">
+							<Icon name="flag" size={28} /> Финиш: сайт открывается по ссылке
+						</p>
+					)}
+				</li>
+			))
+		}
+	</ol>
 </div>
 
 <script>
 	import { load } from '~/lib/storage';
-	const route = document.querySelector<HTMLElement>('.route')!;
-	JSON.parse(route.dataset.warnings!).forEach((w: string) => console.warn('[маршрут] ' + w));
-	const done = load().done;
-	const items = [...route.querySelectorAll<HTMLElement>('li[data-id]')];
-	items.forEach((li) => li.classList.toggle('is-done', done.includes(li.dataset.id!)));
-	route.querySelector('.route__done')!.textContent = String(items.filter((li) => li.classList.contains('is-done')).length);
+	import { getLevels, stars, maxStars } from '~/lib/badges';
+
+	const map = document.querySelector<HTMLElement>('.map')!;
+	JSON.parse(map.dataset.warnings!).forEach((w: string) => console.warn('[маршрут] ' + w));
+
+	const p = load();
+	const levels = getLevels() ?? [];
+	let got = 0;
+	let max = 0;
+	let here = false;
+	for (const li of map.querySelectorAll<HTMLElement>('.level')) {
+		const l = levels.find((x) => x.id === li.dataset.id);
+		if (!l) continue;
+		const n = stars(p, l);
+		got += n;
+		max += maxStars(l);
+		const done = p.done.includes(l.id);
+		li.classList.toggle('is-done', done);
+		li.querySelectorAll('.level__stars svg').forEach((s, i) => s.classList.toggle('is-on', i < n));
+		li.querySelector('a')!.setAttribute('aria-label', `${li.querySelector('.level__title')!.textContent}: ${done ? 'пройден' : 'не пройден'}, звёзд ${n}`);
+		// «Ты тут» — первый непройденный уровень
+		if (!done && !here) {
+			here = true;
+			li.classList.add('is-here');
+		}
+	}
+	map.querySelector('.map__stars')!.textContent = String(got);
+	map.querySelector('.map__stars-max')!.textContent = String(max);
+	map.querySelector('.map__done')!.textContent = String(p.done.filter((id) => levels.some((l) => l.id === id)).length);
 </script>
 
 <style>
-	.route h2 {
-		font-size: var(--sl-text-h3);
-		margin: 2rem 0 0.25rem;
+	.map__score {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 2rem;
+		margin: 0 3px;
+		padding: 0.6rem 1rem;
+		font-size: 0.75rem;
+		line-height: 1.6;
+		color: #f4f2fc;
+		background: #2b2750;
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
 	}
-	.route__sum,
-	.route__result,
-	.route__min {
+	.map__score :global(.px-icon) {
+		color: var(--px-coin);
+	}
+	.map__score b {
+		color: var(--px-coin);
+	}
+	.map__time {
+		margin: 0.8rem 0 0;
 		font-size: var(--sl-text-sm);
-		font-weight: 400;
 		color: var(--sl-color-gray-3);
 	}
-	.route__result {
-		margin: 0 0 0.5rem;
+
+	/* Миры идут «лесенкой» и соединены пунктирной тропой */
+	.map__worlds {
+		margin: 1.5rem 0 0;
+		padding: 0;
+		list-style: none;
 	}
-	.route ol {
-		padding-left: 1.5rem;
-	}
-	.route li {
-		padding-block: 0.3rem;
-	}
-	.route__min {
-		margin-left: 0.5rem;
-	}
-	.route__tag {
-		margin-left: 0.5rem;
-		padding: 0 0.4rem;
-		font-size: var(--sl-text-xs);
-		border-radius: 999px;
+	.world {
+		position: relative;
+		width: min(100%, 34rem);
+		margin: 0 0 2.5rem;
+		padding: 1rem 1.1rem 1.1rem;
 		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink),
+			6px 9px 0 0 #0002;
 	}
-	.route__tag--soon {
-		background: var(--sl-color-orange-low);
+	.world:nth-child(even) {
+		margin-left: auto;
 	}
-	.route li.is-done > a::before {
-		content: '✓ ';
-		color: var(--sl-color-green);
-		font-weight: 700;
+	.world + .world::before {
+		content: '';
+		position: absolute;
+		top: calc(-2.5rem - 3px);
+		left: 50%;
+		height: 2.5rem;
+		border-left: 4px dashed var(--sl-color-gray-4);
+	}
+	.world__title {
+		margin: 0;
+		font-size: 1rem;
+		line-height: 1.5;
+		color: var(--sl-color-white);
+	}
+	.world__min {
+		margin-left: 0.4rem;
+		font: 400 var(--sl-text-sm) var(--sl-font);
+		color: var(--sl-color-gray-3);
+	}
+	.world__result {
+		margin: 0.2rem 0 1.6rem;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+	}
+
+	/* Уровни — блоки как в платформере */
+	.world__levels {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+		gap: 1.75rem 1rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.level {
+		margin: 0 !important;
+	}
+	.level a {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		align-items: flex-start;
+		text-decoration: none;
+		color: var(--sl-color-white);
+	}
+	.level__block {
+		display: grid;
+		place-items: center;
+		width: 3.2rem;
+		height: 3.2rem;
+		margin: 3px;
+		font-size: 0.7rem;
+		color: #fff;
+		background: #8a4d2c;
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink),
+			inset -5px -5px 0 0 #0003,
+			inset 5px 5px 0 0 #ffffff26;
+	}
+	.level.is-done .level__block {
+		background: var(--px-grass);
+	}
+	.level.is-here .level__block {
+		color: #1e1b3a;
+		background: var(--px-coin);
+	}
+	.level a:hover .level__block,
+	.level a:focus-visible .level__block {
+		transform: translateY(-3px);
+	}
+	.level__title {
+		font-size: var(--sl-text-sm);
+		line-height: 1.3;
+	}
+	.level a:hover .level__title {
+		text-decoration: underline;
+	}
+	.level__stars {
+		display: flex;
+		gap: 2px;
+		color: var(--sl-color-gray-4);
+	}
+	.level__stars :global(.is-on) {
+		color: var(--px-coin);
+	}
+	.level__meta {
+		display: block;
+		margin-top: 0.15rem;
+		font-size: var(--sl-text-xs);
+		color: var(--sl-color-gray-3);
+	}
+	/* «Ты тут» над текущим уровнем — единственная постоянная анимация на странице */
+	.level__here {
+		position: absolute;
+		top: -1.1rem;
+		left: 0;
+		display: none;
+		align-items: center;
+		gap: 0.25rem;
+		font-size: 0.6rem;
+		color: var(--sl-color-accent);
+	}
+	.level.is-here .level__here {
+		display: inline-flex;
+		animation: bob 1s steps(2) infinite;
+	}
+	@keyframes bob {
+		50% {
+			transform: translateY(3px);
+		}
+	}
+
+	.world__gate {
+		display: flex;
+		gap: 0.75rem;
+		align-items: center;
+		margin: 1.2rem 0 0;
+		padding: 0.6rem 0.8rem;
+		font-size: 0.75rem;
+		line-height: 1.6;
+		border-top: 3px dashed var(--sl-color-gray-4);
+	}
+	.world__gate :global(.px-icon) {
+		color: var(--px-brick);
+	}
+	.world__gate--finish :global(.px-icon) {
+		color: var(--px-grass);
+	}
+
+	@media (max-width: 40rem) {
+		.world:nth-child(even) {
+			margin-left: 0;
+		}
 	}
 </style>

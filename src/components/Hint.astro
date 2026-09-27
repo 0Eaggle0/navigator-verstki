@@ -1,19 +1,27 @@
 ---
 // Подсказка или решение. На странице открываются строго по очереди:
 // следующую можно открыть, только когда открыта предыдущая.
+// Открытая подсказка забирает звезду «без подсказок» у этого уровня.
 // <Hint title="Подсказка 1">текст</Hint>
+import Icon from './Icon.astro';
 interface Props {
 	title: string;
 }
 const { title } = Astro.props;
+const id = Astro.locals.starlightRoute.entry.id;
 ---
 
-<details class="hint not-content">
-	<summary>{title}</summary>
+<details class="hint not-content" data-id={id}>
+	<summary class="px-font">
+		<Icon name="bulb" size={18} class="hint__bulb" />
+		<Icon name="lock" size={18} class="hint__lock" />
+		{title}
+	</summary>
 	<div class="hint__body sl-markdown-content"><slot /></div>
 </details>
 
 <script>
+	import { update } from '~/lib/storage';
 	const hints = [...document.querySelectorAll<HTMLDetailsElement>('details.hint')];
 	const lock = () =>
 		hints.forEach((h, i) => {
@@ -25,43 +33,66 @@ const { title } = Astro.props;
 		h.querySelector('summary')!.addEventListener('click', (e) => {
 			if (h.classList.contains('is-locked')) e.preventDefault();
 		});
-		h.addEventListener('toggle', lock);
+		h.addEventListener('toggle', () => {
+			lock();
+			const id = h.dataset.id!;
+			if (h.open) update((p) => !p.hints.includes(id) && p.hints.push(id));
+		});
 	});
 	lock();
 </script>
 
 <style>
 	.hint {
-		margin-block: 0.75rem;
-		border: 1px solid var(--sl-color-orange);
-		border-radius: var(--nav-radius);
-		background: var(--sl-color-orange-low);
+		margin: 0.9rem 3px;
+		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
 	}
 	.hint summary {
+		display: flex;
+		gap: 0.6rem;
+		align-items: center;
 		padding: 0.6rem 1rem;
-		font-weight: 600;
+		font-size: 0.75rem;
+		line-height: 1.5;
 		cursor: pointer;
+		list-style: none;
 	}
-	.hint summary::before {
-		content: '💡 ';
+	.hint summary::-webkit-details-marker {
+		display: none;
+	}
+	.hint :global(.hint__bulb) {
+		color: var(--px-coin);
+	}
+	.hint :global(.hint__lock),
+	.hint.is-locked :global(.hint__bulb) {
+		display: none;
+	}
+	.hint.is-locked :global(.hint__lock) {
+		display: inline-block;
+	}
+	.hint[open] summary {
+		border-bottom: 2px dashed var(--sl-color-gray-5);
 	}
 	.hint.is-locked {
-		border-color: var(--sl-color-gray-5);
 		background: none;
-	}
-	.hint.is-locked summary::before {
-		content: '🔒 ';
 	}
 	.hint.is-locked summary {
 		cursor: not-allowed;
 		color: var(--sl-color-gray-3);
 	}
 	.hint.is-locked summary::after {
-		content: ' — сначала открой предыдущую';
+		content: 'сначала открой предыдущую';
+		margin-left: auto;
+		font-family: var(--sl-font);
 		font-weight: 400;
 		font-size: var(--sl-text-sm);
 	}
 	.hint__body {
-		padding: 0 1rem 0.75rem;
+		padding: 0.75rem 1rem;
 	}
 </style>

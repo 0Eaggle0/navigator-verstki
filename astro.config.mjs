@@ -25,7 +25,7 @@ export default defineConfig({
 				{ label: 'Маршрут', link: '/route/' },
 				// Шаги подтягиваются из папок сами. Порядок — поле sidebar.order в файле шага.
 				...route.lessons.map((l) => ({
-					label: `Занятие ${l.n} · ${l.title}`,
+					label: `Мир ${l.n}. ${l.title}`,
 					collapsed: l.n > 1,
 					items: [{ autogenerate: { directory: `lesson-${l.n}` } }],
 				})),

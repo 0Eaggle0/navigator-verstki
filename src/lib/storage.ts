@@ -9,10 +9,13 @@ export type Progress = {
 	done: string[]; // id пройденных шагов (например "lesson-1/1-3-skeleton")
 	checklist: Record<string, number[]>; // отмеченные пункты чек-листа
 	drafts: Record<string, { html: string; css: string; js?: string }>; // черновики песочницы
+	solved: string[]; // id страниц, где разминка решена
+	hints: string[]; // id шагов, где открывали подсказку (для звезды «без подсказок»)
+	badges: string[]; // полученные значки
 };
 
 export function load(): Progress {
-	const empty: Progress = { done: [], checklist: {}, drafts: {} };
+	const empty: Progress = { done: [], checklist: {}, drafts: {}, solved: [], hints: [], badges: [] };
 	try {
 		return { ...empty, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
 	} catch {
@@ -29,5 +32,7 @@ export function update(fn: (p: Progress) => void) {
 	} catch {
 		// нет доступа к хранилищу — молча продолжаем
 	}
+	// Сообщаем странице: звёзды и значки пересчитываются (слушатель в StepHeader.astro)
+	window.dispatchEvent(new Event('nav-progress'));
 	return p;
 }

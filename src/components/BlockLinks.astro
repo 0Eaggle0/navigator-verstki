@@ -25,7 +25,7 @@ const ids = Astro.locals.starlightRoute.entry.data.blocks as (keyof typeof block
 	{
 		cases.map((c) => (
 			<p class="case-note" data-case={c.id} hidden>
-				💡 {c.title}: {c.note}
+				<strong>Для кейса {c.title}:</strong> {c.note}
 			</p>
 		))
 	}

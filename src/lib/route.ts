@@ -36,5 +36,17 @@ export async function getRoute() {
 	return { lessons, steps, total, warnings };
 }
 
+// Уровни для игровых механик (звёзды, значки) — кладутся в страницу как JSON
+export async function getLevels() {
+	const { steps } = await getRoute();
+	return steps.map((s) => ({
+		id: s.id,
+		lesson: s.data.lesson!,
+		order: s.data.sidebar.order ?? 0,
+		warmup: !!s.data.warmup,
+		js: s.data.warmup?.js !== undefined,
+	}));
+}
+
 // Ссылка с учётом base (на GitHub Pages сайт лежит в подпапке)
 export const url = (path: string) => import.meta.env.BASE_URL.replace(/\/$/, '') + '/' + path.replace(/^\//, '');

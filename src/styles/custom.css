@@ -1,35 +1,178 @@
-/* Цвета и мелочи оформления сайта-навигатора */
-/* Шрифт кода: JetBrains Mono (есть кириллица). Без интернета — системный моноширинный */
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap');
+/* Оформление «пиксельная игра». Курс = игра: занятие — мир, шаг — уровень.
+   День — светлая тема (небо), ночь — тёмная. Свои цвета — переменные --px-*. */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Onest:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
 
+/* Ночь (тёмная тема Starlight по умолчанию) */
 :root {
+	--sl-font: 'Onest', system-ui, sans-serif;
 	--sl-font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
-	--sl-color-accent-low: #1e1b4b;
-	--sl-color-accent: #818cf8;
-	--sl-color-accent-high: #c7d2fe;
-	--nav-radius: 0.875rem;
-}
-:root[data-theme='light'] {
-	--sl-color-accent-low: #e0e7ff;
-	--sl-color-accent: #4f46e5;
-	--sl-color-accent-high: #312e81;
+	--px-font: 'Press Start 2P', 'Onest', system-ui, sans-serif;
+
+	--px-ink: #0e0d26; /* пиксельные рамки */
+	--px-grass: #5cc85c; /* пройдено */
+	--px-coin: #ffc930; /* звёзды, текущее */
+	--px-brick: #f07a4a; /* ошибки, «частые ошибки» */
+	--px-panel: #25244f; /* фон панелей */
+	--px-panel-text: #eceaf7;
+
+	--sl-color-white: #f4f2fc;
+	--sl-color-gray-1: #dcd9ef;
+	--sl-color-gray-2: #c3bfdf;
+	--sl-color-gray-3: #9a95c2;
+	--sl-color-gray-4: #605c90;
+	--sl-color-gray-5: #3b386c;
+	--sl-color-gray-6: #29275a;
+	--sl-color-black: #1b1a3f;
+	--sl-color-accent-low: #3d3300;
+	--sl-color-accent: #f2b705;
+	--sl-color-accent-high: #ffd457;
+	--sl-color-bg-nav: #141333;
+	--sl-color-bg-sidebar: #201f48;
 }
 
-/* Кнопки в наших компонентах */
+/* День */
+:root[data-theme='light'] {
+	--px-ink: #2b2750;
+	--px-grass: #2f8a2f;
+	--px-coin: #f2b705;
+	--px-brick: #b8481c;
+	--px-panel: #ffffff;
+	--px-panel-text: #1e1b3a;
+
+	--sl-color-white: #1e1b3a;
+	--sl-color-gray-1: #2b2750;
+	--sl-color-gray-2: #3a3666;
+	--sl-color-gray-3: #55517f;
+	--sl-color-gray-4: #8b88b3;
+	--sl-color-gray-5: #b3c3e8;
+	--sl-color-gray-6: #d3e0fa;
+	--sl-color-gray-7: #e6eeff;
+	--sl-color-black: #f4f7ff;
+	--sl-color-accent-low: #fff0bf;
+	--sl-color-accent: #9a4a10;
+	--sl-color-accent-high: #5c2a05;
+	--sl-color-bg-nav: #dde9ff;
+	--sl-color-bg-sidebar: #eaf1ff;
+}
+
+/* Ночное небо в шапке: редкие пиксельные звёзды. Днём — чистое небо */
+header.header {
+	background-image:
+		linear-gradient(#fff6 0 0), linear-gradient(#fff4 0 0), linear-gradient(#fff5 0 0), linear-gradient(#fff3 0 0);
+	background-size: 2px 2px;
+	background-position: 12% 30%, 38% 70%, 61% 25%, 86% 60%;
+	background-repeat: no-repeat;
+}
+:root[data-theme='light'] header.header {
+	background-image: none;
+}
+
+/* Пиксельный шрифт — только название сайта, заголовок страницы и игровые элементы */
+.site-title,
+.content-panel h1,
+.px-font {
+	font-family: var(--px-font);
+	font-weight: 400; /* у Press Start 2P одно начертание */
+	letter-spacing: 0;
+}
+.site-title {
+	font-size: 0.95rem !important;
+}
+@media (max-width: 30rem) {
+	.site-title {
+		font-size: 0.7rem !important;
+	}
+}
+.content-panel h1 {
+	font-size: clamp(1.25rem, 2.6vw, 1.9rem);
+	line-height: 1.45;
+}
+
+/* Пиксельная рамка со «срезанными» углами — как у спрайтов */
+.px-box {
+	--px-b: var(--px-ink);
+	box-shadow:
+		0 -3px 0 0 var(--px-b),
+		0 3px 0 0 var(--px-b),
+		-3px 0 0 0 var(--px-b),
+		3px 0 0 0 var(--px-b);
+}
+
+/* Кнопки в наших компонентах: объёмная пиксельная кнопка, при нажатии проседает */
 .not-content button {
-	padding: 0.5rem 1rem;
-	font: inherit;
-	font-weight: 600;
+	padding: 0.45rem 1rem;
+	font: 400 0.75rem/1.4 var(--px-font);
 	color: var(--sl-color-white);
 	background: var(--sl-color-gray-6);
-	border: 1px solid var(--sl-color-gray-4);
-	border-radius: 0.625rem;
+	border: 0;
+	border-radius: 0;
+	box-shadow:
+		0 -3px 0 0 var(--px-ink),
+		0 3px 0 0 var(--px-ink),
+		-3px 0 0 0 var(--px-ink),
+		3px 0 0 0 var(--px-ink),
+		inset 0 -4px 0 0 #0003;
 	cursor: pointer;
+	margin: 3px;
 }
 .not-content button:hover {
-	border-color: var(--sl-color-accent);
+	background: var(--sl-color-gray-5);
+}
+.not-content button:active {
+	transform: translateY(2px);
+	box-shadow:
+		0 -3px 0 0 var(--px-ink),
+		0 3px 0 0 var(--px-ink),
+		-3px 0 0 0 var(--px-ink),
+		3px 0 0 0 var(--px-ink);
 }
 .not-content :focus-visible {
-	outline: 3px solid var(--sl-color-accent-high);
-	outline-offset: 2px;
+	outline: 3px solid var(--px-coin);
+	outline-offset: 4px;
+}
+
+/* Тост «Новый значок». Создаётся из src/lib/badges.ts, поэтому стили глобальные */
+.px-toast {
+	position: fixed;
+	right: 1rem;
+	bottom: 1rem;
+	z-index: 50;
+	display: flex;
+	gap: 0.75rem;
+	align-items: center;
+	max-width: min(22rem, calc(100vw - 2rem));
+	padding: 0.75rem 1rem;
+	font-size: 0.9rem;
+	color: var(--px-panel-text);
+	background: var(--px-panel);
+	box-shadow:
+		0 -3px 0 0 var(--px-coin),
+		0 3px 0 0 var(--px-coin),
+		-3px 0 0 0 var(--px-coin),
+		3px 0 0 0 var(--px-coin);
+	animation: px-drop 0.35s steps(4) both;
+}
+.px-toast b {
+	display: block;
+	margin-bottom: 0.3rem;
+	font-size: 0.8rem;
+	font-weight: 400;
+}
+.px-toast__icon {
+	font-size: 2rem;
+	line-height: 1;
+	color: var(--px-coin);
+}
+@keyframes px-drop {
+	from {
+		transform: translateY(120%);
+	}
+}
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation: none !important;
+		transition: none !important;
+	}
 }

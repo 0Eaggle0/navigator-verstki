@@ -1,91 +1,166 @@
 ---
-// Заменяет стандартный заголовок Starlight. У страниц-шагов (есть поле minutes)
-// под заголовком показываем цель и время, а в прогресс пишем «последний открытый шаг».
+// Заменяет стандартный заголовок Starlight. У страниц-шагов (есть поле minutes) под заголовком —
+// игровая панель: «Мир 4-2», звёзды уровня, время шага. На всех страницах кладёт список уровней
+// для звёзд и значков и следит за новыми значками.
 import Default from '@astrojs/starlight/components/PageTitle.astro';
-import { LESSONS } from '~/lib/route';
+import Icon from './Icon.astro';
+import { LESSONS, getLevels } from '~/lib/route';
 
 const { entry } = Astro.locals.starlightRoute;
-const { lesson, minutes, goal, soon, optional, fast } = entry.data;
+const { lesson, minutes, goal, soon, optional, fast, sidebar } = entry.data;
 const isStep = minutes !== undefined;
+const levels = await getLevels();
+const maxStars = entry.data.warmup ? 3 : 2;
 ---
 
 <Default />
+<script id="nav-levels" type="application/json" set:html={JSON.stringify(levels)} />
 {
 	isStep && (
-		<p class="step-meta" data-path={Astro.url.pathname}>
-			<span class="step-meta__lesson">Занятие {lesson} · {LESSONS[lesson!]}</span>
-			<span class="step-meta__goal">🎯 {goal ?? entry.data.title}</span>
-			<span class="step-meta__time">⏱ {minutes} мин</span>
-			{optional && <span>можно пропустить</span>}
-		</p>
+		<div class="hud not-content" data-id={entry.id} data-path={Astro.url.pathname}>
+			<p class="hud__goal">
+				<Icon name="target" size={20} />
+				{goal ?? entry.data.title}
+			</p>
+			<div class="hud__bar px-font">
+				<span class="hud__world">
+					Мир {lesson}-{sidebar.order} <span class="hud__lesson">{LESSONS[lesson!]}</span>
+				</span>
+				<span class="hud__stars" role="img" aria-label={`Звёзды уровня: 0 из ${maxStars}`}>
+					{Array.from({ length: maxStars }, () => <Icon name="star" size={18} />)}
+				</span>
+				<span class="hud__time">
+					<Icon name="clock" size={18} />
+					{minutes} мин
+				</span>
+				{optional && <span class="hud__optional">Бонусный уровень: можно пропустить</span>}
+			</div>
+			<p class="hud__stars-help">
+				Звёзды: решить разминку, отметить шаг пройденным и пройти без подсказок.
+			</p>
+		</div>
 	)
 }
 {
 	fast && (
-		<p class="step-fast" role="note">
-			🏃 <strong>Быстрый путь</strong>, если команда отстаёт: {fast}
+		<p class="step-note step-note--fast" role="note">
+			<Icon name="run" size={18} />
+			<span>
+				<strong>Короткий путь</strong>, если команда отстаёт: {fast}
+			</span>
 		</p>
 	)
 }
 {
 	soon && (
-		<p class="step-soon" role="note">
-			🚧 Этот шаг ещё пишется. Пока загляни в «Шпаргалки и ссылки» или спроси модератора.
+		<p class="step-note" role="note">
+			Этот уровень ещё строится. Пока загляни в «Шпаргалки и ссылки» или спроси модератора.
 		</p>
 	)
 }
 
 <script>
-	import { update } from '~/lib/storage';
-	const meta = document.querySelector<HTMLElement>('.step-meta');
-	if (meta) update((p) => (p.last = meta.dataset.path));
+	import { load, update } from '~/lib/storage';
+	import { checkBadges, getLevels, stars } from '~/lib/badges';
+
+	const hud = document.querySelector<HTMLElement>('.hud');
+	if (hud) {
+		const id = hud.dataset.id!;
+		const level = getLevels()?.find((l) => l.id === id);
+		const starsEl = hud.querySelector<HTMLElement>('.hud__stars')!;
+		update((p) => (p.last = hud.dataset.path));
+
+		const showStars = () => {
+			if (!level) return;
+			const n = stars(load(), level);
+			[...starsEl.children].forEach((s, i) => s.classList.toggle('is-on', i < n));
+			starsEl.setAttribute('aria-label', `Звёзды уровня: ${n} из ${starsEl.children.length}`);
+		};
+
+		showStars();
+		window.addEventListener('nav-progress', showStars);
+	}
+
+	// Значки проверяем при любом изменении прогресса на любой странице
+	window.addEventListener('nav-progress', checkBadges);
 </script>
 
 <style>
-	/* Карточка «миссии»: цель крупно, занятие и время — плашками */
-	.step-meta {
+	.hud {
+		margin-top: 1.25rem;
+	}
+	.hud__goal {
+		display: flex;
+		gap: 0.6rem;
+		align-items: baseline;
+		margin: 0 0 1rem;
+		font-size: var(--sl-text-xl);
+		font-weight: 600;
+		line-height: 1.35;
+		color: var(--sl-color-white);
+	}
+	.hud__goal .px-icon {
+		color: var(--px-brick);
+		transform: translateY(0.1em);
+	}
+	/* Полоса как в старых играх: мир слева, звёзды, время справа */
+	.hud__bar {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem;
-		margin-top: 1rem;
-		padding: 0.875rem 1rem;
-		font-size: var(--sl-text-sm);
-		border: 1px solid var(--sl-color-gray-5);
-		border-radius: var(--nav-radius);
-		background: var(--sl-color-gray-7, var(--sl-color-gray-6));
+		gap: 0.75rem 1.5rem;
+		align-items: center;
+		margin: 3px;
+		padding: 0.5rem 0.9rem;
+		font-size: 0.75rem;
+		line-height: 1.5;
+		color: #f4f2fc;
+		background: #2b2750;
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
 	}
-	.step-meta span {
-		padding: 0.2rem 0.7rem;
-		border-radius: 999px;
-		font-weight: 600;
+	.hud__lesson {
+		margin-left: 0.35rem;
+		color: #b9b4dc;
+	}
+	.hud__stars {
+		display: inline-flex;
+		gap: 0.25rem;
+		color: #58548a;
+	}
+	.hud__stars :global(.is-on) {
+		color: var(--px-coin);
+	}
+	.hud__time {
+		display: inline-flex;
+		gap: 0.5rem;
+		align-items: center;
+		margin-left: auto;
+	}
+	.hud__optional {
+		flex-basis: 100%;
+		font-size: 0.65rem;
+		color: var(--px-coin);
+	}
+	.hud__stars-help {
+		margin: 0.6rem 0 0;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+	.step-note {
+		display: flex;
+		gap: 0.6rem;
+		align-items: baseline;
+		margin-top: 1rem;
+		padding: 0.6rem 1rem;
+		font-size: var(--sl-text-sm);
+		border-left: 6px solid var(--px-coin);
 		background: var(--sl-color-gray-6);
 	}
-	.step-meta .step-meta__goal {
-		order: -1;
-		flex-basis: 100%;
-		padding: 0;
-		font-size: var(--sl-text-lg);
-		color: var(--sl-color-white);
-		background: none;
-	}
-	.step-meta .step-meta__lesson,
-	.step-meta .step-meta__time {
-		color: var(--sl-color-accent-high);
-		background: var(--sl-color-accent-low);
-	}
-	.step-fast {
-		margin-top: 1rem;
-		padding: 0.5rem 1rem;
-		font-size: var(--sl-text-sm);
-		border-left: 4px solid var(--sl-color-blue);
-		border-radius: 0.5rem;
-		background: var(--sl-color-blue-low);
-	}
-	.step-soon {
-		margin-top: 1rem;
-		padding: 0.75rem 1rem;
-		border-radius: 0.5rem;
-		border-left: 4px solid var(--sl-color-orange);
-		background: var(--sl-color-orange-low);
+	.step-note .px-icon {
+		color: var(--px-grass);
+		transform: translateY(0.15em);
 	}
 </style>

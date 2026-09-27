@@ -1,24 +1,22 @@
 ---
-// Кнопка «Я застрял»: частые ошибки по шагу из поля mistakes
+// Кнопка «Частые ошибки»: частые ошибки по шагу из поля mistakes
+import Icon from './Icon.astro';
 const { mistakes } = Astro.locals.starlightRoute.entry.data;
 ---
 
 <details class="stuck not-content">
-	<summary>😵 Я застрял</summary>
+	<summary class="px-font"><Icon name="question" size={20} /> Частые ошибки</summary>
 	<div class="stuck__body">
 		{
 			mistakes.length > 0 && (
-				<>
-					<p>Частые ошибки на этом шаге:</p>
-					<dl>
+				<dl>
 						{mistakes.map((m) => (
 							<>
 								<dt>{m.q}</dt>
 								<dd>{m.a}</dd>
 							</>
 						))}
-					</dl>
-				</>
+				</dl>
 			)
 		}
 		<p>
@@ -30,15 +28,30 @@ const { mistakes } = Astro.locals.starlightRoute.entry.data;
 
 <style>
 	.stuck {
-		margin-block: 1rem;
-		border: 1px solid var(--sl-color-red);
-		border-radius: var(--nav-radius);
-		background: var(--sl-color-red-low);
+		margin: 1.5rem 3px 1rem;
+		color: var(--sl-color-white);
+		background: var(--sl-color-gray-6);
+		box-shadow:
+			0 -3px 0 0 var(--px-brick),
+			0 3px 0 0 var(--px-brick),
+			-3px 0 0 0 var(--px-brick),
+			3px 0 0 0 var(--px-brick);
 	}
 	.stuck summary {
+		display: flex;
+		gap: 0.6rem;
+		align-items: center;
 		padding: 0.6rem 1rem;
-		font-weight: 600;
+		font-size: 0.75rem;
+		line-height: 1.5;
 		cursor: pointer;
+		list-style: none;
+	}
+	.stuck summary::-webkit-details-marker {
+		display: none;
+	}
+	.stuck summary :global(.px-icon) {
+		color: var(--px-brick);
 	}
 	.stuck__body {
 		padding: 0 1rem 0.75rem;
