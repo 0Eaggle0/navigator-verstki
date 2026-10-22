@@ -19,7 +19,12 @@ export default defineConfig({
 			locales: { root: { label: 'Русский', lang: 'ru' } },
 			customCss: ['./src/styles/custom.css'],
 			// Заголовок шага: добавляем «Цель · N мин» над страницей шага
-			components: { PageTitle: './src/components/StepHeader.astro' },
+			components: {
+				PageTitle: './src/components/StepHeader.astro',
+				Header: './src/components/Header.astro',
+				ThemeSelect: './src/components/ThemeSelect.astro',
+				Footer: './src/components/Footer.astro',
+			},
 			sidebar: [
 				{ label: 'Главная', link: '/' },
 				{ label: 'Маршрут', link: '/route/' },

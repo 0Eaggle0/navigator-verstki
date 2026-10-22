@@ -1,67 +1,91 @@
 ---
-// Маршрут как карта миров: занятие — мир, шаг — уровень. Минуты и шаги — из файлов шагов,
-// звёзды и «ты тут» — из прогресса в браузере.
-import Icon from './Icon.astro';
-import WorldScene from './WorldScene.astro';
+// Маршрут как карта миров: занятие — мир, шаг — уровень. Уровни — круглые кнопки на
+// извилистой тропе. Минуты и шаги — из файлов шагов, звёзды и «ты тут» — из прогресса в браузере.
 import { svg } from '~/lib/sprites';
 import { getRoute, url, LIMIT_MINUTES, PER_LESSON } from '~/lib/route';
 
 const { lessons, total, warnings } = await getRoute();
 const count = lessons.reduce((n, l) => n + l.steps.length, 0);
 const MINIMUM = 5; // после этого мира — замок «Минимум»
+// Смещение кнопок уровней влево-вправо: тропа петляет
+const WAVE = [0, 1, 2, 1, 0, -1, -2, -1];
+const STAR = 'M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z';
 ---
 
 <div class="map not-content" data-warnings={JSON.stringify(warnings)}>
-	<p class="map__score px-font">
-		<span><Icon name="star" size={18} /> Звёзд: <b class="map__stars">0</b> из <b class="map__stars-max">0</b></span>
-		<span>Уровней пройдено: <b class="map__done">0</b> из {count}</span>
-	</p>
-	<p class="map__time">
-		Весь маршрут: {total} мин из {LIMIT_MINUTES} — {lessons.length} пар по {PER_LESSON} минут.
-	</p>
+	<div class="map__score">
+		<span class="map__pill">
+			<span class="map__star" aria-hidden="true">★</span> Звёзд: <b class="map__stars">0</b> из <b class="map__stars-max">0</b>
+		</span>
+		<span class="map__pill">Уровней: <b class="map__done">0</b> из {count}</span>
+		<span class="map__time">
+			{total} мин из {LIMIT_MINUTES} · {lessons.length} пар по {PER_LESSON} минут
+		</span>
+	</div>
 
 	<ol class="map__worlds">
 		{
 			lessons.map((l) => (
-				<li class="world" data-n={l.n}>
-					<WorldScene n={l.n} small />
-					<h2 class="world__title px-font">
-						Мир {l.n}. {l.title}
+				<li class={`world w-${l.n}`} data-n={l.n}>
+					<div class="world__banner">
+						<span class="world__n">{l.n}</span>
+						<div>
+							<h2 class="world__title">Мир {l.n}. {l.title}</h2>
+							<p class="world__result">{l.result}</p>
+						</div>
 						<span class="world__min">{l.minutes} мин</span>
-					</h2>
-					<p class="world__result">{l.result}</p>
+					</div>
 					<ol class="world__levels">
-						{l.steps.map((s) => (
-							<li class="level" data-id={s.id}>
+						{l.steps.map((s, i) => (
+							<li class="level" data-id={s.id} style={`--shift:${WAVE[i % WAVE.length]}`}>
 								<a href={url(s.id + '/')}>
-									<span class="level__here px-font" aria-hidden="true">
-										<span class="level__byte" set:html={svg('byte', 28)} /> ты тут
+									<span class="level__here" aria-hidden="true">
+										<span set:html={svg('byte', 30)} />
+										<b>ты тут</b>
 									</span>
-									<span class="level__block px-font">
-										{l.n}-{s.data.sidebar.order}
+									<span class="level__block">
+										<span class="level__num">{l.n}-{s.data.sidebar.order}</span>
 									</span>
-									<span class="level__title">{s.data.title}</span>
 									<span class="level__stars" aria-hidden="true">
 										{Array.from({ length: s.data.warmup ? 3 : 2 }, () => (
-											<Icon name="star" size={12} />
+											<svg viewBox="0 0 24 24" width="16" height="16">
+												<path d={STAR} />
+											</svg>
 										))}
 									</span>
+									<span class="level__title">{s.data.title}</span>
+									<span class="level__meta">
+										{s.data.minutes} мин{s.data.optional && ', бонус'}
+										{s.data.soon && ', строится'}
+									</span>
 								</a>
-								<span class="level__meta">
-									{s.data.minutes} мин{s.data.optional && ', бонус'}
-									{s.data.soon && ', строится'}
-								</span>
 							</li>
 						))}
 					</ol>
 					{l.n === MINIMUM && (
-						<p class="world__gate px-font">
-							<Icon name="castle" size={28} /> Замок «Минимум»: главная свёрстана и работает на телефоне
+						<p class="world__gate">
+							<span class="world__gate-icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M4 20V9l3-2 3 2V6l2-2 2 2v3l3-2 3 2v11Zm6 0v-4h4v4" />
+								</svg>
+							</span>
+							<span>
+								<b>Замок «Минимум»</b>
+								Главная свёрстана и работает на телефоне
+							</span>
 						</p>
 					)}
 					{l.n === lessons.length && (
-						<p class="world__gate world__gate--finish px-font">
-							<Icon name="flag" size={28} /> Финиш: сайт открывается по ссылке
+						<p class="world__gate world__gate--finish">
+							<span class="world__gate-icon" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M5 21V4m0 0h11l-2 4 2 4H5" />
+								</svg>
+							</span>
+							<span>
+								<b>Финиш</b>
+								Сайт открывается по ссылке
+							</span>
 						</p>
 					)}
 				</li>
@@ -107,213 +131,253 @@ const MINIMUM = 5; // после этого мира — замок «Миним
 	.map__score {
 		display: flex;
 		flex-wrap: wrap;
-		gap: 0.5rem 2rem;
-		margin: 0 3px;
-		padding: 0.6rem 1rem;
-		font-size: 0.75rem;
-		line-height: 1.6;
-		color: #f4f2fc;
-		background: #2b2750;
-		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
+		gap: 0.75rem;
+		align-items: center;
 	}
-	.map__score :global(.px-icon) {
-		color: var(--px-coin);
+	.map__pill {
+		padding: 0.45rem 1rem;
+		font: 700 0.85rem var(--a-font);
+		color: var(--a-muted);
+		background: var(--a-surface);
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
 	}
-	.map__score b {
-		color: var(--px-coin);
+	.map__pill b {
+		color: var(--a-text);
+	}
+	.map__star {
+		color: var(--a-coin);
 	}
 	.map__time {
-		margin: 0.8rem 0 0;
 		font-size: var(--sl-text-sm);
-		color: var(--sl-color-gray-3);
+		color: var(--a-muted);
 	}
 
-	/* Миры идут «лесенкой» и соединены пунктирной тропой */
 	.map__worlds {
-		margin: 1.5rem 0 0;
+		margin: 2rem 0 0;
 		padding: 0;
 		list-style: none;
 	}
 	.world {
-		position: relative;
-		width: min(100%, 34rem);
-		margin: 0 0 2.5rem;
-		padding: 0 1.1rem 1.1rem;
-		overflow: visible;
-		background: var(--sl-color-gray-6);
-		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink),
-			6px 9px 0 0 #0002;
+		margin: 0 0 3rem;
 	}
-	.world:nth-child(even) {
-		margin-left: auto;
+	/* Баннер мира — полоса его цвета */
+	.world__banner {
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 1rem;
+		align-items: center;
+		padding: 1rem 1.25rem;
+		color: var(--a-ink);
+		background: var(--w);
+		border-radius: var(--a-r-card);
+		box-shadow: 0 6px 0 var(--w-edge);
 	}
-	.world + .world::before {
-		content: '';
-		position: absolute;
-		top: calc(-2.5rem - 3px);
-		left: 50%;
-		height: 2.5rem;
-		border-left: 4px dashed var(--sl-color-gray-4);
-	}
-	.world :global(.scene) {
-		margin-inline: -1.1rem;
+	.world__n {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		font: 800 1.3rem var(--a-font);
+		background: #ffffff66;
+		border-radius: 50%;
 	}
 	.world__title {
 		margin: 0;
-		font-size: 1rem;
-		line-height: 1.5;
-		color: var(--sl-color-white);
-	}
-	.world__min {
-		margin-left: 0.4rem;
-		font: 400 var(--sl-text-sm) var(--sl-font);
-		color: var(--sl-color-gray-3);
+		font: 800 1.15rem/1.2 var(--a-font);
+		color: var(--a-ink);
 	}
 	.world__result {
-		margin: 0.2rem 0 2.4rem;
+		margin: 0.2rem 0 0;
 		font-size: var(--sl-text-sm);
-		color: var(--sl-color-gray-2);
+		font-weight: 500;
+		color: var(--a-ink);
+	}
+	.world__min {
+		padding: 0.25rem 0.7rem;
+		font: 700 0.75rem var(--a-font);
+		background: #ffffff66;
+		border-radius: 999px;
 	}
 
-	/* Уровни — блоки как в платформере */
+	/* Тропа: уровни столбиком, каждый смещён влево-вправо (--shift) */
 	.world__levels {
-		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
-		gap: 2.5rem 1rem;
-		padding-top: 1rem;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 1.75rem;
 		margin: 0;
-		padding: 0;
+		padding: 2.75rem 0 0.5rem;
 		list-style: none;
 	}
 	.level {
 		margin: 0 !important;
+		transform: translateX(calc(var(--shift) * 4.5rem));
 	}
 	.level a {
 		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: 0.35rem;
-		align-items: flex-start;
+		display: grid;
+		grid-template-columns: auto minmax(0, 15rem);
+		gap: 0.1rem 1rem;
+		align-items: center;
 		text-decoration: none;
-		color: var(--sl-color-white);
+		color: var(--a-text);
 	}
+	/* Кнопка уровня: круг с объёмным краем */
 	.level__block {
+		grid-row: span 3;
 		display: grid;
 		place-items: center;
-		width: 3.2rem;
-		height: 3.2rem;
-		margin: 3px;
-		font-size: 0.7rem;
-		color: #fff;
-		background: #8a4d2c;
+		width: 4.5rem;
+		height: 4.5rem;
+		color: var(--a-muted);
+		background: var(--a-surface-2);
+		border-radius: 50%;
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink),
-			inset -5px -5px 0 0 #0003,
-			inset 5px 5px 0 0 #ffffff26;
+			inset 0 0 0 3px var(--a-line),
+			0 6px 0 var(--a-edge);
+		transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
-	.level.is-done .level__block {
-		background: var(--px-grass);
-	}
-	/* Пройденный уровень — блок с монетой, как в платформере */
-	.level.is-done .level__block::after {
-		content: '';
-		position: absolute;
-		top: -0.6rem;
-		right: -0.5rem;
-		width: 14px;
-		height: 18px;
-		background: var(--px-coin);
-		box-shadow:
-			inset -4px 0 0 #c98f00,
-			0 0 0 2px #7a5600;
-	}
-	.level__block {
-		position: relative;
-	}
-	.level.is-here .level__block {
-		color: #1e1b3a;
-		background: var(--px-coin);
+	.level__num {
+		font: 800 0.95rem var(--a-font);
 	}
 	.level a:hover .level__block,
 	.level a:focus-visible .level__block {
-		transform: translateY(-3px);
+		transform: translateY(-4px) scale(1.05);
+	}
+	.level a:active .level__block {
+		transform: translateY(6px);
+		box-shadow: inset 0 0 0 3px var(--a-line);
+	}
+	.level.is-done .level__block {
+		color: var(--a-ink);
+		background: var(--w);
+		box-shadow: 0 6px 0 var(--w-edge);
+	}
+	.level.is-here .level__block {
+		color: var(--a-ink);
+		background: var(--a-coin);
+		box-shadow: 0 6px 0 var(--a-coin-edge);
+		animation: lvl-pulse 1.6s ease-in-out infinite;
+	}
+	@keyframes lvl-pulse {
+		50% {
+			box-shadow:
+				0 6px 0 var(--a-coin-edge),
+				0 0 0 10px #ffc93033;
+		}
+	}
+	.level__stars {
+		display: flex;
+		gap: 2px;
+	}
+	.level__stars svg {
+		fill: var(--a-surface-2);
+		stroke: var(--a-line);
+		stroke-width: 2;
+	}
+	.level__stars :global(svg.is-on) {
+		fill: var(--a-coin);
+		stroke: var(--a-coin-edge);
 	}
 	.level__title {
 		font-size: var(--sl-text-sm);
+		font-weight: 600;
 		line-height: 1.3;
 	}
 	.level a:hover .level__title {
 		text-decoration: underline;
 	}
-	.level__stars {
-		display: flex;
-		gap: 2px;
-		color: var(--sl-color-gray-4);
-	}
-	.level__stars :global(.is-on) {
-		color: var(--px-coin);
-	}
 	.level__meta {
-		display: block;
-		margin-top: 0.15rem;
 		font-size: var(--sl-text-xs);
-		color: var(--sl-color-gray-3);
+		color: var(--a-muted);
 	}
-	/* «Ты тут» над текущим уровнем — единственная постоянная анимация на странице */
+	/* «Ты тут»: Байт над текущим уровнем */
 	.level__here {
 		position: absolute;
-		top: -2.2rem;
-		left: 0;
+		left: 0.6rem;
+		top: -2.5rem;
 		display: none;
 		align-items: center;
-		gap: 0.25rem;
-		font-size: 0.6rem;
-		color: var(--sl-color-accent);
+		gap: 0.3rem;
+		font: 800 0.7rem var(--a-font);
+		color: var(--a-coin);
+		white-space: nowrap;
 	}
-	.level__byte {
+	:global(:root[data-theme='light']) .level__here {
+		color: var(--a-coin-edge);
+	}
+	.level__here span {
 		line-height: 0;
 	}
 	.level.is-here .level__here {
 		display: inline-flex;
-		animation: bob 1s steps(2) infinite;
+		animation: bob 1.2s ease-in-out infinite;
 	}
 	@keyframes bob {
 		50% {
-			transform: translateY(3px);
+			transform: translateY(-4px);
 		}
 	}
 
+	/* Замок и финиш — большие отметки на тропе */
 	.world__gate {
 		display: flex;
-		gap: 0.75rem;
+		gap: 1rem;
 		align-items: center;
-		margin: 1.2rem 0 0;
-		padding: 0.6rem 0.8rem;
-		font-size: 0.75rem;
-		line-height: 1.6;
-		border-top: 3px dashed var(--sl-color-gray-4);
+		width: fit-content;
+		margin: 2rem auto 0;
+		padding: 0.9rem 1.25rem;
+		color: var(--a-muted);
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
 	}
-	.world__gate :global(.px-icon) {
-		color: var(--px-brick);
+	.world__gate b {
+		display: block;
+		font: 800 1rem var(--a-font);
+		color: var(--a-text);
 	}
-	.world__gate--finish :global(.px-icon) {
-		color: var(--px-grass);
+	.world__gate-icon {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 3.2rem;
+		height: 3.2rem;
+		color: var(--a-ink);
+		background: var(--a-pink);
+		border-radius: 50%;
+		box-shadow: 0 4px 0 var(--a-pink-edge);
+	}
+	.world__gate--finish .world__gate-icon {
+		background: var(--a-go);
+		box-shadow: 0 4px 0 var(--a-go-edge);
+	}
+	.world__gate-icon svg {
+		width: 1.6rem;
+		height: 1.6rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2.4;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
 
 	@media (max-width: 40rem) {
-		.world:nth-child(even) {
-			margin-left: 0;
+		.level {
+			transform: translateX(calc(var(--shift) * 1.25rem));
+		}
+		.level a {
+			grid-template-columns: auto minmax(0, 11rem);
+		}
+		.world__banner {
+			grid-template-columns: auto minmax(0, 1fr);
+		}
+		.world__min {
+			grid-column: 2;
+			justify-self: start;
 		}
 	}
 </style>

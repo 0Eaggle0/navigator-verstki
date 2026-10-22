@@ -1,5 +1,5 @@
 // Игровые механики: звёзды за уровень и значки. Всё считается из прогресса в браузере.
-// Список уровней страница кладёт в <script id="nav-levels" type="application/json"> (см. StepHeader.astro).
+// Список уровней страница кладёт в <script id="nav-levels" type="application/json"> (см. Header.astro).
 import { load, update, type Progress } from './storage';
 
 export type Level = { id: string; lesson: number; order: number; warmup: boolean; js: boolean };

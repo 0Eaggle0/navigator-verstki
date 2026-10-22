@@ -31,11 +31,10 @@ const { mistakes } = Astro.locals.starlightRoute.entry.data;
 		margin: 1.5rem 3px 1rem;
 		color: var(--sl-color-white);
 		background: var(--sl-color-gray-6);
+		border-radius: var(--a-r-card);
 		box-shadow:
-			0 -3px 0 0 var(--px-brick),
-			0 3px 0 0 var(--px-brick),
-			-3px 0 0 0 var(--px-brick),
-			3px 0 0 0 var(--px-brick);
+			inset 0 0 0 2px var(--a-brick),
+			0 5px 0 var(--a-brick-edge);
 	}
 	.stuck summary {
 		display: flex;

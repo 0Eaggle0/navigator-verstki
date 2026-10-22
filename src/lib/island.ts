@@ -1,12 +1,12 @@
 // Воксельный остров на главной (three.js). 7 платформ-миров по спирали, тропа между ними,
-// флажок «ты тут», монеты над пройденными мирами. Рисуем в 1/3 разрешения и растягиваем
-// с image-rendering: pixelated — получается «пиксельное 3D», и слабому ПК легко.
+// флажок «ты тут», монеты над пройденными мирами. Кубики со скруглёнными гранями,
+// мягкие тени — остров похож на игрушку из конструктора и плавно покачивается.
 // Подписи миров — обычные ссылки поверх canvas (Island.astro), здесь только двигаем их.
 import * as THREE from 'three';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 
 export type World = { n: number; done: boolean; here: boolean };
 
-const SCALE = 3; // во сколько раз картинка крупнее пикселя рендера
 const R = 12; // радиус острова в кубиках
 
 // Цвета кубиков
@@ -97,8 +97,11 @@ function decor(n: number): Vox[] {
 
 // Один InstancedMesh на группу кубиков: быстро даже на слабой видеокарте
 function voxels(list: Vox[], size = 1) {
-	const geo = new THREE.BoxGeometry(size, size, size);
+	// Скругление граней — 1 сегмент: игрушечный вид без лишней нагрузки на видеокарту
+	const geo = new RoundedBoxGeometry(size, size, size, 1, size * 0.12);
 	const mesh = new THREE.InstancedMesh(geo, new THREE.MeshLambertMaterial(), list.length);
+	mesh.castShadow = true;
+	mesh.receiveShadow = true;
 	const m = new THREE.Matrix4();
 	const c = new THREE.Color();
 	list.forEach(([x, y, z, col], i) => {
@@ -110,20 +113,29 @@ function voxels(list: Vox[], size = 1) {
 
 export function init(box: HTMLElement, worlds: World[], labels: HTMLElement[], calm: boolean) {
 	const canvas = box.querySelector('canvas')!;
-	const renderer = new THREE.WebGLRenderer({ canvas, antialias: false, alpha: true });
-	renderer.setPixelRatio(1);
+	const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
+	renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+	renderer.toneMapping = THREE.ACESFilmicToneMapping;
+	renderer.shadowMap.enabled = true;
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 	const scene = new THREE.Scene();
 
 	// Свет: днём ярче, ночью синеватый
 	const sky = new THREE.HemisphereLight(0xffffff, 0x3b386c, 1.6);
 	const sun = new THREE.DirectionalLight(0xffffff, 1.6);
-	sun.position.set(10, 20, 6);
+	sun.position.set(14, 26, 8);
+	sun.castShadow = true;
+	sun.shadow.mapSize.set(1024, 1024);
+	Object.assign(sun.shadow.camera, { left: -18, right: 18, top: 18, bottom: -18, near: 1, far: 70 });
+	sun.shadow.bias = -0.002;
 	scene.add(sky, sun);
 	const theme = () => {
 		const night = document.documentElement.dataset.theme !== 'light';
-		sky.color.setHex(night ? 0x8f8cff : 0xffffff);
-		sky.intensity = night ? 1.2 : 1.7;
-		sun.intensity = night ? 0.9 : 1.7;
+		sky.color.setHex(night ? 0xb3adff : 0xffffff);
+		sky.groundColor.setHex(night ? 0x2a2366 : 0x8f87cf);
+		sky.intensity = night ? 2.1 : 1.9;
+		sun.color.setHex(night ? 0xd6d0ff : 0xfff3d6);
+		sun.intensity = night ? 1.9 : 2.4;
 	};
 	theme();
 	new MutationObserver(theme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
@@ -206,7 +218,7 @@ export function init(box: HTMLElement, worlds: World[], labels: HTMLElement[], c
 	const resize = () => {
 		const w = box.clientWidth;
 		const h = box.clientHeight;
-		renderer.setSize(Math.ceil(w / SCALE), Math.ceil(h / SCALE), false);
+		renderer.setSize(w, h, false);
 		const view = (w < 600 ? 15 : 11.5) / zoom;
 		camera.left = (-view * w) / h;
 		camera.right = (view * w) / h;
@@ -267,6 +279,8 @@ export function init(box: HTMLElement, worlds: World[], labels: HTMLElement[], c
 	new IntersectionObserver(([e]) => (visible = e.isIntersecting)).observe(box);
 	const frame = (t: number) => {
 		if (!calm && !inside && drag === null && t - lastMove > 1500) angle += 0.0025;
+		// Остров плавно покачивается в воздухе
+		if (!calm) island.position.y = Math.sin(t / 1400) * 0.45;
 		camera.position.set(Math.cos(angle) * 40, 32, Math.sin(angle) * 40);
 		camera.lookAt(0, 1, 0);
 		groups.forEach((g, i) => {
@@ -275,9 +289,11 @@ export function init(box: HTMLElement, worlds: World[], labels: HTMLElement[], c
 			const coin = g.getObjectByName('coin');
 			if (coin && !calm) coin.rotation.y = t / 400;
 			const flag = g.getObjectByName('flag');
-			if (flag && !calm) flag.position.y = 2 + Math.round(Math.sin(t / 300) * 2) / 4;
-			// Подпись над миром
-			v.set(g.position.x, g.position.y + 7, g.position.z).project(camera);
+			if (flag && !calm) flag.position.y = 2 + Math.sin(t / 300) * 0.4;
+			// Подпись над миром (в координатах сцены — с учётом покачивания острова)
+			g.getWorldPosition(v);
+			v.y += 7;
+			v.project(camera);
 			const l = labels[i];
 			l.style.left = ((v.x + 1) / 2) * 100 + '%';
 			l.style.top = ((1 - v.y) / 2) * 100 + '%';

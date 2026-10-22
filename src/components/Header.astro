@@ -1,0 +1,189 @@
+---
+// Шапка сайта (заменяет шапку Starlight): логотип с Байтом, разделы, поиск,
+// звёзды игрока, «Продолжить» и переключатель темы.
+// Здесь же на каждой странице лежит список уровней для звёзд и значков (#nav-levels).
+import Search from 'virtual:starlight/components/Search';
+import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import { svg } from '~/lib/sprites';
+import { getRoute, getLevels, url } from '~/lib/route';
+
+const { steps } = await getRoute();
+const levels = await getLevels();
+// Для «Продолжить»: шаги по порядку, чтобы найти первый непройденный
+const order = steps.map((s) => [s.id, url(s.id + '/'), s.data.soon]);
+const path = Astro.url.pathname;
+const sections = [
+	{ label: 'Маршрут', href: url('route/'), on: path.includes('/route/') || path.includes('/lesson-') },
+	{ label: 'Задачник', href: url('tasks/'), on: path.includes('/tasks/') },
+	{ label: 'Шпаргалки', href: url('cheatsheets/'), on: path.includes('/cheatsheets/') },
+	{ label: 'Блоки', href: url('blocks/'), on: path.includes('/blocks/') },
+];
+---
+
+<script id="nav-levels" type="application/json" set:html={JSON.stringify(levels)} />
+<div class="a-header">
+	<a class="a-header__logo" href={url('')}>
+		<span class="a-header__byte" set:html={svg('byte', 34)} />
+		<span class="a-header__name">Навигатор <span>вёрстки</span></span>
+	</a>
+	<nav class="a-header__nav" aria-label="Разделы">
+		{sections.map((s) => <a href={s.href} aria-current={s.on ? 'page' : undefined}>{s.label}</a>)}
+	</nav>
+	<div class="a-header__tools">
+		<Search />
+		<span class="a-header__stars" title="Твои звёзды" aria-label="Звёзд: 0">
+			<span aria-hidden="true">★</span> <b>0</b>
+		</span>
+		<nav-continue data-order={JSON.stringify(order)}>
+			<a class="a-btn a-btn--go a-header__go" href={order[0][1]}>Начать</a>
+		</nav-continue>
+		<ThemeSelect />
+	</div>
+</div>
+
+<script>
+	import { load } from '~/lib/storage';
+	import { getLevels, stars } from '~/lib/badges';
+
+	// «Продолжить» — к первому непройденному шагу; звёзды — сумма по всем уровням
+	class Continue extends HTMLElement {
+		connectedCallback() {
+			const order: [string, string, boolean][] = JSON.parse(this.dataset.order!);
+			const go = this.querySelector('a')!;
+			const show = () => {
+				const p = load();
+				const next = order.find(([id, , soon]) => !soon && !p.done.includes(id));
+				const started = p.done.length > 0 || !!p.last;
+				go.href = next ? next[1] : (p.last ?? order[0][1]);
+				go.textContent = !started ? 'Начать' : next ? 'Продолжить' : 'Все пройдены';
+				const n = (getLevels() ?? []).reduce((sum, l) => sum + stars(p, l), 0);
+				const el = document.querySelector('.a-header__stars');
+				if (el) {
+					el.querySelector('b')!.textContent = String(n);
+					el.setAttribute('aria-label', `Звёзд: ${n}`);
+				}
+			};
+			show();
+			window.addEventListener('nav-progress', show);
+		}
+	}
+	customElements.define('nav-continue', Continue);
+</script>
+
+<style>
+	.a-header {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+		height: 100%;
+	}
+	.a-header__logo {
+		display: flex;
+		flex: none;
+		gap: 0.6rem;
+		align-items: center;
+		text-decoration: none;
+		color: var(--a-text);
+	}
+	.a-header__byte {
+		display: grid;
+		place-items: center;
+		width: 2.6rem;
+		height: 2.6rem;
+		background: var(--a-surface);
+		border-radius: 12px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 4px 0 var(--a-edge);
+		transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.a-header__logo:hover .a-header__byte {
+		transform: rotate(-8deg) scale(1.08);
+	}
+	.a-header__name {
+		font: 800 1rem/1.05 var(--a-font);
+		letter-spacing: -0.02em;
+	}
+	.a-header__name span {
+		display: block;
+		color: var(--a-coin);
+	}
+	:global(:root[data-theme='light']) .a-header__name span {
+		color: var(--a-pink-edge);
+	}
+	.a-header__nav {
+		display: flex;
+		gap: 0.25rem;
+		margin-inline-start: 1rem;
+	}
+	.a-header__nav a {
+		padding: 0.5rem 0.9rem;
+		font: 700 0.85rem var(--a-font);
+		text-decoration: none;
+		color: var(--a-muted);
+		border-radius: 999px;
+		transition:
+			background 0.15s,
+			color 0.15s;
+	}
+	.a-header__nav a:hover {
+		color: var(--a-text);
+		background: var(--a-surface);
+	}
+	.a-header__nav a[aria-current='page'] {
+		color: var(--a-text);
+		background: var(--a-surface);
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.a-header__tools {
+		display: flex;
+		gap: 0.75rem;
+		align-items: center;
+		margin-inline-start: auto;
+	}
+	.a-header__stars {
+		display: inline-flex;
+		gap: 0.35rem;
+		align-items: center;
+		padding: 0.45rem 0.8rem;
+		font: 800 0.9rem var(--a-font);
+		color: var(--a-text);
+		background: var(--a-surface);
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.a-header__stars span {
+		color: var(--a-coin);
+		font-size: 1.05rem;
+	}
+	.a-header__go {
+		margin: 0 0 5px;
+		white-space: nowrap;
+	}
+	/* Узкие экраны: меню разделов уходит в боковую панель, справа место под кнопку меню Starlight */
+	@media (max-width: 72rem) {
+		.a-header__nav {
+			display: none;
+		}
+	}
+	@media (max-width: 50rem) {
+		.a-header {
+			padding-inline-end: 4rem;
+			gap: 0.5rem;
+		}
+		.a-header__stars,
+		.a-header :global(starlight-theme-select) {
+			display: none;
+		}
+	}
+	/* На телефоне от логотипа остаётся Байт: иначе не влезают поиск, «Продолжить» и меню */
+	@media (max-width: 30rem) {
+		.a-header__name {
+			display: none;
+		}
+		.a-header__go {
+			padding: 0.5rem 0.75rem;
+			font-size: 0.75rem;
+		}
+	}
+</style>

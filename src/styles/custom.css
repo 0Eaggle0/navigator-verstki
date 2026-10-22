@@ -1,207 +1,501 @@
-/* Оформление «пиксельная игра». Курс = игра: занятие — мир, шаг — уровень.
-   День — светлая тема (небо), ночь — тёмная. Свои цвета — переменные --px-*. */
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Onest:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+/* Оформление «Аркада 2.0». Курс = игра: занятие — мир, шаг — уровень.
+   Объёмные «жевательные» кнопки, яркие цвета, шрифт Unbounded.
+   Ночь — тёмная тема по умолчанию, день — светлая. Свои цвета — переменные --a-*. */
+@import url('https://fonts.googleapis.com/css2?family=Unbounded:wght@500;700;800&family=Onest:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap');
+
+/* ---------- Цвета и шрифты ---------- */
 
 /* Ночь (тёмная тема Starlight по умолчанию) */
 :root {
 	--sl-font: 'Onest', system-ui, sans-serif;
 	--sl-font-mono: 'JetBrains Mono', ui-monospace, Consolas, monospace;
-	--px-font: 'Press Start 2P', 'Onest', system-ui, sans-serif;
+	--a-font: 'Unbounded', 'Onest', system-ui, sans-serif; /* заголовки, кнопки, цифры */
 
-	--px-ink: #0e0d26; /* пиксельные рамки */
-	--px-grass: #5cc85c; /* пройдено */
-	--px-coin: #ffc930; /* звёзды, текущее */
-	--px-brick: #f07a4a; /* ошибки, «частые ошибки» */
-	--px-panel: #25244f; /* фон панелей */
-	--px-panel-text: #eceaf7;
+	--a-bg: #1d1748; /* фон страницы */
+	--a-surface: #2a2366; /* карточки */
+	--a-surface-2: #352d7a; /* вложенные панели */
+	--a-line: #463d99; /* рамки */
+	--a-edge: #120e33; /* «объёмный край» под нейтральными кнопками и карточками */
+	--a-text: #fbfaff;
+	--a-muted: #b9b2ea;
+	--a-ink: #1d1748; /* текст на ярких кнопках */
 
-	--sl-color-white: #f4f2fc;
-	--sl-color-gray-1: #dcd9ef;
-	--sl-color-gray-2: #c3bfdf;
-	--sl-color-gray-3: #9a95c2;
-	--sl-color-gray-4: #605c90;
-	--sl-color-gray-5: #3b386c;
-	--sl-color-gray-6: #29275a;
-	--sl-color-black: #1b1a3f;
-	--sl-color-accent-low: #3d3300;
-	--sl-color-accent: #f2b705;
-	--sl-color-accent-high: #ffd457;
-	--sl-color-bg-nav: #141333;
-	--sl-color-bg-sidebar: #201f48;
+	/* Яркие цвета: заливка и тёмный край под ней */
+	--a-go: #3ccf6e; /* главное действие, «пройдено» */
+	--a-go-edge: #23a352;
+	--a-coin: #ffc930; /* звёзды, текущее */
+	--a-coin-edge: #d99a00;
+	--a-pink: #ff5fa2; /* акцент, выбранное */
+	--a-pink-edge: #d13a7c;
+	--a-sky: #3db7ff; /* ссылки, фокус */
+	--a-sky-edge: #1f8fd6;
+	--a-brick: #ff6b4a; /* ошибки, «частые ошибки» */
+	--a-brick-edge: #d9472a;
+
+	--a-r: 14px; /* скругление кнопок */
+	--a-r-card: 20px; /* скругление карточек */
+
+	--sl-color-white: #fbfaff;
+	--sl-color-gray-1: #e6e3fa;
+	--sl-color-gray-2: #cdc8f2;
+	--sl-color-gray-3: #a9a2e0;
+	--sl-color-gray-4: #6f67b8;
+	--sl-color-gray-5: #463d99;
+	--sl-color-gray-6: #2a2366;
+	--sl-color-black: #1d1748;
+	--sl-color-accent-low: #123e66;
+	--sl-color-accent: #3db7ff;
+	--sl-color-accent-high: #a8e1ff;
+	--sl-color-bg-nav: #1d1748;
+	--sl-color-bg-sidebar: #1d1748;
+	--sl-color-hairline: #352d7a;
+	--sl-color-hairline-shade: #120e33;
+	--sl-nav-height: 4.5rem;
+
+	/* Старые имена из «пиксельного» оформления — чтобы ничего не сломалось */
+	--px-font: var(--a-font);
+	--px-ink: var(--a-line);
+	--px-grass: var(--a-go);
+	--px-coin: var(--a-coin);
+	--px-brick: var(--a-brick);
+	--px-panel: var(--a-surface);
+	--px-panel-text: var(--a-text);
 }
 
 /* День */
 :root[data-theme='light'] {
-	--px-ink: #2b2750;
-	--px-grass: #2f8a2f;
-	--px-coin: #f2b705;
-	--px-brick: #b8481c;
-	--px-panel: #ffffff;
-	--px-panel-text: #1e1b3a;
+	--a-bg: #f4f2ff;
+	--a-surface: #ffffff;
+	--a-surface-2: #ece8ff;
+	--a-line: #d6d0fa;
+	--a-edge: #c9c2f5;
+	--a-text: #1d1748;
+	--a-muted: #5b5399;
+	--a-sky: #1f8fd6;
+	--a-brick: #d9472a;
 
-	--sl-color-white: #1e1b3a;
-	--sl-color-gray-1: #2b2750;
-	--sl-color-gray-2: #3a3666;
-	--sl-color-gray-3: #55517f;
-	--sl-color-gray-4: #8b88b3;
-	--sl-color-gray-5: #b3c3e8;
-	--sl-color-gray-6: #d3e0fa;
-	--sl-color-gray-7: #e6eeff;
-	--sl-color-black: #f4f7ff;
-	--sl-color-accent-low: #fff0bf;
-	--sl-color-accent: #9a4a10;
-	--sl-color-accent-high: #5c2a05;
-	--sl-color-bg-nav: #dde9ff;
-	--sl-color-bg-sidebar: #eaf1ff;
+	--sl-color-white: #1d1748;
+	--sl-color-gray-1: #29235c;
+	--sl-color-gray-2: #3a3375;
+	--sl-color-gray-3: #5b5399;
+	--sl-color-gray-4: #8f87cf;
+	--sl-color-gray-5: #d6d0fa;
+	--sl-color-gray-6: #ece8ff;
+	--sl-color-gray-7: #f4f2ff;
+	--sl-color-black: #f4f2ff;
+	--sl-color-accent-low: #dff1ff;
+	--sl-color-accent: #0b6fb8;
+	--sl-color-accent-high: #0a4f85;
+	--sl-color-bg-nav: #f4f2ff;
+	--sl-color-bg-sidebar: #f4f2ff;
+	--sl-color-hairline: #e3dfff;
+	--sl-color-hairline-shade: #d6d0fa;
 }
 
-/* Ночное небо в шапке: редкие пиксельные звёзды. Днём — чистое небо */
-header.header {
-	background-image:
-		linear-gradient(#fff6 0 0), linear-gradient(#fff4 0 0), linear-gradient(#fff5 0 0), linear-gradient(#fff3 0 0);
-	background-size: 2px 2px;
-	background-position: 12% 30%, 38% 70%, 61% 25%, 86% 60%;
-	background-repeat: no-repeat;
-}
-:root[data-theme='light'] header.header {
-	background-image: none;
-}
+/* Цвет мира: класс .w-N на любом элементе даёт --w (заливка) и --w-edge (край) */
+.w-1 { --w: #3ccf6e; --w-edge: #23a352; }
+.w-2 { --w: #3db7ff; --w-edge: #1f8fd6; }
+.w-3 { --w: #ff5fa2; --w-edge: #d13a7c; }
+.w-4 { --w: #ffc930; --w-edge: #d99a00; }
+.w-5 { --w: #ff8a3d; --w-edge: #d9661a; }
+.w-6 { --w: #a77bff; --w-edge: #7c4fe0; }
+.w-7 { --w: #2fd3c6; --w-edge: #17a89c; }
 
-/* Пиксельный шрифт — только название сайта, заголовок страницы и игровые элементы */
+/* ---------- Типографика ---------- */
+
 .site-title,
 .content-panel h1,
+.a-font,
 .px-font {
-	font-family: var(--px-font);
-	font-weight: 400; /* у Press Start 2P одно начертание */
-	letter-spacing: 0;
-}
-.site-title {
-	font-size: 0.95rem !important;
-}
-@media (max-width: 30rem) {
-	.site-title {
-		font-size: 0.7rem !important;
-	}
+	font-family: var(--a-font);
+	font-weight: 800;
+	letter-spacing: -0.01em;
 }
 .content-panel h1 {
-	font-size: clamp(1.25rem, 2.6vw, 1.9rem);
-	line-height: 1.45;
+	font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+	line-height: 1.15;
+}
+.sl-markdown-content :is(h2, h3) {
+	font-family: var(--a-font);
+	font-weight: 700;
+	letter-spacing: -0.01em;
+}
+.sl-markdown-content h2 {
+	font-size: clamp(1.3rem, 2.4vw, 1.65rem);
 }
 
-/* Пиксельная рамка со «срезанными» углами — как у спрайтов */
-.px-box {
-	--px-b: var(--px-ink);
-	box-shadow:
-		0 -3px 0 0 var(--px-b),
-		0 3px 0 0 var(--px-b),
-		-3px 0 0 0 var(--px-b),
-		3px 0 0 0 var(--px-b);
+/* Списки в тексте: «кристаллики» и цифры в кружках */
+.sl-markdown-content ul:not(:where(.not-content *)) {
+	padding-inline-start: 0;
+	list-style: none;
+}
+.sl-markdown-content ul:not(:where(.not-content *)) > li {
+	position: relative;
+	padding-inline-start: 1.6rem;
+}
+.sl-markdown-content ul:not(:where(.not-content *)) > li::before {
+	content: '';
+	position: absolute;
+	left: 0.25rem;
+	top: 0.6em;
+	width: 0.55rem;
+	height: 0.55rem;
+	background: var(--w, var(--a-pink));
+	border-radius: 2px;
+	transform: rotate(45deg);
+	box-shadow: 1px 2px 0 var(--w-edge, var(--a-pink-edge));
+}
+.sl-markdown-content ol:not(:where(.not-content *)) {
+	padding-inline-start: 0;
+	list-style: none;
+	counter-reset: a-ol;
+}
+.sl-markdown-content ol:not(:where(.not-content *)) > li {
+	position: relative;
+	padding-inline-start: 2.4rem;
+	counter-increment: a-ol;
+}
+.sl-markdown-content ol:not(:where(.not-content *)) > li::before {
+	content: counter(a-ol);
+	position: absolute;
+	left: 0;
+	top: 0.05em;
+	display: grid;
+	place-items: center;
+	width: 1.7rem;
+	height: 1.7rem;
+	font: 800 0.8rem/1 var(--a-font);
+	color: var(--a-ink);
+	background: var(--w, var(--a-sky));
+	border-radius: 50%;
+	box-shadow: 0 3px 0 var(--w-edge, var(--a-sky-edge));
+}
+.sl-markdown-content :is(ul, ol):not(:where(.not-content *)) > li + li {
+	margin-top: 0.55rem;
 }
 
-/* Кнопки в наших компонентах: объёмная пиксельная кнопка, при нажатии проседает */
+/* Ссылки в тексте — с подчёркиванием-маркером */
+.sl-markdown-content a:not(:where(.not-content *)) {
+	text-decoration-thickness: 2px;
+	text-underline-offset: 3px;
+}
+
+/* ---------- Кнопки ---------- */
+
+/* Объёмная кнопка: заливка + тёмный край снизу, при нажатии проседает.
+   .a-btn — нейтральная, .a-btn--go / --coin / --pink / --sky — яркие */
+.a-btn,
 .not-content button {
-	padding: 0.45rem 1rem;
-	font: 400 0.75rem/1.4 var(--px-font);
-	color: var(--sl-color-white);
-	background: var(--sl-color-gray-6);
+	--b: var(--a-surface-2);
+	--b-edge: var(--a-edge);
+	--b-text: var(--a-text);
+	display: inline-flex;
+	gap: 0.5rem;
+	align-items: center;
+	justify-content: center;
+	margin: 0 0 5px;
+	padding: 0.6rem 1.1rem;
+	font: 700 0.85rem/1.3 var(--a-font);
+	letter-spacing: 0;
+	text-decoration: none;
+	color: var(--b-text);
+	background: var(--b);
 	border: 0;
-	border-radius: 0;
-	box-shadow:
-		0 -3px 0 0 var(--px-ink),
-		0 3px 0 0 var(--px-ink),
-		-3px 0 0 0 var(--px-ink),
-		3px 0 0 0 var(--px-ink),
-		inset 0 -4px 0 0 #0003;
+	border-radius: var(--a-r);
+	box-shadow: 0 5px 0 var(--b-edge);
 	cursor: pointer;
-	margin: 3px;
+	transition:
+		transform 0.08s,
+		box-shadow 0.08s,
+		filter 0.15s;
 }
-.not-content button:hover {
-	background: var(--sl-color-gray-5);
-}
-.not-content button:active {
-	transform: translateY(2px);
+:root[data-theme='light'] :is(.a-btn, .not-content button):not(.a-btn--go, .a-btn--coin, .a-btn--pink, .a-btn--sky) {
 	box-shadow:
-		0 -3px 0 0 var(--px-ink),
-		0 3px 0 0 var(--px-ink),
-		-3px 0 0 0 var(--px-ink),
-		3px 0 0 0 var(--px-ink);
+		inset 0 0 0 2px var(--a-line),
+		0 5px 0 var(--b-edge);
 }
-.not-content :focus-visible {
-	outline: 3px solid var(--px-coin);
-	outline-offset: 4px;
+.a-btn:hover,
+.not-content button:hover {
+	color: var(--b-text);
+	filter: brightness(1.08);
+}
+.a-btn:active,
+.not-content button:active {
+	transform: translateY(5px);
+	box-shadow: 0 0 0 var(--b-edge);
+}
+:is(.a-btn, button).a-btn--go {
+	--b: var(--a-go);
+	--b-edge: var(--a-go-edge);
+	--b-text: var(--a-ink);
+}
+:is(.a-btn, button).a-btn--coin {
+	--b: var(--a-coin);
+	--b-edge: var(--a-coin-edge);
+	--b-text: var(--a-ink);
+}
+:is(.a-btn, button).a-btn--pink {
+	--b: var(--a-pink);
+	--b-edge: var(--a-pink-edge);
+	--b-text: var(--a-ink);
+}
+:is(.a-btn, button).a-btn--sky {
+	--b: #3db7ff;
+	--b-edge: #1f8fd6;
+	--b-text: var(--a-ink);
+}
+:is(.a-btn, button).a-btn--big {
+	padding: 0.9rem 1.6rem;
+	font-size: 1rem;
+	border-radius: 16px;
+}
+:is(.a-btn, .not-content button)[aria-disabled='true'] {
+	filter: grayscale(0.7) brightness(0.85);
+}
+:is(.a-btn, .not-content, .a-header, .a-footer) :focus-visible,
+.a-btn:focus-visible {
+	outline: 3px solid var(--a-sky);
+	outline-offset: 3px;
 }
 
-/* Тост «Новый значок». Создаётся из src/lib/badges.ts, поэтому стили глобальные */
+/* Карточка с объёмным краем — общий вид панелей */
+.a-card {
+	background: var(--a-surface);
+	border-radius: var(--a-r-card);
+	box-shadow:
+		inset 0 0 0 2px var(--a-line),
+		0 6px 0 var(--a-edge);
+}
+
+/* ---------- Шапка Starlight ---------- */
+
+header.header {
+	padding-block: 0;
+	border-bottom: 2px solid var(--a-line);
+	background: color-mix(in srgb, var(--a-bg) 88%, transparent);
+	backdrop-filter: blur(10px);
+}
+
+/* Поиск: кнопка-пилюля и окно */
+site-search > button {
+	height: 2.6rem;
+	border: 0 !important;
+	border-radius: 999px !important;
+	background: var(--a-surface) !important;
+	box-shadow: inset 0 0 0 2px var(--a-line);
+	color: var(--a-muted) !important;
+}
+site-search > button:hover {
+	box-shadow: inset 0 0 0 2px var(--a-sky);
+}
+site-search dialog {
+	border: 0 !important;
+	border-radius: var(--a-r-card) !important;
+	background: var(--a-bg) !important;
+	box-shadow:
+		inset 0 0 0 2px var(--a-line),
+		0 8px 0 var(--a-edge),
+		0 30px 80px #0008 !important;
+}
+site-search dialog::backdrop {
+	background: #0e0b2bb3 !important;
+	backdrop-filter: blur(4px);
+}
+site-search {
+	--pagefind-ui-primary: var(--a-sky);
+	--pagefind-ui-text: var(--a-text);
+	--pagefind-ui-background: var(--a-surface);
+	--pagefind-ui-border: var(--a-line);
+	--pagefind-ui-tag: var(--a-surface-2);
+	--pagefind-ui-border-width: 2px;
+	--pagefind-ui-border-radius: 14px;
+	--pagefind-ui-font: var(--sl-font);
+}
+site-search .pagefind-ui__search-input {
+	font-family: var(--a-font) !important;
+	font-weight: 500 !important;
+}
+site-search .pagefind-ui__result {
+	padding: 0.75rem 1rem !important;
+	border: 0 !important;
+	border-radius: 14px;
+	background: var(--a-surface);
+	margin-bottom: 0.6rem;
+}
+
+/* ---------- Боковое меню ---------- */
+
+.sidebar-content a[aria-current='page'],
+.sidebar-content a[aria-current='page']:hover {
+	color: var(--a-ink) !important;
+	background: var(--a-coin) !important;
+	border-radius: 999px;
+	box-shadow: 0 3px 0 var(--a-coin-edge);
+	font-weight: 700;
+}
+.sidebar-content a {
+	border-radius: 999px;
+}
+.sidebar-content a:not([aria-current='page']):hover {
+	background: var(--a-surface);
+}
+.sidebar-content summary .group-label,
+.sidebar-content .large {
+	font-family: var(--a-font);
+	font-weight: 700;
+	font-size: 0.9rem;
+	color: var(--a-text);
+}
+/* Цветная точка у групп «Мир N» — порядок групп совпадает с номерами миров */
+.sidebar-content .top-level > li:nth-child(n + 3):nth-child(-n + 9) > details > summary .group-label::before {
+	content: '';
+	display: inline-block;
+	width: 0.6rem;
+	height: 0.6rem;
+	margin-inline-end: 0.5rem;
+	border-radius: 50%;
+	background: var(--dot);
+	box-shadow: 0 2px 0 #0004;
+	vertical-align: 0.05em;
+}
+.sidebar-content .top-level > li:nth-child(3) { --dot: #3ccf6e; }
+.sidebar-content .top-level > li:nth-child(4) { --dot: #3db7ff; }
+.sidebar-content .top-level > li:nth-child(5) { --dot: #ff5fa2; }
+.sidebar-content .top-level > li:nth-child(6) { --dot: #ffc930; }
+.sidebar-content .top-level > li:nth-child(7) { --dot: #ff8a3d; }
+.sidebar-content .top-level > li:nth-child(8) { --dot: #a77bff; }
+.sidebar-content .top-level > li:nth-child(9) { --dot: #2fd3c6; }
+
+/* Мобильное меню */
+#starlight__sidebar {
+	background: var(--a-bg);
+}
+starlight-menu-button button {
+	border-radius: 50% !important;
+	background: var(--a-surface) !important;
+	box-shadow:
+		inset 0 0 0 2px var(--a-line),
+		0 4px 0 var(--a-edge) !important;
+	color: var(--a-text) !important;
+}
+
+/* Стандартные select и поля, если где-то остались */
+.content-panel select,
+starlight-lang-select select {
+	border-radius: 999px;
+}
+
+/* ---------- Пагинация: большие объёмные кнопки ---------- */
+
+.pagination-links a {
+	border: 0 !important;
+	border-radius: var(--a-r-card) !important;
+	background: var(--a-surface);
+	box-shadow:
+		inset 0 0 0 2px var(--a-line),
+		0 6px 0 var(--a-edge) !important;
+	color: var(--a-muted) !important;
+	transition: transform 0.08s;
+}
+.pagination-links a:hover {
+	box-shadow:
+		inset 0 0 0 2px var(--a-sky),
+		0 6px 0 var(--a-sky-edge) !important;
+}
+.pagination-links a:active {
+	transform: translateY(6px);
+}
+.pagination-links .link-title {
+	font-family: var(--a-font);
+	font-weight: 700;
+	font-size: 1.1rem !important;
+	color: var(--a-text) !important;
+}
+
+/* ---------- Код в тексте ---------- */
+
+.sl-markdown-content code:not(:where(.not-content *)):not(pre code) {
+	padding: 0.1em 0.4em;
+	border-radius: 6px;
+	background: var(--a-surface-2);
+	color: var(--a-text);
+}
+.expressive-code .frame {
+	border-radius: 16px !important;
+	overflow: hidden;
+}
+
+/* ---------- Тост «Новый значок» (создаётся из src/lib/badges.ts) ---------- */
+
 .px-toast {
 	position: fixed;
 	right: 1rem;
 	bottom: 1rem;
 	z-index: 50;
 	display: flex;
-	gap: 0.75rem;
+	gap: 0.85rem;
 	align-items: center;
 	max-width: min(22rem, calc(100vw - 2rem));
-	padding: 0.75rem 1rem;
+	padding: 0.85rem 1.1rem;
 	font-size: 0.9rem;
-	color: var(--px-panel-text);
-	background: var(--px-panel);
+	color: var(--a-text);
+	background: var(--a-surface);
+	border-radius: var(--a-r-card);
 	box-shadow:
-		0 -3px 0 0 var(--px-coin),
-		0 3px 0 0 var(--px-coin),
-		-3px 0 0 0 var(--px-coin),
-		3px 0 0 0 var(--px-coin);
-	animation: px-drop 0.35s steps(4) both;
+		inset 0 0 0 3px var(--a-coin),
+		0 6px 0 var(--a-coin-edge),
+		0 20px 40px #0006;
+	animation: a-pop-up 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 }
 .px-toast b {
 	display: block;
-	margin-bottom: 0.3rem;
-	font-size: 0.8rem;
-	font-weight: 400;
+	margin-bottom: 0.2rem;
+	font: 800 0.85rem var(--a-font);
 }
 .px-toast__icon {
-	font-size: 2rem;
+	display: grid;
+	place-items: center;
+	flex: none;
+	width: 2.6rem;
+	height: 2.6rem;
+	font-size: 1.4rem;
 	line-height: 1;
-	color: var(--px-coin);
+	color: var(--a-ink);
+	background: var(--a-coin);
+	border-radius: 50%;
+	box-shadow: 0 4px 0 var(--a-coin-edge);
 }
-@keyframes px-drop {
+@keyframes a-pop-up {
 	from {
-		transform: translateY(120%);
+		transform: translateY(120%) scale(0.8);
+		opacity: 0;
 	}
 }
+
 /* Шаг — игровой экран: колонки «На этой странице» нет, контент шире */
 :root:has(.hud) {
-	--sl-content-width: 52rem;
+	--sl-content-width: 54rem;
 }
 
-/* Монеты из src/lib/fx.ts */
-.px-coin-fx {
-	position: fixed;
-	z-index: 100;
-	margin: -10px 0 0 -10px;
-	line-height: 0;
-	pointer-events: none;
-}
-
-/* Переход между страницами: пиксельное затемнение. Браузеры без поддержки просто пропускают */
+/* Переход между страницами — мягкое появление. Браузеры без поддержки просто пропускают */
 @view-transition {
 	navigation: auto;
 }
 ::view-transition-old(root) {
-	animation: px-out 0.25s steps(4) both;
+	animation: a-out 0.18s ease-in both;
 }
 ::view-transition-new(root) {
-	animation: px-in 0.3s steps(5) both;
+	animation: a-in 0.28s ease-out both;
 }
-@keyframes px-out {
+@keyframes a-out {
 	to {
 		opacity: 0;
-		transform: translateY(-12px);
 	}
 }
-@keyframes px-in {
+@keyframes a-in {
 	from {
 		opacity: 0;
-		transform: translateY(12px);
+		transform: translateY(10px);
 	}
 }
 
@@ -218,7 +512,15 @@ header.header {
 	}
 }
 
-/* Главная: меньше пустоты вокруг заголовка, остров сразу виден */
-[data-has-hero] .hero {
-	padding-block: 1.5rem 0.5rem;
+/* На главной (без бокового меню) кнопка «Следующая страница» не нужна */
+:root:not([data-has-sidebar]) .pagination-links {
+	display: none;
+}
+
+/* Пустая полоса заголовка на главной (у неё свой заголовок в HomeHero) — прячем */
+.content-panel:not(:has(.sl-container > *)) {
+	display: none;
+}
+.content-panel + .content-panel {
+	border-top: 0;
 }

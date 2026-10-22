@@ -1,233 +1,347 @@
 ---
-// Главная: выбор кейса команды («выбор персонажа»), мини-карта миров и кнопка «Начать / Продолжить»
+// Главная: выбор кейса команды — «выбор персонажа». У каждого кейса свой цвет
+// и нарисованная на CSS мини-превью будущего сайта. Выбор хранится в браузере.
 import cases from '~/data/cases.json';
-import Icon from './Icon.astro';
-import { getRoute, getLevels, url } from '~/lib/route';
 
-const { steps, lessons } = await getRoute();
-const levels = await getLevels();
-const first = url(steps[0].id + '/');
-// Для «Продолжить»: шаги по порядку, чтобы найти первый непройденный
-const order = steps.map((s) => [s.id, url(s.id + '/'), s.data.soon]);
+// Цвет карточки кейса — из цветов миров (custom.css, .w-N)
+const COLOR: Record<string, number> = { watch: 3, teammate: 6, where: 5, tail: 4, split: 1 };
 ---
 
-<script id="nav-levels" type="application/json" set:html={JSON.stringify(levels)} />
-<nav-case-picker class="picker not-content" data-order={JSON.stringify(order)}>
+<nav-case-picker class="picker not-content">
 	<fieldset>
-		<legend class="px-font">Выберите кейс команды</legend>
+		<legend>
+			<span class="picker__title">Выбери кейс команды</span>
+			<span class="picker__sub">Подсказки в шагах подстроятся под ваш сайт</span>
+		</legend>
 		<div class="picker__grid">
 			{
 				cases.map((c) => (
-					<label class="picker__card">
+					<label class={`picker__card w-${COLOR[c.id] ?? 2}`} data-case={c.id}>
 						<input type="radio" name="case" value={c.id} />
-						<span class="picker__chosen px-font">
-							<Icon name="arrow" size={12} /> ваш кейс
+						<span class={`picker__art picker__art--${c.id}`} aria-hidden="true">
+							{c.id === 'watch' && (
+								<>
+									<i /><i /><i /><i />
+								</>
+							)}
+							{c.id === 'teammate' && (
+								<>
+									<i><b /><em /></i>
+									<i><b /><em /></i>
+								</>
+							)}
+							{c.id === 'where' && (
+								<>
+									<b /><b /><b />
+									<i /><i /><i />
+								</>
+							)}
+							{c.id === 'tail' && (
+								<>
+									<i /><i /><i />
+								</>
+							)}
+							{c.id === 'split' && (
+								<>
+									<i><b /></i>
+									<em /><em /><em />
+								</>
+							)}
 						</span>
-						<strong class="px-font">{c.title}</strong>
-						<span>{c.about}</span>
+						<span class="picker__chosen">твой кейс</span>
+						<strong>{c.title.replace('_', '_​') /* перенос строки после «_» */}</strong>
+						<span class="picker__about">{c.about}</span>
 					</label>
 				))
 			}
 		</div>
 	</fieldset>
-
-	<ol class="picker__worlds" aria-label="Прогресс по мирам">
-		{
-			lessons.map((l) => (
-				<li data-ids={JSON.stringify(l.steps.map((s) => s.id))}>
-					<span class="picker__world px-font">{l.n}</span>
-					<span class="picker__world-name">{l.title}</span>
-					<span class="picker__world-count">0 из {l.steps.length}</span>
-				</li>
-			))
-		}
-	</ol>
-
-	<a class="picker__go px-font" href={first}>Начать игру с уровня 1-1</a>
 </nav-case-picker>
 
 <script>
 	import { load, update } from '~/lib/storage';
 	import { checkBadges } from '~/lib/badges';
+	import { burst } from '~/lib/fx';
 
 	class CasePicker extends HTMLElement {
 		connectedCallback() {
-			const p = load();
-			const go = this.querySelector<HTMLAnchorElement>('.picker__go')!;
-			const order: [string, string, boolean][] = JSON.parse(this.dataset.order!);
-			const done = order.filter(([id]) => p.done.includes(id)).length; // старые id (после переименований) не считаем
-
-			// Мини-карта: сколько уровней пройдено в каждом мире
-			for (const li of this.querySelectorAll<HTMLElement>('.picker__worlds li')) {
-				const ids: string[] = JSON.parse(li.dataset.ids!);
-				const n = ids.filter((id) => p.done.includes(id)).length;
-				li.querySelector('.picker__world-count')!.textContent = `${n} из ${ids.length}`;
-				li.classList.toggle('is-done', n === ids.length);
-				li.classList.toggle('is-started', n > 0 && n < ids.length);
-			}
-
-			// «Продолжить» ведёт к первому непройденному шагу (из уже написанных)
-			const next = order.find(([id, , soon]) => !soon && !p.done.includes(id));
-			if (done || p.last) {
-				go.href = next ? next[1] : p.last ?? go.href;
-				go.textContent = next ? 'Продолжить игру' : 'Все уровни пройдены! Открыть последний';
-			}
-			const radio = this.querySelector<HTMLInputElement>(`input[value="${p.case}"]`);
+			const radio = this.querySelector<HTMLInputElement>(`input[value="${load().case}"]`);
 			if (radio) radio.checked = true;
-			this.addEventListener('change', (e) => update((p) => (p.case = (e.target as HTMLInputElement).value)));
+			this.addEventListener('change', (e) => {
+				const input = e.target as HTMLInputElement;
+				update((p) => (p.case = input.value));
+				burst(input.closest('label')!);
+			});
 			window.addEventListener('nav-progress', checkBadges);
+
+			// Карточка слегка наклоняется за мышкой
+			if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+			for (const card of this.querySelectorAll<HTMLElement>('.picker__card')) {
+				card.addEventListener('pointermove', (e) => {
+					const r = card.getBoundingClientRect();
+					const x = (e.clientX - r.left) / r.width - 0.5;
+					const y = (e.clientY - r.top) / r.height - 0.5;
+					card.style.transform = `translateY(-6px) rotateX(${(-y * 8).toFixed(1)}deg) rotateY(${(x * 10).toFixed(1)}deg)`;
+				});
+				card.addEventListener('pointerleave', () => (card.style.transform = ''));
+			}
 		}
 	}
 	customElements.define('nav-case-picker', CasePicker);
 </script>
 
 <style>
+	.picker {
+		display: block;
+		margin-block: 3.5rem 1rem;
+	}
 	.picker fieldset {
-		border: 0;
-		padding: 0;
 		margin: 0;
+		padding: 0;
+		border: 0;
 	}
 	.picker legend {
-		margin-bottom: 1.25rem;
-		font-size: 1.05rem;
-		line-height: 1.5;
-		color: var(--sl-color-white);
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		margin-bottom: 1.5rem;
+		padding: 0;
+	}
+	.picker__title {
+		font: 800 clamp(1.5rem, 3vw, 2rem) var(--a-font);
+		color: var(--a-text);
+	}
+	.picker__sub {
+		color: var(--a-muted);
 	}
 	.picker__grid {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 13rem), 1fr));
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 12.5rem), 1fr));
 		gap: 1.25rem;
+		perspective: 900px;
 	}
-	/* Карточка персонажа: пиксельная рамка, выбранная — золотая с меткой «ваш кейс» */
+	/* Карточка персонажа */
 	.picker__card {
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		gap: 0.3rem;
-		margin: 3px;
-		padding: 1rem;
-		background: var(--sl-color-gray-6);
+		gap: 0.35rem;
+		padding: 0.75rem 0.75rem 1.1rem;
+		background: var(--a-surface);
+		border-radius: 22px;
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
 		cursor: pointer;
+		transform-style: preserve-3d;
+		transition:
+			transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1),
+			box-shadow 0.2s;
 	}
 	.picker__card:hover {
-		transform: translateY(-3px);
+		transform: translateY(-6px);
 	}
 	.picker__card:has(input:checked) {
-		background: var(--sl-color-accent-low);
 		box-shadow:
-			0 -4px 0 0 var(--px-coin),
-			0 4px 0 0 var(--px-coin),
-			-4px 0 0 0 var(--px-coin),
-			4px 0 0 0 var(--px-coin);
+			inset 0 0 0 4px var(--w),
+			0 6px 0 var(--w-edge);
 	}
 	.picker__card:has(input:focus-visible) {
-		outline: 3px solid var(--px-coin);
-		outline-offset: 6px;
+		outline: 3px solid var(--a-sky);
+		outline-offset: 4px;
 	}
 	.picker__card input {
 		position: absolute;
 		opacity: 0;
 	}
 	.picker__card strong {
-		font-size: 0.75rem;
-		line-height: 1.5;
-		font-weight: 400;
-		color: var(--sl-color-white);
+		margin: 0.6rem 0.35rem 0;
+		font: 800 0.95rem/1.2 var(--a-font);
+		color: var(--a-text);
 		overflow-wrap: anywhere;
 	}
-	.picker__card > span:last-child {
+	.picker__about {
+		margin: 0 0.35rem;
 		font-size: var(--sl-text-sm);
-		color: var(--sl-color-gray-2);
+		line-height: 1.4;
+		color: var(--a-muted);
 	}
 	.picker__chosen {
+		position: absolute;
+		top: 1.1rem;
+		right: 1.1rem;
+		z-index: 1;
 		display: none;
-		align-items: center;
-		gap: 0.3rem;
-		font-size: 0.55rem;
-		color: var(--sl-color-accent);
+		padding: 0.2rem 0.6rem 0.2rem 0.45rem;
+		font: 800 0.7rem var(--a-font);
+		color: var(--a-ink);
+		background: #fff;
+		border-radius: 999px;
+		box-shadow: 0 3px 0 #0004;
+	}
+	.picker__chosen::before {
+		content: '✓ ';
+		color: var(--w-edge);
 	}
 	.picker__card:has(input:checked) .picker__chosen {
-		display: inline-flex;
+		display: block;
+		animation: pick-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	@keyframes pick-pop {
+		from {
+			transform: scale(0);
+		}
 	}
 
-	/* Мини-карта миров */
-	.picker__worlds {
+	/* Мини-превью сайта кейса: фон цвета кейса и нарисованные блоки */
+	.picker__art {
+		position: relative;
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
-		gap: 0.75rem;
-		margin: 2rem 0 0;
-		padding: 0;
-		list-style: none;
+		gap: 0.4rem;
+		height: 7.5rem;
+		padding: 0.75rem;
+		background: var(--w);
+		border-radius: 16px;
+		box-shadow: inset 0 -5px 0 var(--w-edge);
+		overflow: hidden;
 	}
-	.picker__worlds li {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 0 0.6rem;
+	.picker__art i,
+	.picker__art b,
+	.picker__art em {
+		display: block;
+		border-radius: 8px;
+		transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	/* ЧТО_ПОСМОТРИМ — постеры фильмов, один «свайпается» */
+	.picker__art--watch {
+		grid-template-columns: repeat(4, 1fr);
+		align-items: end;
+	}
+	.picker__art--watch i {
+		height: 78%;
+		background: #fff;
+		box-shadow: inset 0 -1.2rem 0 #1d174822;
+	}
+	.picker__art--watch i:nth-child(2) {
+		height: 92%;
+		background: #1d1748;
+		transform: rotate(-6deg);
+	}
+	.picker__card:hover .picker__art--watch i:nth-child(2) {
+		transform: rotate(-16deg) translateX(-8px);
+	}
+	/* ТИММЕЙТ — анкеты с аватаром и «навыками» */
+	.picker__art--teammate {
+		grid-template-columns: 1fr 1fr;
+	}
+	.picker__art--teammate i {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
 		align-items: center;
-		margin: 0;
+		justify-content: center;
+		background: #fff;
 	}
-	.picker__world {
-		grid-row: span 2;
-		display: grid;
-		place-items: center;
-		width: 2.4rem;
-		height: 2.4rem;
-		margin: 3px;
-		font-size: 0.75rem;
-		color: #fff;
-		background: #8a4d2c;
-		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink),
-			inset -4px -4px 0 0 #0003;
+	.picker__art--teammate b {
+		width: 2rem;
+		height: 2rem;
+		background: #1d1748;
+		border-radius: 50%;
 	}
-	.picker__worlds .is-started .picker__world {
-		color: #1e1b3a;
-		background: var(--px-coin);
+	.picker__art--teammate em {
+		width: 75%;
+		height: 0.5rem;
+		background: repeating-linear-gradient(90deg, #a77bff 0 30%, transparent 30% 36%);
+		border-radius: 4px;
 	}
-	.picker__worlds .is-done .picker__world {
-		background: var(--px-grass);
+	.picker__card:hover .picker__art--teammate i:first-child {
+		transform: rotate(-4deg) translateY(-3px);
 	}
-	.picker__world-name {
-		font-size: var(--sl-text-sm);
-		font-weight: 600;
-		line-height: 1.2;
-		color: var(--sl-color-white);
+	/* КУДА_СХОДИТЬ — фильтры-пилюли и карточки событий */
+	.picker__art--where {
+		grid-template-columns: repeat(3, 1fr);
+		grid-template-rows: 0.9rem 1fr;
 	}
-	.picker__world-count {
-		font-size: var(--sl-text-xs);
-		color: var(--sl-color-gray-3);
+	.picker__art--where b {
+		border-radius: 999px;
+		background: #fff;
 	}
-
-	/* Главная кнопка — большая «нажимаемая» */
-	.picker__go {
-		display: inline-block;
-		margin: 2rem 4px 0;
-		padding: 0.9rem 1.4rem;
-		font-size: 0.85rem;
-		line-height: 1.5;
-		text-decoration: none;
-		color: #1e1b3a;
-		background: var(--px-coin);
-		box-shadow:
-			0 -4px 0 0 var(--px-ink),
-			0 4px 0 0 var(--px-ink),
-			-4px 0 0 0 var(--px-ink),
-			4px 0 0 0 var(--px-ink),
-			inset 0 -6px 0 0 #0003;
+	.picker__art--where b:first-child {
+		background: #1d1748;
 	}
-	.picker__go:hover {
-		color: #1e1b3a;
-		transform: translateY(-2px);
+	.picker__art--where i {
+		background: #fff;
+		box-shadow: inset 0 1.6rem 0 #1d174822;
 	}
-	.picker__go:active {
-		transform: translateY(2px);
+	.picker__card:hover .picker__art--where i:nth-of-type(2) {
+		transform: translateY(-4px);
+	}
+	/* ХВОСТ_ДОМОЙ — карточки питомцев с «мордочками» */
+	.picker__art--tail {
+		grid-template-columns: repeat(3, 1fr);
+	}
+	.picker__art--tail i {
+		position: relative;
+		background: #fff;
+	}
+	.picker__art--tail i::before {
+		content: '';
+		position: absolute;
+		left: 50%;
+		top: 28%;
+		width: 1.5rem;
+		height: 1.3rem;
+		margin-left: -0.75rem;
+		background: #f5a14a;
+		border-radius: 45% 45% 50% 50%;
+	}
+	.picker__art--tail i:nth-child(2)::before {
+		background: #c08552;
+	}
+	.picker__art--tail i:nth-child(3)::before {
+		background: #888;
+	}
+	.picker__art--tail i::after {
+		content: '';
+		position: absolute;
+		left: 18%;
+		right: 18%;
+		bottom: 16%;
+		height: 0.5rem;
+		background: #ff8a3d;
+		border-radius: 4px;
+	}
+	.picker__card:hover .picker__art--tail i:nth-child(2) {
+		transform: translateY(-5px) rotate(3deg);
+	}
+	/* СКИНЕМСЯ — сбор с прогрессом и строки «кто сколько должен» */
+	.picker__art--split {
+		grid-template-rows: 1.1rem repeat(3, 0.55rem);
+		align-content: center;
+	}
+	.picker__art--split i {
+		background: #ffffff66;
+		border-radius: 999px;
+		overflow: hidden;
+	}
+	.picker__art--split i b {
+		width: 62%;
+		height: 100%;
+		background: #fff;
+		border-radius: 999px;
+		transition: width 0.7s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.picker__card:hover .picker__art--split i b {
+		width: 94%;
+	}
+	.picker__art--split em {
+		background: #fff;
+		border-radius: 4px;
+	}
+	.picker__art--split em:nth-of-type(2) {
+		width: 70%;
+	}
+	.picker__art--split em:nth-of-type(3) {
+		width: 45%;
 	}
 </style>

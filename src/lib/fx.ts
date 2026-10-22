@@ -1,36 +1,29 @@
-// Игровые эффекты: монеты разлетаются, блок трясётся. При «уменьшить движение» — ничего.
-import { svg } from './sprites';
+// Игровые эффекты: конфетти из элемента и тряска при ошибке. При «уменьшить движение» — ничего.
+import confetti from 'canvas-confetti';
 
 const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+const COLORS = ['#3ccf6e', '#ffc930', '#ff5fa2', '#3db7ff', '#a77bff'];
 
-// Монеты вылетают из центра элемента и падают
-export function burst(el: Element, n = 14) {
+// Конфетти вылетает из центра элемента. big — праздник побольше (уровень пройден)
+export function burst(el: Element, big = false) {
 	if (calm()) return;
 	const r = el.getBoundingClientRect();
-	for (let i = 0; i < n; i++) {
-		const c = document.createElement('span');
-		c.className = 'px-coin-fx';
-		c.innerHTML = svg('coin', 20);
-		c.style.left = r.left + r.width / 2 + 'px';
-		c.style.top = r.top + r.height / 2 + 'px';
-		document.body.append(c);
-		const dx = (Math.random() - 0.5) * 320;
-		const up = 80 + Math.random() * 140;
-		c.animate(
-			[
-				{ transform: 'translate(0, 0)' },
-				{ transform: `translate(${dx * 0.6}px, ${-up}px)`, offset: 0.4 },
-				{ transform: `translate(${dx}px, ${up}px)`, opacity: 0 },
-			],
-			{ duration: 900 + Math.random() * 300, easing: 'steps(12)' }
-		).onfinish = () => c.remove();
-	}
+	confetti({
+		origin: { x: (r.left + r.width / 2) / innerWidth, y: (r.top + r.height / 2) / innerHeight },
+		particleCount: big ? 140 : 50,
+		spread: big ? 100 : 70,
+		startVelocity: big ? 45 : 30,
+		scalar: 0.9,
+		colors: COLORS,
+		disableForReducedMotion: true,
+		zIndex: 1000,
+	});
 }
 
 export function shake(el: Element) {
 	if (calm()) return;
 	el.animate([{ transform: 'translateX(0)' }, { transform: 'translateX(-6px)' }, { transform: 'translateX(6px)' }, { transform: 'translateX(0)' }], {
-		duration: 240,
-		easing: 'steps(4)',
+		duration: 260,
+		easing: 'ease-in-out',
 	});
 }

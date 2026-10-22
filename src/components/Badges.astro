@@ -1,23 +1,48 @@
 ---
-// Коллекция значков. Полученные — цветные, остальные — силуэты с подсказкой, как их получить.
-// Правила — в src/lib/badges.ts.
-import Icon from './Icon.astro';
+// Полка значков. Полученные — цветные медали, остальные — силуэты с замком и подсказкой,
+// как их получить. Правила — в src/lib/badges.ts.
 import { BADGES } from '~/lib/badges';
+
+// Иконка и цвет медали (цвета миров из custom.css). Контуры — 24×24, обводкой
+const LOOK: Record<string, { w: number; d: string }> = {
+	case: { w: 3, d: 'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8Zm-7 8a7 7 0 0 1 14 0' },
+	first: { w: 1, d: 'M5 12.5l4.5 4.5L19 7.5' },
+	ten: { w: 2, d: 'M8 7v10M5.5 9.5 8 7M13 7h3a2.5 2.5 0 0 1 2.5 2.5v5A2.5 2.5 0 0 1 16 17h-.5A2.5 2.5 0 0 1 13 14.5v-5A2.5 2.5 0 0 1 15.5 7' },
+	clean: { w: 4, d: 'M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.8L12 16.3l-5.2 2.8 1-5.8-4.3-4.1 5.9-.8z' },
+	world: { w: 7, d: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18Zm-9-9h18M12 3c2.5 3 2.5 15 0 18M12 3c-2.5 3-2.5 15 0 18' },
+	js: { w: 6, d: 'M9 7l-5 5 5 5M15 7l5 5-5 5' },
+	minimum: { w: 5, d: 'M4 20V9l3-2 3 2V6l2-2 2 2v3l3-2 3 2v11Zm6 0v-4h4v4' },
+	gamer: { w: 3, d: 'M7 9h10a4 4 0 0 1 0 8c-1.5 0-2.3-1-3-2h-4c-.7 1-1.5 2-3 2a4 4 0 0 1 0-8Zm1 2v3m-1.5-1.5h3M16 12h.01M18 14h.01' },
+	final: { w: 4, d: 'M7 4h10v4a5 5 0 0 1-10 0Zm5 9v4m-4 3h8M7 6H4a3 3 0 0 0 3 4m10-4h3a3 3 0 0 1-3 4' },
+};
 ---
 
 <nav-badges class="badges not-content">
-	<p class="badges__count px-font">Собрано <b>0</b> из {BADGES.length}</p>
+	<div class="badges__head">
+		<h2>Значки</h2>
+		<p class="badges__count">Собрано <b>0</b> из {BADGES.length}</p>
+	</div>
 	<ul>
 		{
-			BADGES.map((b) => (
-				<li data-id={b.id}>
-					<span class="badges__medal">
-						<Icon name="star" size={28} />
-					</span>
-					<strong class="px-font">{b.title}</strong>
-					<span>{b.how}</span>
-				</li>
-			))
+			BADGES.map((b) => {
+				const look = LOOK[b.id] ?? { w: 4, d: LOOK.clean.d };
+				return (
+					<li data-id={b.id} class={`w-${look.w}`}>
+						<span class="badges__medal">
+							<svg viewBox="0 0 24 24" aria-hidden="true">
+								<path d={look.d} />
+							</svg>
+							<span class="badges__lock" aria-hidden="true">
+								<svg viewBox="0 0 24 24">
+									<path d="M7 11V8a5 5 0 0 1 10 0v3M5 11h14v10H5z" />
+								</svg>
+							</span>
+						</span>
+						<strong>{b.title}</strong>
+						<span>{b.how}</span>
+					</li>
+				);
+			})
 		}
 	</ul>
 </nav-badges>
@@ -45,70 +70,120 @@ import { BADGES } from '~/lib/badges';
 <style>
 	.badges {
 		display: block;
+		margin-block: 3.5rem 1rem;
+	}
+	.badges__head {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 1rem;
+		align-items: baseline;
+		justify-content: space-between;
+		margin-bottom: 1.5rem;
+	}
+	.badges h2 {
+		margin: 0;
+		font: 800 clamp(1.5rem, 3vw, 2rem) var(--a-font);
+		color: var(--a-text);
 	}
 	.badges__count {
-		margin: 0 0 1rem;
-		font-size: 0.75rem;
+		margin: 0;
+		padding: 0.35rem 0.9rem;
+		font: 700 0.85rem var(--a-font);
+		color: var(--a-muted);
+		background: var(--a-surface);
+		border-radius: 999px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
 	}
 	.badges__count b {
-		color: var(--sl-color-accent);
+		color: var(--a-coin);
 	}
+	/* Полка: медали в ряд на «доске» */
 	.badges ul {
 		display: grid;
-		grid-template-columns: repeat(auto-fill, minmax(min(100%, 12rem), 1fr));
-		gap: 1.25rem 1rem;
+		grid-template-columns: repeat(auto-fill, minmax(min(100%, 9rem), 1fr));
+		gap: 1.75rem 1rem;
 		margin: 0;
-		padding: 0;
+		padding: 1.75rem 1.25rem;
 		list-style: none;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
 	}
 	.badges li {
-		display: grid;
-		grid-template-columns: auto 1fr;
-		gap: 0.1rem 0.75rem;
-		align-items: start;
+		display: flex;
+		flex-direction: column;
+		gap: 0.3rem;
+		align-items: center;
 		margin: 0;
-		color: var(--sl-color-gray-3);
+		text-align: center;
+		color: var(--a-muted);
+	}
+	.badges strong {
+		margin-top: 0.4rem;
+		font: 700 0.8rem/1.25 var(--a-font);
+		color: var(--a-text);
 	}
 	.badges li > span:last-child {
-		grid-column: 2;
 		font-size: var(--sl-text-xs);
 		line-height: 1.35;
 	}
-	.badges strong {
-		font-size: 0.65rem;
-		line-height: 1.5;
-		font-weight: 400;
-	}
-	/* Медаль: пиксельный кружок со звездой. Не полученная — тёмный силуэт */
+	/* Медаль: круг цвета значка с толстым краем. Не полученная — серый силуэт с замком */
 	.badges__medal {
-		grid-row: span 2;
+		position: relative;
 		display: grid;
 		place-items: center;
-		width: 3rem;
-		height: 3rem;
-		margin: 3px;
-		color: var(--sl-color-gray-5);
-		background: var(--sl-color-gray-6);
-		box-shadow:
-			0 -3px 0 0 var(--sl-color-gray-5),
-			0 3px 0 0 var(--sl-color-gray-5),
-			-3px 0 0 0 var(--sl-color-gray-5),
-			3px 0 0 0 var(--sl-color-gray-5);
+		width: 4.5rem;
+		height: 4.5rem;
+		color: var(--a-line);
+		background: var(--a-surface-2);
+		border-radius: 50%;
+		box-shadow: 0 5px 0 var(--a-edge);
 	}
-	.badges li.is-got {
-		color: var(--sl-color-gray-2);
+	.badges__medal svg {
+		width: 2rem;
+		height: 2rem;
+		fill: none;
+		stroke: currentColor;
+		stroke-width: 2.4;
+		stroke-linecap: round;
+		stroke-linejoin: round;
 	}
-	.badges li.is-got strong {
-		color: var(--sl-color-white);
+	.badges__lock {
+		position: absolute;
+		right: -0.2rem;
+		bottom: -0.1rem;
+		display: grid;
+		place-items: center;
+		width: 1.6rem;
+		height: 1.6rem;
+		color: var(--a-muted);
+		background: var(--a-surface);
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.badges__lock svg {
+		width: 0.9rem;
+		height: 0.9rem;
+	}
+	.badges li:not(.is-got) strong {
+		color: var(--a-muted);
 	}
 	.badges li.is-got .badges__medal {
-		color: #fff;
-		background: var(--px-coin);
+		color: var(--a-ink);
+		background: var(--w);
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink),
-			inset -5px -5px 0 0 #0003;
+			inset 0 0 0 5px #ffffff55,
+			0 5px 0 var(--w-edge);
+		animation: medal-in 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.badges li.is-got .badges__lock {
+		display: none;
+	}
+	@keyframes medal-in {
+		from {
+			transform: scale(0.6) rotate(-20deg);
+		}
 	}
 </style>

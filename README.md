@@ -142,9 +142,9 @@ src/data/route.json        список занятий: номер, назван
 src/data/cases.json        кейсы и рекомендуемые блоки главной для каждого
 src/data/blocks.json       список блоков (ready: false — «скоро»)
 src/components/            компоненты шага: песочница, подсказки, чек-лист, Npc (проводник Байт), Game (мини-игры),
-                           WorldScene (пиксельный пейзаж мира), Island (3D-остров на главной)…
+                           Island (3D-остров), Header / ThemeSelect / Footer (шапка, тема, подвал), HomeHero / LevelPath / Rules (главная)…
 src/lib/                   прогресс (localStorage), автопроверки, подсчёт маршрута, sprites.ts (пиксельные спрайты),
-                           fx.ts (монеты), games/ghost.ts (игра «Призрак»), island.ts (3D-остров на three.js)
+                           fx.ts (конфетти), games/ghost.ts (игра «Призрак»), island.ts (3D-остров на three.js)
 src/content.config.ts      какие поля бывают у шага
 public/starter/            стартовый шаблон для команд (index.html, style.css, img/) и шаблон секции для работы вчетвером (section.html, section.css)
 public/img/                картинки для примеров и разминок: img/barsik.svg и др.
@@ -155,6 +155,8 @@ templates/step.mdx         образец шага
 
 **Новый блок:** положите `имя.html` и `имя.css` (и, если нужно, `имя.js`) в `src/blocks/`, добавьте его в `src/data/blocks.json` с `"ready": true` и создайте страницу `src/content/docs/blocks/имя.mdx` по образцу `cards.mdx`.
 
-**3D-остров на главной** сделан на three.js (единственная библиотека сверх Astro и Starlight). Он грузится только на главной и только если браузер умеет WebGL. Без WebGL на его месте ряд кнопок-миров.
+**Оформление «Аркада 2.0»** (`src/styles/custom.css`): цвета — переменные `--a-*`, цвет мира — класс `.w-1` … `.w-7`. Объёмные кнопки — класс `a-btn` и варианты `a-btn--go`, `a-btn--coin`, `a-btn--pink`, `a-btn--sky`, `a-btn--big`; все кнопки в компонентах уже выглядят так. Шапка, переключатель темы и подвал — свои компоненты `Header.astro`, `ThemeSelect.astro`, `Footer.astro` (подключены в `astro.config.mjs` → `components`). Если добавите группу в боковое меню перед мирами, поправьте цветные точки «Мир N» в `custom.css` (`.sidebar-content .top-level > li:nth-child(...)`).
+
+**3D-остров на главной** сделан на three.js. Конфетти — `canvas-confetti`. Других библиотек сверх Astro и Starlight нет. Он грузится только на главной и только если браузер умеет WebGL. Без WebGL на его месте ряд кнопок-миров.
 
 **Прогресс учеников** (выбранный кейс, пройденные шаги и игры, чек-листы, черновики разминок) хранится только в браузере, в localStorage, под ключом `nav-v1`. Сервера нет. Если хранилище отключено, сайт работает, но ничего не запоминает.

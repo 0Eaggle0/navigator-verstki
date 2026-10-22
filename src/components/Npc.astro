@@ -7,13 +7,13 @@ import { svg } from '~/lib/sprites';
 
 <nav-npc class="npc not-content">
 	<div class="npc__who" aria-hidden="true">
-		<span class="npc__sprite" set:html={svg('byte', 64)} />
+		<span class="npc__sprite" set:html={svg('byte', 52)} />
 		<span class="npc__name px-font">Байт</span>
 	</div>
 	<div class="npc__talk">
 		<div class="npc__lines sl-markdown-content"><slot /></div>
 		<div class="npc__controls" hidden>
-			<button type="button" class="npc__next">Дальше ▸</button>
+			<button type="button" class="npc__next a-btn--go">Дальше ▸</button>
 			<button type="button" class="npc__all">Показать всё</button>
 			<span class="npc__count px-font" aria-hidden="true"></span>
 		</div>
@@ -106,16 +106,28 @@ import { svg } from '~/lib/sprites';
 		position: sticky;
 		top: calc(var(--sl-nav-height, 4rem) + 1rem);
 	}
+	/* Байт сидит в круглом «аватаре» */
 	.npc__sprite {
-		display: block;
-		animation: npc-idle 1.6s steps(2) infinite;
+		display: grid;
+		place-items: center;
+		width: 5rem;
+		height: 5rem;
+		background: var(--a-surface-2);
+		border-radius: 50%;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 5px 0 var(--a-edge);
+		animation: npc-idle 1.6s cubic-bezier(0.34, 1.56, 0.64, 1) infinite;
 	}
 	.npc.is-talking .npc__sprite {
-		animation: npc-hop 0.4s steps(3);
+		animation: npc-hop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 	.npc__name {
-		font-size: 0.6rem;
-		color: var(--px-coin);
+		font: 800 0.75rem var(--a-font);
+		color: var(--a-coin);
+	}
+	:global(:root[data-theme='light']) .npc__name {
+		color: var(--a-pink-edge);
 	}
 	/* Облачко реплики с хвостиком к проводнику */
 	.npc__talk {
@@ -124,31 +136,31 @@ import { svg } from '~/lib/sprites';
 		padding: 1rem 1.25rem;
 		color: var(--px-panel-text);
 		background: var(--px-panel);
+		border-radius: var(--a-r-card);
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
+			inset 0 0 0 2px var(--a-line),
+			0 5px 0 var(--a-edge);
 	}
+	/* Хвостик облачка — повёрнутый квадрат */
 	.npc__talk::before {
 		content: '';
 		position: absolute;
-		top: 1.5rem;
-		left: -15px;
-		width: 12px;
-		height: 12px;
-		background: var(--px-panel);
-		box-shadow:
-			-3px 0 0 0 var(--px-ink),
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink);
+		top: 1.6rem;
+		left: -8px;
+		width: 16px;
+		height: 16px;
+		background: var(--a-surface);
+		border-left: 2px solid var(--a-line);
+		border-bottom: 2px solid var(--a-line);
+		border-radius: 0 0 0 4px;
+		transform: rotate(45deg);
 	}
 	.npc__lines > :global([hidden]) {
 		display: none !important;
 	}
 	/* Анимация запускается заново, когда реплика перестаёт быть hidden */
 	.npc__lines > :global(*) {
-		animation: npc-line 0.25s steps(3);
+		animation: npc-line 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 	.npc__controls {
 		display: flex;
@@ -160,13 +172,9 @@ import { svg } from '~/lib/sprites';
 	.npc__controls[hidden] {
 		display: none;
 	}
-	.npc__next {
-		color: #1e1b3a !important;
-		background: var(--px-coin) !important;
-	}
 	.npc__count {
 		margin-left: auto;
-		font-size: 0.6rem;
+		font: 700 0.75rem var(--a-font);
 		color: var(--sl-color-gray-3);
 	}
 	@media (max-width: 40rem) {

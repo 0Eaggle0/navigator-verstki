@@ -1,0 +1,136 @@
+---
+// Первый экран главной: заголовок, кнопки «Играть» / «Карта миров», прогресс игрока
+// и справа 3D-остров с мирами.
+import Island from './Island.astro';
+import { getRoute, url } from '~/lib/route';
+
+const { steps } = await getRoute();
+const order = steps.map((s) => [s.id, url(s.id + '/'), s.data.soon]);
+---
+
+<section class="home-hero not-content" aria-labelledby="home-title">
+	<div class="home-hero__text">
+		<h1 id="home-title">Сверстай свой сайт, проходя уровни</h1>
+		<p class="home-hero__lead">
+			7 миров по одному занятию: от макета в Figma до сайта, который открывается по ссылке. Байт объясняет, игры тренируют,
+			разминки проверяют код сами.
+		</p>
+		<div class="home-hero__btns">
+			<nav-continue data-order={JSON.stringify(order)}>
+				<a class="a-btn a-btn--go a-btn--big" href={order[0][1]}>Начать</a>
+			</nav-continue>
+			<a class="a-btn a-btn--big" href={url('route/')}>Карта миров</a>
+		</div>
+		<dl class="home-hero__stats" data-total={steps.length}>
+			<div>
+				<dt>Звёзд</dt>
+				<dd><b class="home-hero__stars">0</b> из <span class="home-hero__stars-max">78</span></dd>
+			</div>
+			<div>
+				<dt>Уровней</dt>
+				<dd><b class="home-hero__done">0</b> из {steps.length}</dd>
+			</div>
+			<div>
+				<dt>Время</dt>
+				<dd><b>7</b> пар по 80 мин</dd>
+			</div>
+		</dl>
+	</div>
+	<div class="home-hero__island">
+		<Island />
+	</div>
+</section>
+
+<script>
+	import { load } from '~/lib/storage';
+	import { getLevels, stars, maxStars } from '~/lib/badges';
+
+	const box = document.querySelector<HTMLElement>('.home-hero__stats');
+	if (box) {
+		const show = () => {
+			const p = load();
+			const levels = getLevels() ?? [];
+			box.querySelector('.home-hero__stars')!.textContent = String(levels.reduce((n, l) => n + stars(p, l), 0));
+			box.querySelector('.home-hero__stars-max')!.textContent = String(levels.reduce((n, l) => n + maxStars(l), 0));
+			box.querySelector('.home-hero__done')!.textContent = String(levels.filter((l) => p.done.includes(l.id)).length);
+		};
+		show();
+		window.addEventListener('nav-progress', show);
+	}
+</script>
+
+<style>
+	.home-hero {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+		gap: 2.5rem;
+		align-items: center;
+		margin-block: 1rem 1.5rem;
+	}
+	.home-hero h1 {
+		margin: 0;
+		font: 800 clamp(2.1rem, 4.6vw, 3.6rem) / 1.04 var(--a-font);
+		letter-spacing: -0.03em;
+		color: var(--a-text);
+		text-wrap: balance;
+	}
+	.home-hero__lead {
+		margin: 1.25rem 0 0;
+		max-width: 34rem;
+		font-size: var(--sl-text-lg);
+		line-height: 1.55;
+		color: var(--a-muted);
+	}
+	.home-hero__btns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.9rem;
+		margin-top: 1.75rem;
+	}
+	.home-hero__stats {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin: 1.75rem 0 0;
+	}
+	.home-hero__stats div {
+		padding: 0.6rem 1rem;
+		background: var(--a-surface);
+		border-radius: 16px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.home-hero__stats dt {
+		font-size: var(--sl-text-xs);
+		color: var(--a-muted);
+	}
+	.home-hero__stats dd {
+		margin: 0.1rem 0 0;
+		font-size: var(--sl-text-sm);
+		color: var(--a-muted);
+	}
+	.home-hero__stats b {
+		font: 800 1.25rem var(--a-font);
+		color: var(--a-text);
+	}
+	.home-hero__stats div:first-child b {
+		color: var(--a-coin);
+	}
+	:global(:root[data-theme='light']) .home-hero__stats div:first-child b {
+		color: var(--a-coin-edge);
+	}
+	.home-hero__island {
+		--island-h: 32rem;
+		height: var(--island-h);
+	}
+	.home-hero__island:has(.is-flat) {
+		height: auto;
+	}
+	@media (max-width: 60rem) {
+		.home-hero {
+			grid-template-columns: minmax(0, 1fr);
+		}
+		.home-hero__island {
+			--island-h: 22rem;
+		}
+	}
+</style>

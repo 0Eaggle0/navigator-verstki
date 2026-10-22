@@ -46,11 +46,10 @@ const id = Astro.locals.starlightRoute.entry.id;
 	.hint {
 		margin: 0.9rem 3px;
 		background: var(--sl-color-gray-6);
+		border-radius: var(--a-r-card);
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
+			inset 0 0 0 2px var(--a-line),
+			0 5px 0 var(--a-edge);
 	}
 	.hint summary {
 		display: flex;

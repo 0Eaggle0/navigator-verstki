@@ -17,13 +17,13 @@ const items = entry.data.checklist;
 			</fieldset>
 		)
 	}
-	<button type="button" class="checklist__done" aria-pressed="false">Шаг пройден</button>
+	<button type="button" class="checklist__done a-btn--coin a-btn--big" aria-pressed="false">Шаг пройден</button>
 	<dialog class="clear" aria-labelledby="clear-title">
 		<p id="clear-title" class="clear__title px-font">Уровень пройден!</p>
 		<p class="clear__stars" />
 		<p class="clear__note" />
 		<div class="clear__btns">
-			<a class="clear__next px-font" href="#" hidden>Следующий уровень ▸</a>
+			<a class="clear__next a-btn a-btn--go a-btn--big" href="#" hidden>Следующий уровень ▸</a>
 			<form method="dialog"><button>Остаться</button></form>
 		</div>
 	</dialog>
@@ -82,7 +82,7 @@ const items = entry.data.checklist;
 				a.hidden = !nextLink;
 				if (nextLink) a.href = nextLink.href;
 				dialog.showModal();
-				burst(dialog.querySelector('.clear__title')!, 20);
+				burst(dialog.querySelector('.clear__title')!, true);
 			};
 		}
 	}
@@ -99,12 +99,11 @@ const items = entry.data.checklist;
 		color: #eceaf7;
 		background: #1b1a3f;
 		border: 0;
+		border-radius: var(--a-r-card);
 		box-shadow:
-			0 -4px 0 0 var(--px-coin),
-			0 4px 0 0 var(--px-coin),
-			-4px 0 0 0 var(--px-coin),
-			4px 0 0 0 var(--px-coin);
-		animation: clear-pop 0.3s steps(3);
+			inset 0 0 0 2px var(--a-coin),
+			0 5px 0 var(--a-coin-edge);
+		animation: clear-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
 	}
 	.clear::backdrop {
 		background: #0e0d26b3;
@@ -125,7 +124,7 @@ const items = entry.data.checklist;
 	}
 	.clear__stars :global(span) {
 		color: #3b386c;
-		animation: star-pop 0.3s steps(3) both;
+		animation: star-pop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) both;
 	}
 	.clear__stars :global(.is-on) {
 		color: var(--px-coin);
@@ -145,14 +144,6 @@ const items = entry.data.checklist;
 	}
 	.clear__btns form {
 		margin: 0;
-	}
-	.clear__next {
-		padding: 0.6rem 1rem;
-		font-size: 0.7rem;
-		color: #1e1b3a;
-		text-decoration: none;
-		background: var(--px-coin);
-		box-shadow: inset 0 -4px 0 0 #0003;
 	}
 	.clear__next[hidden] {
 		display: none;
@@ -179,11 +170,10 @@ const items = entry.data.checklist;
 		padding: 0.75rem 1rem;
 		border: 0;
 		background: var(--sl-color-gray-6);
+		border-radius: var(--a-r-card);
 		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
+			inset 0 0 0 2px var(--a-line),
+			0 5px 0 var(--a-edge);
 	}
 	.checklist legend {
 		float: left;
@@ -221,12 +211,11 @@ const items = entry.data.checklist;
 		text-decoration: line-through;
 	}
 	.checklist__done {
-		margin-top: 1.25rem !important;
-		color: #1e1b3a !important;
-		background: var(--px-coin) !important;
+		margin-top: 1.25rem;
 	}
+	/* Пройдено — кнопка становится зелёной */
 	.checklist__done[aria-pressed='true'] {
-		color: #fff !important;
-		background: var(--px-grass) !important;
+		--b: var(--a-go);
+		--b-edge: var(--a-go-edge);
 	}
 </style>

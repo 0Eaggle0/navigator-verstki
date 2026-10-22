@@ -19,3 +19,6 @@ export { default as Icon } from './Icon.astro';
 export { default as Npc } from './Npc.astro';
 export { default as Game } from './Game.astro';
 export { default as Island } from './Island.astro';
+export { default as HomeHero } from './HomeHero.astro';
+export { default as LevelPath } from './LevelPath.astro';
+export { default as Rules } from './Rules.astro';

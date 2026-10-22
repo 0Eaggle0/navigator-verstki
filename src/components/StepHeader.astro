@@ -4,42 +4,43 @@
 // для звёзд и значков и следит за новыми значками.
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 import Icon from './Icon.astro';
-import WorldScene from './WorldScene.astro';
-import { LESSONS, getLevels } from '~/lib/route';
+import { LESSONS } from '~/lib/route';
 
 const { entry } = Astro.locals.starlightRoute;
 const { lesson, minutes, goal, soon, optional, fast, sidebar } = entry.data;
 const isStep = minutes !== undefined;
-const levels = await getLevels();
 const maxStars = entry.data.warmup ? 3 : 2;
+const splash = entry.data.template === 'splash'; // у главной свой заголовок в HomeHero
 ---
 
-{isStep && <WorldScene n={lesson!} />}
-<Default />
-<script id="nav-levels" type="application/json" set:html={JSON.stringify(levels)} />
+{!splash && <Default />}
 {
 	isStep && (
-		<div class="hud not-content" data-id={entry.id} data-path={Astro.url.pathname}>
-			<p class="hud__goal">
-				<Icon name="target" size={20} />
-				{goal ?? entry.data.title}
-			</p>
-			<div class="hud__bar px-font">
-				<span class="hud__world">
-					Мир {lesson}-{sidebar.order} <span class="hud__lesson">{LESSONS[lesson!]}</span>
-				</span>
+		<div class={`hud w-${lesson} not-content`} data-id={entry.id} data-path={Astro.url.pathname}>
+			<span class="hud__level" aria-hidden="true">
+				<b>{lesson}-{sidebar.order}</b>
+			</span>
+			<div class="hud__main">
+				<p class="hud__world">
+					Мир {lesson} · {LESSONS[lesson!]}
+					{optional && <span class="hud__optional">бонусный уровень</span>}
+				</p>
+				<p class="hud__goal">{goal ?? entry.data.title}</p>
+			</div>
+			<div class="hud__side">
 				<span class="hud__stars" role="img" aria-label={`Звёзды уровня: 0 из ${maxStars}`}>
-					{Array.from({ length: maxStars }, () => <Icon name="star" size={18} />)}
+					{Array.from({ length: maxStars }, () => (
+						<svg viewBox="0 0 24 24" width="30" height="30" aria-hidden="true">
+							<path d="M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z" />
+						</svg>
+					))}
 				</span>
 				<span class="hud__time">
-					<Icon name="clock" size={18} />
+					<Icon name="clock" size={14} />
 					{minutes} мин
 				</span>
-				{optional && <span class="hud__optional">Бонусный уровень: можно пропустить</span>}
 			</div>
-			<p class="hud__stars-help">
-				Звёзды: решить разминку, отметить шаг пройденным и пройти без подсказок.
-			</p>
+			<p class="hud__help">Звёзды: реши разминку, отметь шаг пройденным и пройди без подсказок.</p>
 		</div>
 	)
 }
@@ -88,81 +89,123 @@ const maxStars = entry.data.warmup ? 3 : 2;
 </script>
 
 <style>
+	/* Плашка уровня в цвете мира: номер уровня, мир, цель, звёзды и время */
 	.hud {
-		margin-top: 1.25rem;
+		display: grid;
+		grid-template-columns: auto minmax(0, 1fr) auto;
+		gap: 0.5rem 1.25rem;
+		align-items: center;
+		margin: 1.5rem 0 0;
+		padding: 1.1rem 1.25rem;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			inset 6px 0 0 var(--w),
+			0 6px 0 var(--a-edge);
+	}
+	.hud__level {
+		display: grid;
+		place-items: center;
+		width: 4.2rem;
+		height: 4.2rem;
+		color: var(--a-ink);
+		background: var(--w);
+		border-radius: 50%;
+		box-shadow: 0 5px 0 var(--w-edge);
+	}
+	.hud__level b {
+		font: 800 1.15rem var(--a-font);
+	}
+	.hud__world {
+		margin: 0;
+		font: 700 0.8rem var(--a-font);
+		color: var(--w);
+	}
+	:global(:root[data-theme='light']) .hud__world {
+		color: var(--w-edge);
+	}
+	.hud__optional {
+		margin-inline-start: 0.5rem;
+		padding: 0.1rem 0.5rem;
+		font-size: 0.7rem;
+		color: var(--a-ink);
+		background: var(--a-coin);
+		border-radius: 999px;
 	}
 	.hud__goal {
-		display: flex;
-		gap: 0.6rem;
-		align-items: baseline;
-		margin: 0 0 1rem;
+		margin: 0.3rem 0 0;
 		font-size: var(--sl-text-xl);
 		font-weight: 600;
-		line-height: 1.35;
-		color: var(--sl-color-white);
+		line-height: 1.3;
+		color: var(--a-text);
 	}
-	.hud__goal .px-icon {
-		color: var(--px-brick);
-		transform: translateY(0.1em);
-	}
-	/* Полоса как в старых играх: мир слева, звёзды, время справа */
-	.hud__bar {
+	.hud__side {
 		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem 1.5rem;
-		align-items: center;
-		margin: 3px;
-		padding: 0.5rem 0.9rem;
-		font-size: 0.75rem;
-		line-height: 1.5;
-		color: #f4f2fc;
-		background: #2b2750;
-		box-shadow:
-			0 -3px 0 0 var(--px-ink),
-			0 3px 0 0 var(--px-ink),
-			-3px 0 0 0 var(--px-ink),
-			3px 0 0 0 var(--px-ink);
-	}
-	.hud__lesson {
-		margin-left: 0.35rem;
-		color: #b9b4dc;
+		flex-direction: column;
+		gap: 0.4rem;
+		align-items: flex-end;
 	}
 	.hud__stars {
 		display: inline-flex;
-		gap: 0.25rem;
-		color: #58548a;
+		gap: 0.15rem;
 	}
-	.hud__stars :global(.is-on) {
-		color: var(--px-coin);
+	.hud__stars svg {
+		fill: var(--a-surface-2);
+		stroke: var(--a-line);
+		stroke-width: 1.5;
+		stroke-linejoin: round;
+		transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.hud__stars :global(svg.is-on) {
+		fill: var(--a-coin);
+		stroke: var(--a-coin-edge);
+		transform: rotate(-8deg) scale(1.1);
 	}
 	.hud__time {
 		display: inline-flex;
-		gap: 0.5rem;
+		gap: 0.4rem;
 		align-items: center;
-		margin-left: auto;
+		padding: 0.2rem 0.65rem;
+		font: 700 0.75rem var(--a-font);
+		color: var(--a-muted);
+		background: var(--a-surface-2);
+		border-radius: 999px;
 	}
-	.hud__optional {
-		flex-basis: 100%;
-		font-size: 0.65rem;
-		color: var(--px-coin);
+	.hud__help {
+		grid-column: 1 / -1;
+		margin: 0.25rem 0 0;
+		font-size: var(--sl-text-xs);
+		color: var(--a-muted);
 	}
-	.hud__stars-help {
-		margin: 0.6rem 0 0;
-		font-size: var(--sl-text-sm);
-		color: var(--sl-color-gray-3);
+	@media (max-width: 40rem) {
+		.hud {
+			grid-template-columns: auto minmax(0, 1fr);
+		}
+		.hud__level {
+			width: 3.4rem;
+			height: 3.4rem;
+		}
+		.hud__side {
+			grid-column: 1 / -1;
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+		}
 	}
 	.step-note {
 		display: flex;
-		gap: 0.6rem;
+		gap: 0.75rem;
 		align-items: baseline;
-		margin-top: 1rem;
-		padding: 0.6rem 1rem;
+		margin-top: 1.25rem;
+		padding: 0.8rem 1.1rem;
 		font-size: var(--sl-text-sm);
-		border-left: 6px solid var(--px-coin);
-		background: var(--sl-color-gray-6);
+		background: var(--a-surface);
+		border-radius: 16px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
 	}
 	.step-note .px-icon {
-		color: var(--px-grass);
+		color: var(--a-go);
 		transform: translateY(0.15em);
 	}
 </style>
