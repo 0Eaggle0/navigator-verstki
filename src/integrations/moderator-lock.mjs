@@ -9,6 +9,7 @@
 import { webcrypto as crypto } from 'node:crypto';
 import { readdirSync, readFileSync, writeFileSync, statSync } from 'node:fs';
 import { join } from 'node:path';
+import { gzipSync } from 'node:zlib';
 
 const ITER = 150000;
 const enc = new TextEncoder();
@@ -56,8 +57,9 @@ export default function moderatorLock(codesRaw = '') {
 					const parts = [...html.matchAll(re)];
 					for (const m of parts) {
 						const iv = crypto.getRandomValues(new Uint8Array(12));
-						const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, enc.encode(m[2]));
-						const payload = b64(enc.encode(JSON.stringify({ v: 1, it: ITER, keys, i: b64(iv), c: b64(ct) })));
+						// Сжимаем до шифрования: зашифрованное уже не сожмётся при передаче (код сайтов с подсветкой — мегабайты)
+						const ct = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, gzipSync(enc.encode(m[2]), { level: 9 }));
+						const payload = b64(enc.encode(JSON.stringify({ v: 2, it: ITER, keys, i: b64(iv), c: b64(ct) })));
 						html = html.replace(m[0], `<mod-secret${m[1]} data-payload="${payload}"></mod-secret>`);
 					}
 					writeFileSync(f, html);
