@@ -5,11 +5,64 @@ minutes: 20
 goal: Подключаем JavaScript к странице и пишем первые строки кода
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "learn.javascript.ru: переменные"
     url: https://learn.javascript.ru/variables
   - title: "learn.javascript.ru: функции"
     url: https://learn.javascript.ru/function-basics
+game:
+  type: "quiz"
+  title: "Угадай, что в консоли"
+  levels:
+    - task: "Что появится в консоли?"
+      code: "console.log(2 + 3);"
+      options:
+        - "5"
+        - "2 + 3"
+        - "23"
+        - "Ошибка"
+      answer: 1
+    - task: "А здесь?"
+      code: "console.log('2' + 3);"
+      options:
+        - "5"
+        - "23"
+        - "Ошибка"
+        - "undefined"
+      answer: 2
+      why: "Строка + число = склейка строк: \"2\" + 3 = \"23\"."
+    - task: "Что выведет этот код?"
+      code: |
+        let count = 0;
+        count = count + 1;
+        count = count + 1;
+        console.log(count);
+      options:
+        - "0"
+        - "1"
+        - "2"
+        - "Ошибка"
+      answer: 3
+    - task: "Что напишет функция?"
+      code: |
+        function greet(n) {
+          return 'Привет, ' + n + '!';
+        }
+        console.log(greet('Аня'));
+      options:
+        - "Привет, Аня!"
+        - "greet('Аня')"
+        - "Привет, n!"
+        - "undefined"
+      answer: 1
+    - task: "Код падает с ошибкой. Кликни на строку с ней."
+      code: |
+        const name = 'Аня';
+        name = 'Боря';
+        console.log(name);
+      answer: 2
+      why: "const нельзя менять. Если значение будет меняться — объявляй через let."
 warmup:
   task: "Объяви переменную name со своим именем. Напиши функцию greet(n), которая возвращает строку «Привет, n!». Выведи greet(name) в консоль через console.log и запиши этот же текст в заголовок h1."
   html: |
@@ -43,9 +96,11 @@ mistakes:
     a: "Функцию нужно вызвать: greet(name). Просто объявить мало."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 HTML — это содержимое, CSS — оформление, а **JavaScript** — поведение: реакция на клики, открытие меню, фильтры. Код пишем в отдельном файле `script.js` и подключаем в самом конце `<body>`: `<script src="script.js"></script>`. К этому моменту весь HTML уже загружен, и скрипт может с ним работать.
 
@@ -72,7 +127,13 @@ document.querySelector('h1').textContent = greet(name);`}
   height={90}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -217,3 +217,8 @@ header.header {
 		transition: none !important;
 	}
 }
+
+/* Главная: меньше пустоты вокруг заголовка, остров сразу виден */
+[data-has-hero] .hero {
+	padding-block: 1.5rem 0.5rem;
+}

@@ -5,11 +5,45 @@ minutes: 20
 goal: Выкладываем сайт в интернет — он открывается по ссылке с любого телефона
 sidebar:
   order: 3
+tableOfContents: false
 links:
   - title: "GitHub Pages"
     url: https://pages.github.com/
   - title: "GitHub Docs: загрузка файлов в репозиторий"
     url: https://docs.github.com/ru/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
+game:
+  type: "quiz"
+  title: "Перед публикацией"
+  levels:
+    - task: "Какой путь к картинке сработает на GitHub Pages?"
+      options:
+        - "img/cat.jpg"
+        - "C:\\Users\\Аня\\Desktop\\site\\img\\cat.jpg"
+        - "file:///img/cat.jpg"
+        - "/Desktop/img/cat.jpg"
+      answer: 1
+      why: "Путь от папки сайта. Дисков C: в интернете нет."
+    - task: "Файл называется Cat.JPG, а в коде cat.jpg. Что будет на GitHub Pages?"
+      options:
+        - "Картинка не загрузится: GitHub различает регистр"
+        - "Всё будет работать"
+        - "GitHub сам переименует файл"
+        - "Сайт не опубликуется"
+      answer: 1
+    - task: "Как должен называться главный файл сайта?"
+      options:
+        - "index.html"
+        - "main.html"
+        - "home.html"
+        - "site.html"
+      answer: 1
+    - task: "Как обычно выглядит адрес сайта на GitHub Pages?"
+      options:
+        - "https://логин.github.io/репозиторий/"
+        - "https://github.com/сайт"
+        - "C:/github/site"
+        - "https://pages.ru/логин"
+      answer: 1
 warmup:
   task: "Эта страница сломается в интернете: пути к картинкам и ссылкам ведут на компьютер автора или в корень сайта. Сделай все пути относительными — от папки, где лежит index.html: img/…, about.html."
   html: |
@@ -39,9 +73,11 @@ mistakes:
     a: "Перетаскивай в окно загрузки содержимое папки проекта (index.html, style.css, script.js, папку img), а не саму папку."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 **GitHub** — сайт, где хранят код, а **GitHub Pages** — его бесплатный хостинг. Кладёте файлы сайта в репозиторий (папку на GitHub), включаете Pages — и через минуту сайт открывается по адресу `https://логин.github.io/название-репозитория/`. Git и командная строка для этого не нужны: всё делается в браузере.
 
@@ -51,7 +87,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 Главный файл обязательно называется `index.html` и лежит в корне репозитория — его GitHub Pages открывает по адресу сайта.
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

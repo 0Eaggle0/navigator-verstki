@@ -1,15 +1,19 @@
 ---
-// Мини-игра шага из поля game во frontmatter. Сейчас тип ghost: «поставь фигурки на призраков».
-// Ученик пишет CSS внутри замка «селектор { … }», поле обновляется на лету.
+// Мини-игра шага из поля game во frontmatter. Три типа:
+// ghost — поставь фигурки на «призраков», написав CSS (как Flexbox Froggy);
+// tags  — кликни на часть страницы, которая должна быть нужным тегом;
+// quiz  — выбери ответ или кликни строку кода с ошибкой.
 const { entry } = Astro.locals.starlightRoute;
 const g = entry.data.game;
+const type = g?.type;
 ---
 
 {
 	g && (
 		<nav-game
-			class="game not-content"
+			class={`game game--${type} not-content`}
 			data-id={entry.id}
+			data-type={type}
 			data-html={g.html}
 			data-css={g.css}
 			data-height={g.height}
@@ -20,7 +24,9 @@ const g = entry.data.game;
 				<ol class="game__pips" aria-label="Уровни игры">
 					{g.levels.map((_, i) => (
 						<li>
-							<button type="button" aria-label={`Уровень ${i + 1}`}>{i + 1}</button>
+							<button type="button" aria-label={`Уровень ${i + 1}`}>
+								{i + 1}
+							</button>
 						</li>
 					))}
 				</ol>
@@ -28,25 +34,45 @@ const g = entry.data.game;
 			<div class="game__grid">
 				<div class="game__side">
 					<p class="game__task" />
-					<label class="game__editor">
-						<span class="sr-only">Твой CSS</span>
-						<code class="game__lock" aria-hidden="true" />
-						<textarea spellcheck="false" autocapitalize="off" wrap="off" rows="4" />
-						<code class="game__lock" aria-hidden="true">{'}'}</code>
-					</label>
+					{type === 'ghost' && (
+						<label class="game__editor">
+							<span class="sr-only">Твой CSS</span>
+							<code class="game__lock" aria-hidden="true" />
+							<textarea spellcheck="false" autocapitalize="off" wrap="off" rows="4" />
+							<code class="game__lock" aria-hidden="true">
+								{'}'}
+							</code>
+						</label>
+					)}
+					{type === 'quiz' && (
+						<>
+							<pre class="game__code" />
+							<div class="game__options" role="group" aria-label="Варианты ответа" />
+							<p class="game__why" hidden />
+						</>
+					)}
 					<p class="game__status px-font" aria-live="polite" />
 					<div class="game__btns">
 						<button type="button" class="game__next" hidden>
 							Дальше ▸
 						</button>
-						<button type="button" class="game__hint-btn">
-							Подсказка
-						</button>
+						{type !== 'quiz' && (
+							<button type="button" class="game__hint-btn">
+								Подсказка
+							</button>
+						)}
 					</div>
 					<p class="game__hint" hidden />
 				</div>
 				<div class="game__view">
-					<iframe title="Игровое поле" sandbox="allow-same-origin" tabindex="-1" style={`height:${g.height}px`} />
+					{type !== 'quiz' && (
+						<iframe
+							title={type === 'tags' ? 'Страница: кликни на нужную часть' : 'Игровое поле'}
+							sandbox="allow-same-origin"
+							tabindex={type === 'tags' ? undefined : '-1'}
+							style={`height:${g.height}px`}
+						/>
+					)}
 					<div class="game__win px-font" role="status" hidden>
 						<b>Игра пройдена!</b>
 						<span>Теперь — разминка ниже</span>
@@ -60,69 +86,164 @@ const g = entry.data.game;
 <script>
 	import { load, update } from '~/lib/storage';
 	import { ghostDoc, score, type GhostLevel } from '~/lib/games/ghost';
+	import { srcdoc } from '~/lib/srcdoc';
+	import { spriteCss } from '~/lib/sprites';
 	import { burst, shake } from '~/lib/fx';
+
+	type Level = GhostLevel & { code?: string; options?: string[]; answer?: number; why?: string };
+
+	// Как выглядит мини-страница в игре «теги»: подсветка при наведении и фокусе
+	const TAGS_CSS = `*{cursor:pointer}body{margin:8px;font:15px/1.4 system-ui,sans-serif}
+*:hover,*:focus{outline:3px solid #ffc930;outline-offset:-3px}
+.is-hit{outline:4px solid #5cc85c!important;outline-offset:-4px;background-color:#5cc85c33!important}`;
 
 	class Game extends HTMLElement {
 		connectedCallback() {
-			const { id = '', html = '', css = '', height = '240' } = this.dataset;
-			const levels: GhostLevel[] = JSON.parse(this.dataset.levels!);
+			const { id = '', type = 'ghost', html = '', css = '', height = '240' } = this.dataset;
+			const levels: Level[] = JSON.parse(this.dataset.levels!);
 			const $ = <T extends Element>(s: string) => this.querySelector<T>(s)!;
-			const box = $<HTMLTextAreaElement>('textarea');
-			const frame = $<HTMLIFrameElement>('iframe');
+			const frame = this.querySelector<HTMLIFrameElement>('iframe');
 			const status = $<HTMLElement>('.game__status');
 			const next = $<HTMLButtonElement>('.game__next');
 			const hint = $<HTMLElement>('.game__hint');
 			const pips = [...this.querySelectorAll<HTMLButtonElement>('.game__pips button')];
-			const codes = levels.map((l) => l.start ?? '');
 			const passed = new Set<number>(load().games.includes(id) ? levels.map((_, i) => i) : []);
 			let n = 0;
+			let solved = false; // текущий уровень уже решён
 
-			const render = () => (frame.srcdoc = ghostDoc(html, css, levels, n, box.value, +height));
-			const open = (i: number) => {
-				n = i;
-				const l = levels[n];
-				$('.game__task').textContent = l.task;
-				$('.game__lock').textContent = `${l.selector ?? '.board'} {`;
-				box.value = codes[n];
-				hint.hidden = true;
-				hint.textContent = l.hint ?? 'Сравни, где стоят фигурки и где их призраки. Какое свойство это меняет?';
-				frame.style.width = l.width ? l.width + 'px' : '';
-				pips.forEach((p, k) => {
-					p.classList.toggle('is-on', k === n);
-					p.classList.toggle('is-done', passed.has(k));
-					p.setAttribute('aria-current', String(k === n));
-				});
-				next.hidden = true;
-				render();
+			const say = (text: string, ok = false) => {
+				status.textContent = text;
+				status.classList.toggle('is-win', ok);
 			};
 
-			frame.addEventListener('load', () => {
-				const { hit, total } = score(frame.contentDocument!);
-				const win = total > 0 && hit === total;
-				status.textContent = win ? 'Все на месте!' : `На месте: ${hit} из ${total}`;
-				status.classList.toggle('is-win', win);
-				if (!win || next.hidden === false) return;
-				const first = !passed.has(n);
+			// Уровень решён: монеты, зелёный номер, «Дальше»; все уровни — игра пройдена
+			const win = (text: string, from: Element) => {
+				say(text, true);
+				if (solved) return;
+				solved = true;
+				if (!passed.has(n)) burst(from);
 				passed.add(n);
 				pips[n].classList.add('is-done');
 				next.hidden = n === levels.length - 1;
-				if (first) burst(frame);
+				if (!next.hidden && type !== 'ghost') next.focus();
 				if (passed.size === levels.length && !load().games.includes(id)) {
 					update((p) => p.games.push(id));
 					const banner = $<HTMLElement>('.game__win');
 					banner.hidden = false;
 					setTimeout(() => (banner.hidden = true), 2600);
 				}
-			});
+			};
 
-			let timer: number;
-			box.addEventListener('input', () => {
-				codes[n] = box.value;
-				clearTimeout(timer);
-				timer = window.setTimeout(render, 250);
-			});
+			// Для каждого типа — что сделать при открытии уровня
+			let show: (l: Level) => void = () => {};
+
+			if (type === 'ghost') {
+				const box = $<HTMLTextAreaElement>('textarea');
+				const codes = levels.map((l) => l.start ?? '');
+				const render = () => (frame!.srcdoc = ghostDoc(html, css, levels, n, box.value, +height));
+				frame!.addEventListener('load', () => {
+					const { hit, total } = score(frame!.contentDocument!);
+					if (total > 0 && hit === total) win('Все на месте!', frame!);
+					else say(`На месте: ${hit} из ${total}`);
+				});
+				let timer: number;
+				box.addEventListener('input', () => {
+					codes[n] = box.value;
+					clearTimeout(timer);
+					timer = window.setTimeout(render, 250);
+				});
+				show = (l) => {
+					$('.game__lock').textContent = `${l.selector ?? '.board'} {`;
+					box.value = codes[n];
+					frame!.style.width = l.width ? l.width + 'px' : '';
+					render();
+				};
+			}
+
+			if (type === 'tags') {
+				frame!.srcdoc = srcdoc(html, spriteCss() + TAGS_CSS + css);
+				frame!.addEventListener('load', () => {
+					const doc = frame!.contentDocument!;
+					// Каждый элемент можно выбрать с клавиатуры: Tab и Enter
+					doc.querySelectorAll('body *').forEach((el) => el.setAttribute('tabindex', '0'));
+					const pick = (el: Element) => {
+						const hit = el.closest(levels[n].target);
+						doc.querySelectorAll('.is-hit').forEach((x) => x.classList.remove('is-hit'));
+						if (hit) {
+							hit.classList.add('is-hit');
+							win(`Да! Это <${hit.tagName.toLowerCase()}>`, frame!);
+						} else {
+							say(`Ты выбрал <${el.tagName.toLowerCase()}>. Не то — попробуй ещё`);
+							shake(frame!);
+						}
+					};
+					doc.addEventListener('click', (e) => (e.preventDefault(), pick(e.target as Element)));
+					doc.addEventListener('keydown', (e) => e.key === 'Enter' && (e.preventDefault(), pick(e.target as Element)));
+				});
+				show = () => {
+					frame!.contentDocument?.querySelectorAll('.is-hit').forEach((x) => x.classList.remove('is-hit'));
+					say('Кликни на нужную часть страницы');
+				};
+			}
+
+			if (type === 'quiz') {
+				const code = $<HTMLElement>('.game__code');
+				const opts = $<HTMLElement>('.game__options');
+				const why = $<HTMLElement>('.game__why');
+				show = (l) => {
+					why.hidden = true;
+					why.textContent = l.why ?? '';
+					code.textContent = '';
+					opts.replaceChildren();
+					// Без вариантов — ответом служит строка кода: «кликни строку с ошибкой»
+					const lines = !l.options;
+					code.hidden = !l.code || lines;
+					if (l.code && !lines) code.textContent = l.code;
+					const answers = l.options ?? l.code!.replace(/\n$/, '').split('\n');
+					opts.classList.toggle('is-lines', lines);
+					// Варианты перемешиваем, чтобы верный не стоял всегда на одном месте. Строки кода — нет
+					const order = answers.map((_, i) => i);
+					if (!lines) order.sort(() => Math.random() - 0.5);
+					order.forEach((i) => {
+						const text = answers[i];
+						const b = document.createElement('button');
+						b.type = 'button';
+						b.textContent = text || ' ';
+						b.addEventListener('click', () => {
+							if (i + 1 === l.answer) {
+								b.classList.add('is-right');
+								why.hidden = !l.why;
+								win('Верно!', b);
+							} else if (!solved) {
+								b.classList.add('is-wrong');
+								say('Не то. Подумай ещё');
+								shake(b);
+							}
+						});
+						opts.append(b);
+					});
+					say(lines ? 'Кликни на строку' : 'Выбери ответ');
+				};
+			}
+
+			const open = (i: number) => {
+				n = i;
+				solved = false;
+				const l = levels[n];
+				$('.game__task').textContent = l.task;
+				hint.hidden = true;
+				hint.textContent = l.hint ?? 'Сравни, где стоят фигурки и где их призраки. Какое свойство это меняет?';
+				pips.forEach((p, k) => {
+					p.classList.toggle('is-on', k === n);
+					p.classList.toggle('is-done', passed.has(k));
+					p.setAttribute('aria-current', String(k === n));
+				});
+				next.hidden = true;
+				show(l);
+			};
+
 			next.addEventListener('click', () => open(n + 1));
-			$('.game__hint-btn').addEventListener('click', () => {
+			this.querySelector('.game__hint-btn')?.addEventListener('click', () => {
 				hint.hidden = !hint.hidden;
 				if (!hint.hidden) shake(hint);
 			});
@@ -135,6 +256,7 @@ const g = entry.data.game;
 
 <style>
 	.game {
+		position: relative;
 		display: block;
 		margin: 1.5rem 3px;
 		padding: 1rem;
@@ -162,6 +284,7 @@ const g = entry.data.game;
 	}
 	.game__pips {
 		display: flex;
+		flex-wrap: wrap;
 		gap: 0.35rem;
 		margin: 0;
 		padding: 0;
@@ -190,17 +313,40 @@ const g = entry.data.game;
 		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
 		gap: 1rem;
 	}
+	/* Квиз — одна колонка, поля нет; «Игра пройдена» — поверх всей игры */
+	.game--quiz .game__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
+	.game--quiz .game__view {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+	/* Теги — страница крупнее, задание сверху */
+	.game--tags .game__grid {
+		grid-template-columns: minmax(0, 1fr);
+	}
 	.game__task {
 		margin: 0 0 0.75rem;
 		font-size: var(--sl-text-base);
 		line-height: 1.5;
 	}
-	.game__editor {
+	.game__editor,
+	.game__code {
 		display: block;
+		margin: 0;
 		padding: 0.5rem 0.75rem;
 		font: 0.95rem/1.5 var(--sl-font-mono);
+		color: #ffe08a;
 		background: #0b0a22;
 		border: 2px solid #3b386c;
+	}
+	.game__code {
+		white-space: pre;
+		overflow-x: auto;
+	}
+	.game__code[hidden] {
+		display: none;
 	}
 	.game__lock {
 		display: block;
@@ -224,9 +370,71 @@ const g = entry.data.game;
 	.game__editor textarea:focus-visible {
 		outline: 2px solid var(--px-coin);
 	}
+	/* Варианты ответа квиза */
+	.game__options {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+		gap: 0.5rem;
+		margin-top: 0.75rem;
+	}
+	.game .game__options :global(button) {
+		margin: 3px;
+		padding: 0.6rem 0.75rem;
+		font: 0.95rem/1.4 var(--sl-font);
+		text-align: left;
+		color: #eceaf7;
+		background: #25244f;
+	}
+	/* Режим «кликни строку»: варианты — строки кода с номерами */
+	.game__options.is-lines {
+		grid-template-columns: minmax(0, 1fr);
+		gap: 0;
+		counter-reset: line;
+		overflow-x: auto;
+		background: #0b0a22;
+		border: 2px solid #3b386c;
+	}
+	.game .game__options.is-lines :global(button) {
+		margin: 0;
+		padding: 0.15rem 0.75rem;
+		font: 0.95rem/1.5 var(--sl-font-mono);
+		color: #ffe08a;
+		white-space: pre;
+		background: none;
+		box-shadow: none;
+	}
+	.game .game__options.is-lines :global(button)::before {
+		counter-increment: line;
+		content: counter(line);
+		display: inline-block;
+		width: 2rem;
+		color: #8b88b3;
+	}
+	.game .game__options.is-lines :global(button:hover) {
+		background: #25244f;
+	}
+	.game .game__options :global(button.is-wrong) {
+		color: #ffd0c0;
+		background: #5a2420;
+	}
+	.game .game__options :global(button.is-right) {
+		color: #10260f;
+		background: var(--px-grass);
+	}
+	.game__why {
+		margin: 0.75rem 0 0;
+		padding: 0.5rem 0.75rem;
+		font-size: var(--sl-text-sm);
+		border-left: 4px solid var(--px-grass);
+		background: #25244f;
+	}
+	.game__why[hidden] {
+		display: none;
+	}
 	.game__status {
 		margin: 0.75rem 0 0;
 		font-size: 0.65rem;
+		line-height: 1.6;
 		color: #a8a4cc;
 	}
 	.game__status.is-win {
@@ -262,6 +470,7 @@ const g = entry.data.game;
 		display: block;
 		width: 100%;
 		border: 0;
+		background: #fff;
 		image-rendering: pixelated;
 	}
 	.game__win {
@@ -295,7 +504,7 @@ const g = entry.data.game;
 	}
 	@media (max-width: 50rem) {
 		.game__grid {
-			grid-template-columns: 1fr;
+			grid-template-columns: minmax(0, 1fr);
 		}
 	}
 </style>

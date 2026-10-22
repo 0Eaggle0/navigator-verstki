@@ -5,11 +5,52 @@ minutes: 15
 goal: Запоминаем выбор пользователя, чтобы он не пропадал после перезагрузки
 sidebar:
   order: 2
+tableOfContents: false
 links:
   - title: "learn.javascript.ru: localStorage"
     url: https://learn.javascript.ru/localstorage
   - title: "Дока: localStorage"
     url: https://doka.guide/js/local-storage/
+game:
+  type: "quiz"
+  title: "Память браузера"
+  levels:
+    - task: "Как сохранить тему 'dark' под ключом 'theme'?"
+      options:
+        - "localStorage.setItem('theme', 'dark')"
+        - "localStorage.theme('dark')"
+        - "localStorage.save('dark')"
+        - "setItem.localStorage('theme')"
+      answer: 1
+    - task: "Что вернёт строка, если ключа city ещё нет?"
+      code: "localStorage.getItem('city')"
+      options:
+        - "null"
+        - "''"
+        - "undefined"
+        - "Ошибку"
+      answer: 1
+    - task: "Как сохранить список ['a', 'b']?"
+      options:
+        - "localStorage.setItem('list', JSON.stringify(list))"
+        - "localStorage.setItem('list', list)"
+        - "localStorage.list = list"
+        - "Списки сохранить нельзя"
+      answer: 1
+      why: "Хранятся только строки, поэтому список сначала превращают в строку."
+    - task: "Зачем оборачивать localStorage в try/catch?"
+      options:
+        - "В приватном режиме он бросает ошибку — сайт не должен ломаться"
+        - "Так быстрее"
+        - "Иначе данные пропадут"
+        - "Так требует GitHub"
+      answer: 1
+    - task: "Избранное не читается. Кликни на строку с ошибкой."
+      code: |
+        const saved = localStorage.getItem('likes');
+        const likes = JSON.stringify(saved) || [];
+      answer: 2
+      why: "При чтении строку превращают обратно в список: JSON.parse(saved)."
 warmup:
   task: "Сделай «избранное». По клику на ♥ (.fav) у карточки переключай класс active и сохраняй в localStorage под ключом favorites список id избранных карточек (JSON). При загрузке страницы отметь сохранённые. Внутри клика каждый раз читай список из localStorage заново."
   html: |
@@ -73,9 +114,11 @@ mistakes:
     a: "localStorage хранит только строки. Массивы и объекты сохраняй через JSON.stringify, читай через JSON.parse."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Всё, что меняет JavaScript на странице, пропадает после перезагрузки. **localStorage** — маленькое хранилище в браузере, где данные живут, пока пользователь сам их не удалит. Прогресс в этом навигаторе хранится именно так.
 
@@ -107,7 +150,13 @@ like.addEventListener('click', function () {
   height={110}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

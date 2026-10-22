@@ -6,12 +6,59 @@ optional: true
 goal: Выравниваем все ряды на странице — кнопки, иконки, преимущества
 sidebar:
   order: 4
+tableOfContents: false
 fast: "пропусти шаг: ряды выровняет блок «Как это работает» из библиотеки."
 links:
   - title: "Дока: flex-wrap"
     url: https://doka.guide/css/flex-wrap/
   - title: "Flexbox Froggy — уровни 11–24"
     url: https://flexboxfroggy.com/#ru
+game:
+  type: "ghost"
+  title: "Ряд значков"
+  height: 240
+  html: |
+    <i class="sp sp-star"></i>
+    <i class="sp sp-coin"></i>
+    <i class="sp sp-star"></i>
+    <i class="sp sp-coin"></i>
+    <i class="sp sp-star"></i>
+    <i class="sp sp-coin"></i>
+  css: |
+    .board {
+      background: #f3e8ff;
+    }
+    .board > * {
+      display: block;
+      width: 100px;
+      height: 44px;
+      background-color: #ffffffaa;
+      background-size: auto 70%;
+      border: 2px solid #2b2750;
+    }
+  levels:
+    - task: "Поставь значки в ряд с промежутком 16px."
+      target: "display: flex; gap: 16px;"
+      hint: "display: flex; и gap: 16px;"
+    - task: "Им тесно — они сжались. Разреши перенос на новую строку."
+      start: |
+        display: flex;
+        gap: 16px;
+      target: "display: flex; gap: 16px; flex-wrap: wrap;"
+      hint: "flex-wrap: wrap;"
+    - task: "Поставь ряды по центру по горизонтали."
+      start: |
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+      target: "display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;"
+    - task: "И по центру поля по вертикали: для нескольких рядов это align-content: center."
+      start: |
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        justify-content: center;
+      target: "display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; align-content: center;"
 warmup:
   task: "Сделай ряд преимуществ: у .features — flex с переносом (wrap) и промежутком 16px. Каждый .feature — столбик (flex-direction: column), всё по центру."
   html: |
@@ -64,9 +111,11 @@ mistakes:
     a: "align-items: center выравнивает сами блоки. Если строк текста несколько, добавь text-align: center."
 blocks: [steps]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 На странице много маленьких рядов: две кнопки рядом, иконки соцсетей, «три шага», преимущества. Все они делаются одним приёмом: `display: flex` + `gap`.
 
@@ -86,7 +135,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={140}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -5,11 +5,65 @@ minutes: 25
 goal: Учимся менять стили для узких экранов и проверять сайт «как на телефоне»
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "Дока: медиазапросы"
     url: https://doka.guide/css/media/
   - title: "Дока: мета-тег viewport"
     url: https://doka.guide/html/meta/
+game:
+  type: "quiz"
+  title: "Узкий экран"
+  levels:
+    - task: "Ширина окна 1280 px. Какого размера будет h1?"
+      code: |
+        h1 { font-size: 40px; }
+        @media (max-width: 768px) {
+          h1 { font-size: 24px; }
+        }
+      options:
+        - "24px"
+        - "Тот, что задан вне медиазапроса"
+        - "Ноль"
+        - "Ошибка"
+      answer: 2
+      why: "Условие max-width: 768px не выполнено — правило внутри просто пропускается."
+    - task: "А на телефоне шириной 375 px?"
+      code: |
+        h1 { font-size: 40px; }
+        @media (max-width: 768px) {
+          h1 { font-size: 24px; }
+        }
+      options:
+        - "24px"
+        - "40px"
+        - "64px"
+        - "375px"
+      answer: 1
+      why: "375 меньше 768 — правило из медиазапроса срабатывает."
+    - task: "Медиазапрос не работает. Кликни на строку с ошибкой."
+      code: |
+        @media max-width: 768px {
+          .cards {
+            grid-template-columns: 1fr;
+          }
+        }
+      answer: 1
+      why: "Условие пишется в скобках: @media (max-width: 768px)."
+    - task: "Как включить режим телефона в DevTools?"
+      options:
+        - "F12 → значок телефона (Ctrl+Shift+M)"
+        - "Ctrl+P"
+        - "Правый клик → Сохранить как"
+        - "Никак, нужен настоящий телефон"
+      answer: 1
+    - task: "Зачем в head строка <meta name=\"viewport\" …>?"
+      options:
+        - "Чтобы телефон не притворялся широким экраном"
+        - "Чтобы подключить CSS"
+        - "Чтобы сайт нашёлся в поиске"
+        - "Чтобы ускорить загрузку"
+      answer: 1
 warmup:
   width: 375
   task: "Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 768px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column)."
@@ -62,9 +116,11 @@ mistakes:
     a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. В этом курсе для телефона везде берём 768px — так медиазапросы из разных шагов совпадут.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 **Адаптив** — это когда один сайт хорошо выглядит и на компьютере, и на телефоне. Основной инструмент — **медиазапрос**: блок CSS, который работает только при нужной ширине экрана.
 
@@ -90,7 +146,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={140}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

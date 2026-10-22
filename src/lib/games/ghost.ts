@@ -13,7 +13,7 @@ html,body{margin:0;height:100%;overflow:hidden}
 .stage{position:relative;height:${height}px}
 .layer{position:absolute;inset:0}
 .board{box-sizing:border-box;height:100%;padding:12px}
-.board>*{box-sizing:border-box;min-width:40px;min-height:40px}
+.board>*{min-width:40px;min-height:40px}
 #ghost .board>*{opacity:.35;outline:2px dashed #fff;outline-offset:-2px;filter:grayscale(1)}
 #ghost .board{background:none!important}
 #play{pointer-events:none}

@@ -5,12 +5,47 @@ minutes: 20
 goal: Открываем окно поверх страницы по кнопке и закрываем его
 sidebar:
   order: 4
+tableOfContents: false
 fast: "возьми блок «Модальное окно» и поменяй текст и поля под свой кейс."
 links:
   - title: "Дока: тег dialog"
     url: https://doka.guide/html/dialog/
   - title: "MDN: элемент dialog"
     url: https://developer.mozilla.org/ru/docs/Web/HTML/Element/dialog
+game:
+  type: "quiz"
+  title: "Окно поверх всего"
+  levels:
+    - task: "Какой тег — готовое модальное окно?"
+      options:
+        - "<dialog>"
+        - "<modal>"
+        - "<popup>"
+        - "<window>"
+      answer: 1
+    - task: "Как открыть его поверх страницы с затемнением?"
+      options:
+        - "modal.showModal()"
+        - "modal.open()"
+        - "modal.show = true"
+        - "modal.display()"
+      answer: 1
+    - task: "Как задать цвет затемнения под окном?"
+      options:
+        - ".modal::backdrop { background: rgba(0, 0, 0, 0.5); }"
+        - ".modal { shadow: dark; }"
+        - "body { opacity: 0.5; }"
+        - ".modal:dark { … }"
+      answer: 1
+    - task: "Окно не открывается. Кликни на строку с ошибкой."
+      code: |
+        const modal = document.querySelector('.modal');
+        const open = document.querySelector('.open');
+        open.addEventListener('click', function () {
+          modal.close();
+        });
+      answer: 4
+      why: "Кнопка «Открыть» должна вызывать modal.showModal(), а не close()."
 warmup:
   task: "По клику на .open-modal открой окно .modal методом showModal(), по клику на .close-modal — закрой методом close()."
   html: |
@@ -59,9 +94,11 @@ mistakes:
     a: "Задай .modal { max-width: calc(100% - 32px); } — у окна всегда будут отступы по краям."
 blocks: [modal]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 **Модальное окно** — окно поверх страницы: форма записи, «создать комнату», подробности события. Пока оно открыто, страница за ним затемнена и не нажимается.
 
@@ -87,7 +124,13 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
   height={200}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -5,12 +5,54 @@ minutes: 30
 goal: Доделываем все секции главной — десктопная версия готова
 sidebar:
   order: 3
+tableOfContents: false
 fast: "30 минут на все секции — мало, поэтому всё, кроме карточек, смело берите блоками: «Как это работает», «Форма», «Отзывы», «Пример сбора», «Подвал». Вставьте нужные и поменяйте тексты."
 links:
   - title: "Дока: grid-template-columns"
     url: https://doka.guide/css/grid-template-columns/
   - title: "Дока: тег footer"
     url: https://doka.guide/html/footer/
+game:
+  type: "ghost"
+  title: "Собери подвал"
+  height: 170
+  html: |
+    <i class="col"></i>
+    <i class="col"></i>
+    <i class="col"></i>
+    <i class="copy"></i>
+  css: |
+    .board {
+      background: #1e1e1e;
+    }
+    .board > * {
+      display: block;
+      border: 2px solid #605c90;
+    }
+    .col { height: 60px; background: repeating-linear-gradient(#c3bfdf 0 6px, transparent 6px 16px) content-box; padding: 8px; }
+    .copy { height: 20px; background: #3b386c; }
+  levels:
+    - task: "Разложи подвал на 3 равные колонки."
+      start: |
+        display: grid;
+      target: "display: grid; grid-template-columns: repeat(3, 1fr);"
+      hint: "grid-template-columns: repeat(3, 1fr);"
+    - task: "Добавь промежуток 24px."
+      start: |
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      target: "display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;"
+    - task: "Нижняя строка «© 2026» — на все колонки."
+      selector: ".board > .copy"
+      target: "grid-column: 1 / -1;"
+      hint: "grid-column: 1 / -1;"
+    - task: "Первая колонка с логотипом — вдвое шире."
+      start: |
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 24px;
+      target: "display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 24px;"
+      hint: "2fr 1fr 1fr"
 warmup:
   task: "Сверстай подвал: тёмный фон, светлый текст, отступы 24px. Колонки .footer__cols разложи сеткой на 3 колонки (repeat(3, 1fr)) с промежутком 24px."
   html: |
@@ -73,9 +115,11 @@ mistakes:
     a: "У fr делится свободное место. Если у колонки длинный текст, задай ей minmax(0, 1fr) или просто сократи текст."
 blocks: [steps, form, footer]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Все инструменты уже у вас в руках: семантика, стили, Flexbox, Grid. Остальные секции — это комбинации того же. Посмотрите на секцию и спросите: это **ряд** (Flexbox) или **сетка** (Grid)? «Как это работает» из трёх шагов — сетка из трёх колонок. Отзывы — тоже сетка. Форма — столбик полей.
 
@@ -100,7 +144,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } f
   height={120}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

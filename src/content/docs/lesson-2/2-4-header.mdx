@@ -5,12 +5,47 @@ minutes: 25
 goal: Делаем шапку похожей на макет — цвета, шрифты, кнопка
 sidebar:
   order: 4
+tableOfContents: false
 fast: "возьми блок «Шапка с меню», вставь HTML и CSS в проект и поменяй логотип, пункты меню и цвета на свои."
 links:
   - title: "Дока: text-decoration"
     url: https://doka.guide/css/text-decoration/
   - title: "Дока: border-radius"
     url: https://doka.guide/css/border-radius/
+game:
+  type: "quiz"
+  title: "Мастерская шапки"
+  levels:
+    - task: "Как убрать подчёркивание у ссылок меню?"
+      options:
+        - "text-decoration: none;"
+        - "underline: none;"
+        - "text-style: none;"
+        - "link: none;"
+      answer: 1
+    - task: "Кнопка-ссылка <a> не берёт вертикальные отступы. Что дописать?"
+      options:
+        - "display: inline-block;"
+        - "display: none;"
+        - "position: button;"
+        - "float: top;"
+      answer: 1
+      why: "Ссылка строчная. inline-block разрешает ей padding сверху и снизу."
+    - task: "Как сделать кнопку-«таблетку» с круглыми краями?"
+      options:
+        - "border-radius: 999px;"
+        - "border-radius: 8px;"
+        - "border: pill;"
+        - "radius: round;"
+      answer: 1
+    - task: "Цвет ссылок меню не меняется. Кликни на строку с ошибкой."
+      code: |
+        .menu a {
+          text-decoration: none;
+          colour: #1E1E1E;
+        }
+      answer: 3
+      why: "Свойство пишется color — по-американски, без u."
 warmup:
   task: "Оформи шапку: фон #FFFFFF и внутренние отступы 16px, логотип крупнее 20px и жирный, у ссылок меню нет подчёркивания, у кнопки есть фон и скруглённые углы. Расположение пока не трогай — это следующее занятие."
   html: |
@@ -68,9 +103,11 @@ mistakes:
     a: "Задай ей высоту из макета: .logo img { height: 40px; } — ширина подстроится сама."
 blocks: [header]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Шапка — первое, что видит человек. Её оформляем первой: на ней проверяем, что шрифты и цвета подключены правильно. Располагать элементы в строку будем в занятии 3 через Flexbox, сейчас — только внешний вид.
 
@@ -94,7 +131,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={160}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

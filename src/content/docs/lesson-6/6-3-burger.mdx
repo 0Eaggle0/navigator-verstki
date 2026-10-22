@@ -5,12 +5,49 @@ minutes: 20
 goal: На телефоне прячем меню под кнопку ☰ и открываем по клику
 sidebar:
   order: 3
+tableOfContents: false
 fast: "возьми блок «Бургер-меню»: это та же шапка, что в блоке «Шапка с меню», только с кнопкой ☰. Классы те же, поэтому твои стили шапки продолжат работать. Добавь его CSS и JS."
 links:
   - title: "Дока: атрибут aria-expanded"
     url: https://doka.guide/a11y/aria-expanded/
   - title: "Дока: медиазапросы"
     url: https://doka.guide/css/media/
+game:
+  type: "quiz"
+  title: "Почини бургер"
+  levels:
+    - task: "На телефоне меню спрятано. Какое правило показывает его после клика?"
+      options:
+        - ".menu.open { display: flex; }"
+        - ".menu { display: none; }"
+        - ".burger:hover { display: flex; }"
+        - ".open { display: none; }"
+      answer: 1
+    - task: "Меню только что открылось. Что окажется в isOpen?"
+      code: "const isOpen = menu.classList.toggle('open');"
+      options:
+        - "true"
+        - "false"
+        - "'open'"
+        - "undefined"
+      answer: 1
+      why: "toggle возвращает true, если класс добавился."
+    - task: "Что сообщает атрибут aria-expanded?"
+      options:
+        - "Открыто меню или нет — для программ чтения экрана"
+        - "Ширину меню"
+        - "Цвет кнопки"
+        - "Сколько пунктов в меню"
+      answer: 1
+    - task: "Меню не открывается. Кликни на строку с ошибкой."
+      code: |
+        const burger = document.querySelector('.burger');
+        const menu = document.querySelector('.menu');
+        burger.addEventListener('click', function () {
+          menu.classList.toggle('.open');
+        });
+      answer: 4
+      why: "В classList имя класса пишется без точки: toggle('open')."
 warmup:
   width: 375
   task: "Превью шириной с телефон. По клику на кнопку .burger переключай у .menu класс open (меню показывается). Заодно меняй у кнопки aria-expanded: \"true\", когда меню открыто, и \"false\", когда закрыто."
@@ -89,9 +126,11 @@ mistakes:
     a: Незрячие пользователи с программой экранного доступа услышат «меню развёрнуто» или «свёрнуто». Без этого кнопка ☰ для них — непонятный символ.
 blocks: [burger]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 На телефоне пять пунктов меню в строку не помещаются. Решение — **бургер**: кнопка ☰, по которой меню выезжает или раскрывается. Это соединение двух прошлых тем: медиазапрос прячет меню на узком экране, а JavaScript по клику переключает класс, который его показывает.
 
@@ -121,7 +160,13 @@ burger.addEventListener('click', function () {
   height={130}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

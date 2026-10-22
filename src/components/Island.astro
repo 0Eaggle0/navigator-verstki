@@ -1,0 +1,197 @@
+---
+// Карта миров на главной: воксельный 3D-остров (src/lib/island.ts) с подписями-ссылками.
+// Без WebGL остров не грузится, а подписи остаются обычным рядом кнопок-миров.
+import { getRoute, url } from '~/lib/route';
+
+const { lessons } = await getRoute();
+const worlds = lessons.map((l) => ({
+	n: l.n,
+	title: l.title,
+	ids: l.steps.map((s) => s.id),
+	urls: l.steps.map((s) => url(s.id + '/')),
+}));
+---
+
+<nav-island class="island not-content" data-worlds={JSON.stringify(worlds)}>
+	<canvas aria-hidden="true"></canvas>
+	<ol class="island__worlds" aria-label="Миры">
+		{
+			worlds.map((w) => (
+				<li>
+					<a class="island__label px-font" href={w.urls[0]}>
+						<b>{w.n}</b>
+						<span>{w.title}</span>
+					</a>
+				</li>
+			))
+		}
+	</ol>
+	<p class="island__help">Покрути остров мышкой и выбери мир</p>
+</nav-island>
+
+<script>
+	import { load } from '~/lib/storage';
+
+	class Island extends HTMLElement {
+		connectedCallback() {
+			const worlds: { n: number; ids: string[]; urls: string[] }[] = JSON.parse(this.dataset.worlds!);
+			const labels = [...this.querySelectorAll<HTMLAnchorElement>('.island__label')];
+			const p = load();
+			// «Ты тут» — мир первого непройденного шага; ссылка мира ведёт на этот шаг
+			const here = worlds.findIndex((w) => w.ids.some((id) => !p.done.includes(id)));
+			const state = worlds.map((w, i) => {
+				const next = w.ids.findIndex((id) => !p.done.includes(id));
+				if (next > 0) labels[i].href = w.urls[next];
+				const done = next === -1;
+				labels[i].classList.toggle('is-done', done);
+				labels[i].classList.toggle('is-here', i === here);
+				return { n: w.n, done, here: i === here };
+			});
+
+			const gl = (() => {
+				try {
+					return !!document.createElement('canvas').getContext('webgl2');
+				} catch {
+					return false;
+				}
+			})();
+			if (!gl) return;
+			const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+			import('~/lib/island')
+				.then((m) => m.init(this, state, labels, calm))
+				.catch((e) => console.warn('Остров не загрузился, показываем список миров', e));
+		}
+	}
+	customElements.define('nav-island', Island);
+</script>
+
+<style>
+	.island {
+		position: relative;
+		display: block;
+		margin: 0 3px 2.5rem;
+		overflow: hidden;
+		background: linear-gradient(#2a2860, #4b3f86 70%, #7a5c9e);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
+	}
+	:global(:root[data-theme='light']) .island {
+		background: linear-gradient(#5fb4ff, #a8dbff 70%, #e6f6ff);
+	}
+	/* Ночью — звёзды */
+	.island::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image:
+			linear-gradient(#fff 0 0), linear-gradient(#fff 0 0), linear-gradient(#fffa 0 0), linear-gradient(#fff 0 0),
+			linear-gradient(#fffa 0 0), linear-gradient(#fff 0 0), linear-gradient(#fff9 0 0), linear-gradient(#fff 0 0);
+		background-size: 3px 3px;
+		background-repeat: no-repeat;
+		background-position: 6% 12%, 18% 40%, 33% 8%, 52% 18%, 70% 6%, 84% 30%, 93% 12%, 44% 34%;
+	}
+	:global(:root[data-theme='light']) .island::before {
+		display: none;
+	}
+	.island canvas {
+		display: none;
+	}
+	.island.is-3d canvas {
+		position: relative;
+		display: block;
+		width: 100%;
+		height: 26rem;
+		image-rendering: pixelated;
+		cursor: grab;
+		touch-action: pan-y;
+	}
+	/* Без 3D — ряд кнопок-миров */
+	.island__worlds {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		margin: 0;
+		padding: 1.25rem;
+		list-style: none;
+	}
+	.island__worlds li {
+		margin: 0;
+	}
+	.island__label {
+		display: inline-flex;
+		gap: 0.5rem;
+		align-items: center;
+		padding: 0.35rem 0.6rem;
+		font-size: 0.6rem;
+		line-height: 1.4;
+		white-space: nowrap;
+		text-decoration: none;
+		color: #fff;
+		background: #0e0d26cc;
+		box-shadow: 0 3px 0 0 #0006;
+	}
+	.island__label b {
+		display: grid;
+		place-items: center;
+		width: 1.4rem;
+		height: 1.4rem;
+		font-weight: 400;
+		color: #fff;
+		background: #8a4d2c;
+	}
+	.island__label.is-done b {
+		background: var(--px-grass);
+	}
+	.island__label.is-here b {
+		color: #1e1b3a;
+		background: var(--px-coin);
+	}
+	.island__label:hover,
+	.island__label:focus-visible,
+	.island__label:global(.is-hover) {
+		color: #1e1b3a;
+		background: var(--px-coin);
+	}
+	/* В 3D подписи висят над мирами; название видно при наведении */
+	.island.is-3d .island__worlds {
+		position: absolute;
+		inset: 0;
+		padding: 0;
+		pointer-events: none;
+	}
+	.island.is-3d .island__label {
+		position: absolute;
+		transform: translate(-50%, -100%);
+		pointer-events: auto;
+	}
+	.island.is-3d .island__label span {
+		display: none;
+	}
+	.island.is-3d .island__label:hover span,
+	.island.is-3d .island__label:focus-visible span,
+	.island.is-3d .island__label:global(.is-hover) span {
+		display: inline;
+	}
+	.island__help {
+		display: none;
+	}
+	.island.is-3d .island__help {
+		position: absolute;
+		right: 0.75rem;
+		bottom: 0.5rem;
+		display: block;
+		margin: 0;
+		font-size: var(--sl-text-xs);
+		color: #fff;
+		text-shadow: 0 1px 0 #000;
+	}
+	@media (max-width: 40rem) {
+		.island.is-3d canvas {
+			height: 18rem;
+		}
+	}
+</style>

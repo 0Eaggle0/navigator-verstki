@@ -5,11 +5,80 @@ minutes: 20
 goal: Учимся читать код и делим макет главной на крупные блоки
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "Дока: как устроена вёрстка страницы"
     url: https://doka.guide/html/
   - title: "MDN: структура документа"
     url: https://developer.mozilla.org/ru/docs/Learn_web_development/Core/Structuring_content/Structuring_documents
+game:
+  type: "tags"
+  title: "Найди блоки на макете"
+  html: |
+    <header class="header">
+      <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Питомцы</a></li>
+          <li><a href="#">Помочь</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <h1>Найди друга в приюте</h1>
+        <p>Пройди тест — подскажем, кто тебе подходит.</p>
+        <a class="button" href="#">Пройти тест</a>
+      </section>
+      <section class="pets">
+        <h2>Ищут дом</h2>
+        <div class="cards">
+          <article class="card"><img src="img/barsik.svg" alt="Рыжий кот Барсик"><h3>Барсик</h3><p>2 года</p></article>
+          <article class="card"><img src="img/sharik.svg" alt="Пёс Шарик"><h3>Шарик</h3><p>3 года</p></article>
+          <article class="card"><img src="img/murka.svg" alt="Серая кошка Мурка"><h3>Мурка</h3><p>1 год</p></article>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>Омск, 2026 · hello@hvost.ru</p>
+    </footer>
+  css: |
+    body { margin: 0; color: #1e1e1e; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #2b2750; }
+    .header a { color: #fff; text-decoration: none; }
+    .logo { font-weight: 700; }
+    .menu { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+    .hero { padding: 20px 16px; background: #fff3e6; }
+    .hero h1 { margin: 0 0 6px; font-size: 22px; }
+    .hero p { margin: 0 0 10px; }
+    .button { display: inline-block; padding: 6px 14px; color: #fff; background: #e8741a; border-radius: 8px; text-decoration: none; }
+    .pets { padding: 14px 16px; }
+    .pets h2 { margin: 0 0 8px; font-size: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .card { padding: 8px; background: #f4f2fc; border-radius: 10px; }
+    .card img { display: block; width: 100%; height: 60px; object-fit: contain; }
+    .card h3 { margin: 4px 0 0; font-size: 15px; }
+    .card p { margin: 0; font-size: 13px; }
+    .footer { padding: 10px 16px; color: #fff; background: #1b1a3f; }
+    .footer p { margin: 0; }
+  height: 420
+  levels:
+    - task: "Это главная страница приюта. Где шапка сайта? Кликни на неё."
+      target: "header"
+      hint: "Шапка — самая верхняя полоса: логотип и меню."
+    - task: "Найди первый экран — большой заголовок с кнопкой. Его обычно называют hero."
+      target: ".hero"
+      hint: "Он сразу под шапкой, на светлом фоне."
+    - task: "Найди повторяющийся блок — одну карточку питомца."
+      target: ".card"
+      hint: "Карточек три, они одинаковые. Кликни на любую."
+    - task: "Где меню? Это часть шапки со ссылками на разделы."
+      target: "nav"
+      hint: "Три ссылки в шапке справа."
+    - task: "А где подвал сайта с контактами?"
+      target: "footer"
+      hint: "Подвал — в самом низу страницы."
 warmup:
   task: Блоки страницы перепутались. Переставь их в порядке сверху вниз, как на обычном сайте — шапка, первый экран, карточки, подвал.
   html: |
@@ -40,9 +109,11 @@ mistakes:
     a: Попроси у модератора ссылку ещё раз и войди в Figma. Для просмотра достаточно бесплатного аккаунта.
 blocks: [header, cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 ### Как читать код
 
@@ -106,7 +177,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } f
   height={260}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

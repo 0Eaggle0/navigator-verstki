@@ -9,6 +9,7 @@ minutes: 15                          # сколько минут на шаг
 goal: "Что сделаем за этот шаг"      # одна строка, начинается с глагола
 sidebar:
   order: 1                           # порядок шага внутри занятия
+tableOfContents: false               # у шагов нет колонки «На этой странице»: экран шире
 # optional: true                     # шаг можно пропустить — не нужен для минимума
 # fast: "возьми блок «Шапка с меню» и поменяй тексты"   # быстрый путь для отстающих команд
 
@@ -16,6 +17,59 @@ sidebar:
 links:
   - title: "Дока: свойство display"
     url: https://doka.guide/css/display/
+
+# Мини-игра перед разминкой: 3–5 коротких уровней на 2–4 минуты. Тип — один из трёх.
+# 1) ghost — «поставь фигурки на призраков»: ученик пишет CSS, фигурки двигаются.
+#    target — CSS-решение уровня. Если у следующего уровня тот же selector, повторите в target
+#    и прошлые свойства (start — что уже написано в редакторе).
+game:
+  type: ghost
+  title: "Лягушки на кувшинках"
+  height: 220                        # высота поля в px
+  html: |                            # фигурки: sp-cat, sp-dog, sp-frog, sp-coin, sp-star, sp-flower …
+    <i class="sp sp-frog"></i>
+    <i class="sp sp-frog"></i>
+  css: |                             # оформление поля — ученик его не видит
+    .board > * { width: 52px; height: 52px; }
+  levels:
+    - task: "Поставь лягушек в ряд."
+      target: "display: flex;"
+      hint: "display: flex;"
+    - task: "Теперь — по центру."
+      start: "display: flex;
+"
+      target: "display: flex; justify-content: center;"
+    - task: "Первой лягушке — отступ слева 20px."
+      selector: ".board > :first-child"   # ученик пишет CSS для этого селектора
+      target: "margin-left: 20px;"
+      # width: 300                       # поле шириной с телефон — для адаптива
+# 2) tags — мини-страница, ученик кликает на нужную часть. target — селектор правильного элемента:
+# game:
+#   type: tags
+#   title: "Охота на теги"
+#   height: 420
+#   html: |
+#     <header>…</header> <main>…</main>
+#   levels:
+#     - task: "Кликни на шапку — тег <header>."
+#       target: "header"
+# 3) quiz — вопрос с вариантами (answer — номер верного, с 1; на странице варианты перемешаются).
+#    Без options ученик кликает строку кода: answer — номер строки с ошибкой.
+# game:
+#   type: quiz
+#   title: "Угадай, что в консоли"
+#   levels:
+#     - task: "Что выведет код?"
+#       code: "console.log(2 + 3);"
+#       options: ["5", "23", "Ошибка"]
+#       answer: 1
+#       why: "Числа складываются."   # объяснение после верного ответа
+#     - task: "Кликни на строку с ошибкой."
+#       code: |
+#         const a = 1;
+#         a = 2;
+#       answer: 2
+#       why: "const нельзя менять."
 
 # Разминка в песочнице
 warmup:
@@ -60,11 +114,14 @@ mistakes:
 
 blocks: [header, cards]              # готовые блоки по теме (id из src/data/blocks.json)
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
 
-3–5 коротких абзацев. Названия тегов и свойств — в обратных кавычках: `display: flex`, `<header>`.
+<Npc>
+
+3–5 коротких абзацев. Проводник Байт показывает их по одному: каждый абзац, код или превью — одна реплика.
+Названия тегов и свойств — в обратных кавычках: `display: flex`, `<header>`.
 Без обратных кавычек знаки < > и фигурные скобки в тексте ломают страницу.
 
 <Preview
@@ -72,7 +129,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } f
   css={`.box { display: flex; }`}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -5,11 +5,45 @@ minutes: 20
 goal: Находим элемент на странице и меняем его по клику
 sidebar:
   order: 2
+tableOfContents: false
 links:
   - title: "learn.javascript.ru: введение в браузерные события"
     url: https://learn.javascript.ru/introduction-browser-events
   - title: "Дока: classList"
     url: https://doka.guide/js/element-classlist/
+game:
+  type: "quiz"
+  title: "Охота на баги в DOM"
+  levels:
+    - task: "Как найти на странице кнопку с классом btn?"
+      options:
+        - "document.querySelector('.btn')"
+        - "document.find('btn')"
+        - "querySelector(btn)"
+        - "document.class('.btn')"
+      answer: 1
+    - task: "Что делает эта строка?"
+      code: "menu.classList.toggle('open');"
+      options:
+        - "Добавляет класс open, если его нет, и убирает, если есть"
+        - "Всегда добавляет класс open"
+        - "Удаляет меню"
+        - "Открывает новую страницу"
+      answer: 1
+    - task: "Клик не работает. Кликни на строку с ошибкой."
+      code: |
+        const btn = document.querySelector('.btn');
+        btn.addEventListener('click' function () {
+          btn.classList.toggle('active');
+        });
+      answer: 2
+      why: "Между 'click' и function нужна запятая."
+    - task: "Консоль: «Cannot read properties of null». Кликни на строку с ошибкой."
+      code: |
+        const card = document.querySelector('card');
+        card.classList.add('active');
+      answer: 1
+      why: "Класс в селекторе пишется с точкой: '.card'. Без точки ищется тег <card>, а его нет."
 warmup:
   task: "По клику на кнопку .theme-button переключай у body класс dark: первый клик — тёмная тема, второй — обратно светлая. Используй querySelector, addEventListener и classList.toggle."
   html: |
@@ -49,9 +83,11 @@ mistakes:
     a: "В addEventListener передают саму функцию, без скобок: addEventListener('click', toggleTheme). Со скобками она вызовется сразу."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Для JavaScript страница — это дерево объектов, **DOM**. Каждый тег — объект, который можно найти и поменять. Ищем так же, как в CSS, селектором: `document.querySelector('.menu')` возвращает первый подходящий элемент. Если ничего не нашлось — `null`.
 
@@ -80,7 +116,13 @@ btn.addEventListener('click', function () {
   height={80}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

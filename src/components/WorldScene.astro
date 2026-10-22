@@ -7,8 +7,9 @@ import { svg, type SpriteName } from '~/lib/sprites';
 interface Props {
 	n: number;
 	label?: string;
+	small?: boolean; // низкая полоса — для карты миров
 }
-const { n, label } = Astro.props;
+const { n, label, small } = Astro.props;
 
 // Биом мира: цвета слоёв, высота холмов и что растёт на переднем плане
 const BIOMES: Record<number, { far: string; mid: string; near: string; hills: number; decor: SpriteName[]; extra?: SpriteName }> = {
@@ -42,7 +43,7 @@ const mid = ridge(b.hills * 0.6, 12, b.mid);
 const decor = Array.from({ length: 9 }, (_, i) => ({ name: b.decor[i % b.decor.length], x: 4 + i * 11 + rnd() * 5 }));
 ---
 
-<div class={`scene scene--${n} not-content`} aria-hidden="true">
+<div class:list={['scene', `scene--${n}`, 'not-content', { 'scene--small': small }]} aria-hidden="true">
 	<div class="scene__sky">
 		<span class="scene__cloud" style="left:12%;top:18%" />
 		<span class="scene__cloud" style="left:58%;top:30%;animation-delay:-14s" />
@@ -58,18 +59,19 @@ const decor = Array.from({ length: 9 }, (_, i) => ({ name: b.decor[i % b.decor.l
 
 <script>
 	// Параллакс: слои сдвигаются от прокрутки и движения мыши
-	const scene = document.querySelector<HTMLElement>('.scene');
-	if (scene && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
-		const layers = [...scene.querySelectorAll<HTMLElement>('[data-depth]')];
-		let mx = 0;
-		const move = () =>
-			layers.forEach((l) => (l.style.transform = `translateX(${Math.round((mx * 24 - scrollY * 0.15) * +l.dataset.depth!)}px)`));
-		addEventListener('scroll', move, { passive: true });
-		scene.addEventListener('pointermove', (e) => {
-			const r = scene.getBoundingClientRect();
-			mx = (e.clientX - r.left) / r.width - 0.5;
-			move();
-		});
+	if (!matchMedia('(prefers-reduced-motion: reduce)').matches) {
+		for (const scene of document.querySelectorAll<HTMLElement>('.scene')) {
+			const layers = [...scene.querySelectorAll<HTMLElement>('[data-depth]')];
+			let mx = 0;
+			const move = () =>
+				layers.forEach((l) => (l.style.transform = `translateX(${Math.round((mx * 24 - scrollY * 0.08) * +l.dataset.depth!)}px)`));
+			addEventListener('scroll', move, { passive: true });
+			scene.addEventListener('pointermove', (e) => {
+				const r = scene.getBoundingClientRect();
+				mx = (e.clientX - r.left) / r.width - 0.5;
+				move();
+			});
+		}
 	}
 </script>
 
@@ -171,8 +173,8 @@ const decor = Array.from({ length: 9 }, (_, i) => ({ name: b.decor[i % b.decor.l
 	}
 	.scene__layer {
 		position: absolute;
-		left: -40px;
-		right: -40px;
+		left: -80px;
+		right: -80px;
 		bottom: 0;
 		transition: transform 0.2s steps(4);
 	}
@@ -219,9 +221,17 @@ const decor = Array.from({ length: 9 }, (_, i) => ({ name: b.decor[i % b.decor.l
 			opacity: 0.5;
 		}
 	}
+	.scene--small {
+		height: 96px;
+		margin: 0 0 1rem;
+		box-shadow: none;
+	}
 	@media (max-width: 40rem) {
 		.scene {
 			height: 110px;
+		}
+		.scene--small {
+			height: 80px;
 		}
 	}
 </style>

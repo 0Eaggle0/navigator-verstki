@@ -6,11 +6,79 @@ goal: Наполняем скелет настоящим контентом из
 fast: "возьми блоки «Шапка с меню» и «Сетка карточек», вставь в скелет и замени тексты и картинки на свои."
 sidebar:
   order: 4
+tableOfContents: false
 links:
   - title: "Дока: тег img"
     url: https://doka.guide/html/img/
   - title: "Дока: тег a"
     url: https://doka.guide/html/a/
+game:
+  type: "tags"
+  title: "Найди тег по контенту"
+  html: |
+    <header class="header">
+      <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Питомцы</a></li>
+          <li><a href="#">Помочь</a></li>
+          <li><a href="#">Контакты</a></li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <section class="hero">
+        <h1>Найди друга в приюте</h1>
+        <p>Пройди тест — подскажем, кто тебе подходит.</p>
+        <a class="button" href="#">Пройти тест</a>
+      </section>
+      <section class="pets">
+        <h2>Ищут дом</h2>
+        <div class="cards">
+          <article class="card"><img src="img/barsik.svg" alt="Рыжий кот Барсик"><h3>Барсик</h3><p>2 года</p></article>
+          <article class="card"><img src="img/sharik.svg" alt="Пёс Шарик"><h3>Шарик</h3><p>3 года</p></article>
+          <article class="card"><img src="img/murka.svg" alt="Серая кошка Мурка"><h3>Мурка</h3><p>1 год</p></article>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">
+      <p>Омск, 2026 · hello@hvost.ru</p>
+    </footer>
+  css: |
+    body { margin: 0; color: #1e1e1e; }
+    .header { display: flex; justify-content: space-between; align-items: center; padding: 10px 16px; background: #2b2750; }
+    .header a { color: #fff; text-decoration: none; }
+    .logo { font-weight: 700; }
+    .menu { display: flex; gap: 14px; margin: 0; padding: 0; list-style: none; }
+    .hero { padding: 20px 16px; background: #fff3e6; }
+    .hero h1 { margin: 0 0 6px; font-size: 22px; }
+    .hero p { margin: 0 0 10px; }
+    .button { display: inline-block; padding: 6px 14px; color: #fff; background: #e8741a; border-radius: 8px; text-decoration: none; }
+    .pets { padding: 14px 16px; }
+    .pets h2 { margin: 0 0 8px; font-size: 18px; }
+    .cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+    .card { padding: 8px; background: #f4f2fc; border-radius: 10px; }
+    .card img { display: block; width: 100%; height: 60px; object-fit: contain; }
+    .card h3 { margin: 4px 0 0; font-size: 15px; }
+    .card p { margin: 0; font-size: 13px; }
+    .footer { padding: 10px 16px; color: #fff; background: #1b1a3f; }
+    .footer p { margin: 0; }
+  height: 420
+  levels:
+    - task: "Кликни на картинку — тег <img>."
+      target: "img"
+      hint: "Котики и собаки в карточках."
+    - task: "Найди ссылку, оформленную как кнопка: <a class=\"button\">."
+      target: ".button"
+    - task: "Кликни на абзац <p> под главным заголовком."
+      target: ".hero p"
+      hint: "Текст «Пройди тест…»."
+    - task: "Кликни на <h3> — заголовок карточки."
+      target: "h3"
+      hint: "Имя питомца."
+    - task: "Найди пункт списка <li> в меню."
+      target: ".menu li"
+      hint: "Одна из ссылок в шапке: каждая лежит в своём li."
 warmup:
   task: "Собери карточку питомца внутри article.card: картинка img (src=\"img/barsik.svg\" и описание в alt), заголовок h3 с кличкой, абзац p с возрастом и ссылка a с классом button и текстом «Познакомиться»."
   html: |
@@ -58,9 +126,11 @@ mistakes:
     a: В Figma дважды кликни по тексту, выдели всё (Ctrl+A) и скопируй. Переносы строк в HTML ничего не значат — браузер сам переносит текст.
 blocks: [header, cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Скелет готов — теперь наполняем его. Почти всё на главной странице собирается из пяти тегов:
 - `<h1>`–`<h3>` — заголовки;
@@ -88,7 +158,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } f
 />
 
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

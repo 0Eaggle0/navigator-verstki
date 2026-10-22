@@ -18,3 +18,4 @@ export { default as Badges } from './Badges.astro';
 export { default as Icon } from './Icon.astro';
 export { default as Npc } from './Npc.astro';
 export { default as Game } from './Game.astro';
+export { default as Island } from './Island.astro';

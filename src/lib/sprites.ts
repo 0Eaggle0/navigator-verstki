@@ -60,6 +60,22 @@ const SPRITES = {
 			'.kkk.kk.kkk.',
 		],
 	},
+	frog: {
+		pal: { k: K, g: '#5cc85c', G: '#2f8a2f', w: '#ffffff', r: '#ff8fb1' },
+		rows: [
+			'..kk....kk..',
+			'.kwwk..kwwk.',
+			'.kwkgkkgkwk.',
+			'kggggggggggk',
+			'kGggggggggGk',
+			'kgkrrrrrrkgk',
+			'.kgkkkkkkgk.',
+			'..kggggggk..',
+			'.kgGggggGgk.',
+			'kggk....kggk',
+			'kkkk....kkkk',
+		],
+	},
 	coin: {
 		pal: { k: '#7a5600', y: '#ffc930', Y: '#c98f00', w: '#fff6c8' },
 		rows: ['..kkkk..', '.kyyyyk.', 'kyywyyYk', 'kywyyyYk', 'kyyyyyYk', 'kyyyyYYk', '.kYYYYk.', '..kkkk..'],

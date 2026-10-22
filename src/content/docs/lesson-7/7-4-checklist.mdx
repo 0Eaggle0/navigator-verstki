@@ -5,11 +5,44 @@ minutes: 15
 goal: Проверяем сайт по критериям аттестации и исправляем последние мелочи
 sidebar:
   order: 4
+tableOfContents: false
 links:
   - title: "Дока: доступность"
     url: https://doka.guide/a11y/
   - title: "W3C Validator — проверка HTML"
     url: https://validator.w3.org/
+game:
+  type: "quiz"
+  title: "Финальная проверка"
+  levels:
+    - task: "Чем проверить ошибки HTML: незакрытые теги, картинки без alt?"
+      options:
+        - "W3C Validator"
+        - "Figma"
+        - "Paint"
+        - "Word"
+      answer: 1
+    - task: "Как проверить, что на телефоне нет прокрутки вбок?"
+      options:
+        - "DevTools → режим телефона, ширина 375 px"
+        - "Уменьшить шрифт"
+        - "Посмотреть в Figma"
+        - "Никак"
+      answer: 1
+    - task: "Что из этого НЕ входит в чек-лист сдачи?"
+      options:
+        - "Семантические теги"
+        - "У картинок есть alt"
+        - "Анимация на каждой кнопке"
+        - "Сайт открывается по ссылке"
+      answer: 3
+    - task: "Где искать красные ошибки JavaScript и 404?"
+      options:
+        - "Консоль (F12 → Console)"
+        - "В Figma"
+        - "В README"
+        - "В настройках GitHub"
+      answer: 1
 warmup:
   task: "На этой странице четыре ошибки из чек-листа сдачи. Замени div.header на тег header, оставь один h1 (второй сделай h2), добавь картинке alt и дай ссылке href."
   html: |
@@ -44,9 +77,11 @@ mistakes:
     a: "Приоритет: сайт открывается по ссылке → нет прокрутки вбок на телефоне → alt у картинок → остальное."
 blocks: []
 ---
-import { Links, Warmup, Hint, Checklist, Stuck } from '~/components';
+import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Аттестация проверяет не красоту, а качество: насколько страница соответствует макету и базовым правилам вёрстки. Хорошая новость — всё это вы уже делали по шагам. Осталось пройтись одним списком и ничего не забыть.
 
@@ -57,7 +92,13 @@ import { Links, Warmup, Hint, Checklist, Stuck } from '~/components';
 
 Делите проверку между участниками: один смотрит телефон, второй валидатор, третий сверяет с макетом, четвёртый проверяет ссылки и кнопки.
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

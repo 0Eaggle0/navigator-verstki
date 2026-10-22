@@ -35,23 +35,31 @@ const step = z.object({
 			checks: z.array(check).default([]),
 		})
 		.optional(),
-	// Мини-игра перед разминкой. ghost: фигурки из html нужно поставить на «призраков» —
-	// туда, куда их ставит CSS target. Ученик пишет CSS для selector (по умолчанию .board)
+	// Мини-игра перед разминкой (Game.astro). Три типа:
+	// ghost — фигурки из html нужно поставить на «призраков» — туда, куда их ставит CSS target.
+	//         Ученик пишет CSS для selector (по умолчанию .board);
+	// tags  — html — мини-страница, ученик кликает на элемент, подходящий под селектор target;
+	// quiz  — вопрос с вариантами options (answer — номер верного, с 1). Без options ученик
+	//         кликает строку в code, answer — номер строки.
 	game: z
 		.object({
-			type: z.enum(['ghost']),
+			type: z.enum(['ghost', 'tags', 'quiz']),
 			title: z.string(),
-			html: z.string(), // фигурки на поле: <i class="sp sp-cat"></i> …
+			html: z.string().default(''), // ghost: фигурки <i class="sp sp-cat"></i>; tags: мини-страница
 			css: z.string().default(''), // оформление поля, ученик его не видит
 			height: z.number().default(240), // высота поля в px
 			levels: z.array(
 				z.object({
 					task: z.string(),
-					target: z.string(), // CSS-решение уровня
-					start: z.string().optional(), // что уже написано в редакторе
-					selector: z.string().optional(), // для какого селектора пишет ученик
+					target: z.string().optional(), // ghost: CSS-решение; tags: селектор, куда надо кликнуть
+					start: z.string().optional(), // ghost: что уже написано в редакторе
+					selector: z.string().optional(), // ghost: для какого селектора пишет ученик
+					width: z.number().optional(), // ghost: ширина поля в px, например 375
 					hint: z.string().optional(),
-					width: z.number().optional(), // ширина поля в px, например 375
+					code: z.string().optional(), // quiz: код к вопросу
+					options: z.array(z.string()).optional(), // quiz: варианты ответа
+					answer: z.number().optional(), // quiz: номер верного варианта или строки, с 1
+					why: z.string().optional(), // quiz: объяснение после верного ответа
 				})
 			),
 		})

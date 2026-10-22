@@ -5,11 +5,57 @@ minutes: 20
 goal: Разбираемся, как Flexbox ставит элементы в ряд и выравнивает их
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "Flexbox Froggy — игра (уровни 1–10)"
     url: https://flexboxfroggy.com/#ru
   - title: "Дока: гайд по Flexbox"
     url: https://doka.guide/css/flexbox-guide/
+game:
+  type: "ghost"
+  title: "Лягушки на кувшинках"
+  height: 220
+  html: |
+    <i class="sp sp-frog"></i>
+    <i class="sp sp-frog"></i>
+    <i class="sp sp-frog"></i>
+  css: |
+    .board {
+      background: repeating-linear-gradient(90deg, #3b8fd9 0 30px, #4a9be0 30px 60px);
+    }
+    .board > * {
+      display: block;
+      width: 52px;
+      height: 52px;
+    }
+  levels:
+    - task: "Лягушки стоят столбиком. Поставь их в ряд: display: flex."
+      target: "display: flex;"
+      hint: "display: flex;"
+    - task: "Отправь лягушек вправо по главной оси: justify-content: flex-end."
+      start: |
+        display: flex;
+      target: "display: flex; justify-content: flex-end;"
+    - task: "Теперь — в центр по горизонтали."
+      start: |
+        display: flex;
+      target: "display: flex; justify-content: center;"
+      hint: "justify-content: center;"
+    - task: "Разнеси лягушек по краям, свободное место — между ними."
+      start: |
+        display: flex;
+      target: "display: flex; justify-content: space-between;"
+      hint: "justify-content: space-between;"
+    - task: "Опусти их вниз по поперечной оси: align-items: flex-end."
+      start: |
+        display: flex;
+        justify-content: space-between;
+      target: "display: flex; justify-content: space-between; align-items: flex-end;"
+    - task: "Финал: ровно в центр поля — и по горизонтали, и по вертикали."
+      start: |
+        display: flex;
+      target: "display: flex; justify-content: center; align-items: center;"
+      hint: "justify-content и align-items — оба center."
 warmup:
   task: "Поставь три кружка в ряд: у .row включи flex, разнеси кружки по краям (space-between) и выровняй по центру по вертикали."
   html: |
@@ -60,9 +106,11 @@ mistakes:
     a: "Flex по умолчанию сжимает детей, чтобы поместились в ряд. Задай им ширину и flex-shrink: 0 или разреши перенос flex-wrap: wrap."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Обычные блоки встают друг под другом. **Flexbox** — способ поставить их в ряд и выровнять. Включается одной строкой у **родителя**: `display: flex`. Все его прямые дети становятся флекс-элементами и выстраиваются в строку.
 
@@ -81,7 +129,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={130}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -5,12 +5,48 @@ minutes: 30
 goal: Убираем горизонтальную прокрутку и собираем версию для телефона
 sidebar:
   order: 2
+tableOfContents: false
 fast: "возьми блоки «Шапка с меню» и «Сетка карточек» — они уже адаптивные. Проверь остальные секции на 375 px."
 links:
   - title: "MDN: адаптивный дизайн"
     url: https://developer.mozilla.org/ru/docs/Learn_web_development/Core/CSS_layout/Responsive_Design
   - title: "Дока: медиазапросы"
     url: https://doka.guide/css/media/
+game:
+  type: "ghost"
+  title: "Сожми первый экран"
+  height: 230
+  html: |
+    <i class="txt"></i>
+    <i class="sp sp-cat pic"></i>
+  css: |
+    .board {
+      display: flex;
+      gap: 16px;
+      align-items: flex-start;
+      background: #fff3e6;
+    }
+    .board > * {
+      display: block;
+      border: 2px solid #2b2750;
+    }
+    .txt { width: 180px; height: 60px; background: repeating-linear-gradient(#2b2750 0 8px, transparent 8px 20px) content-box; padding: 10px; }
+    .pic { width: 180px; height: 80px; background-color: #ffe0c2; }
+  levels:
+    - task: "Поле шириной 300 px — как телефон. Текст и картинка сжались. Поставь их столбиком: flex-direction: column."
+      target: "flex-direction: column;"
+      width: 300
+      hint: "flex-direction: column;"
+    - task: "Пусть оба блока займут всю ширину экрана."
+      selector: ".board > *"
+      target: "width: 100%;"
+      width: 300
+      hint: "width: 100%;"
+    - task: "Уменьши промежуток до 8px — на телефоне место дорого."
+      start: |
+        flex-direction: column;
+      target: "flex-direction: column; gap: 8px;"
+      width: 300
 warmup:
   width: 375
   task: "На телефоне страница уехала вбок. В медиазапросе @media (max-width: 768px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно."
@@ -89,9 +125,11 @@ mistakes:
     a: Медиазапрос должен стоять ниже обычных правил. Если он выше, обычные правила его перебивают.
 blocks: [header, cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Версию для телефона строят от главного правила: **ничего не должно быть шире экрана**. Горизонтальная прокрутка на телефоне — главный признак сломанного адаптива.
 
@@ -113,7 +151,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={170}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

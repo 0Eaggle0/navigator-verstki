@@ -5,11 +5,50 @@ minutes: 10
 goal: Заводим папку проекта и видим страницу в браузере
 sidebar:
   order: 2
+tableOfContents: false
 links:
   - title: "VS Code: скачать"
     url: https://code.visualstudio.com/
   - title: "Live Server в каталоге расширений"
     url: https://marketplace.visualstudio.com/items?itemName=ritwickdey.LiveServer
+game:
+  type: "quiz"
+  title: "Собери папку проекта"
+  levels:
+    - task: "В каком файле пишут оформление: цвета, размеры, шрифты?"
+      options:
+        - "index.html"
+        - "style.css"
+        - "script.js"
+        - "В Figma"
+      answer: 2
+      why: "index.html — содержимое, style.css — оформление, script.js — поведение."
+    - task: "Какая строка подключает style.css к странице?"
+      options:
+        - "<link rel=\"stylesheet\" href=\"style.css\">"
+        - "<style src=\"style.css\">"
+        - "<script src=\"style.css\">"
+        - "<css>style.css</css>"
+      answer: 1
+      why: "Стили подключает тег link внутри head."
+    - task: "Что делает расширение Live Server?"
+      options:
+        - "Публикует сайт в интернете"
+        - "Открывает страницу и обновляет её после сохранения"
+        - "Ищет ошибки в коде"
+        - "Рисует макет"
+      answer: 2
+    - task: "Файл стилей называется style.css, но стили не работают. Кликни на строку с ошибкой."
+      code: |
+        <!DOCTYPE html>
+        <html lang="ru">
+        <head>
+          <meta charset="UTF-8">
+          <title>Мой сайт</title>
+          <link rel="stylesheet" href="styles.css">
+        </head>
+      answer: 6
+      why: "В href написано styles.css, а файл называется style.css — браузер его не найдёт."
 warmup:
   task: Страница уже подключена к стилям. Напиши заголовок h1 с названием вашего проекта и в CSS покрась его в любой цвет, кроме чёрного.
   html: |
@@ -41,9 +80,11 @@ mistakes:
     a: Так тоже работает, но без автообновления. Лучше запускать через Go Live — адрес будет вида http://127.0.0.1:5500.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Сайт — это просто папка с файлами. В `index.html` лежит содержимое страницы: тексты, картинки, ссылки. В `style.css` — оформление: цвета, размеры, расположение. Картинки кладём в папку `img`.
 
@@ -64,7 +105,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={140}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

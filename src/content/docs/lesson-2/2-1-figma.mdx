@@ -5,11 +5,47 @@ minutes: 15
 goal: Собираем «паспорт стиля» — цвета, шрифты и размеры из макета
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "Дока: как задавать цвет в CSS"
     url: https://doka.guide/css/color/
   - title: "Дока: свойство font-size"
     url: https://doka.guide/css/font-size/
+game:
+  type: "quiz"
+  title: "Детектив из Figma"
+  levels:
+    - task: "В Figma цвет кнопки: #FF6B35. Как записать его в CSS?"
+      options:
+        - "color: #FF6B35;"
+        - "color: FF6B35;"
+        - "color = #FF6B35"
+        - "color: \"FF6B35\";"
+      answer: 1
+      why: "HEX-цвет вставляется как есть, с решёткой."
+    - task: "В Figma у шрифта начертание Bold. Какой это font-weight?"
+      options:
+        - "400"
+        - "700"
+        - "900"
+        - "100"
+      answer: 2
+      why: "Regular = 400, Bold = 700."
+    - task: "Цвет #00FF00. Какая составляющая на максимуме?"
+      options:
+        - "Красная"
+        - "Зелёная"
+        - "Синяя"
+        - "Никакая"
+      answer: 2
+      why: "Пары цифр: красный 00, зелёный FF, синий 00. FF — максимум."
+    - task: "Что входит в «паспорт стиля»?"
+      options:
+        - "Все тексты сайта"
+        - "3–5 цветов, 1–2 шрифта и главные размеры"
+        - "Логины команды"
+        - "Список картинок"
+      answer: 2
 warmup:
   task: "В макете у заголовка шрифт 32 px и цвет #1E1E1E, у кнопки фон #FF6B35 и белый текст. Перенеси эти значения в CSS."
   html: |
@@ -53,9 +89,11 @@ mistakes:
     a: Округляй до целого — 32px. Полпикселя на глаз не видно.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Макет в Figma — это не картинка, а набор точных чисел. Кликни по любому элементу: справа появится панель с размером шрифта, цветом, отступами и шириной. Верстальщик не угадывает на глаз, а переписывает эти числа в CSS.
 
@@ -79,7 +117,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={150}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

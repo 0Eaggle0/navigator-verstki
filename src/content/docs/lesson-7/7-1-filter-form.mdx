@@ -5,12 +5,50 @@ minutes: 30
 goal: Делаем главную «живой» — фильтр карточек или проверку формы, смотря по кейсу
 sidebar:
   order: 1
+tableOfContents: false
 fast: "для фильтра возьми блок «Фильтры» целиком — HTML, CSS и JS — и поменяй тексты и data-type. Для формы возьми блок «Форма» и допиши к нему JS из решения ниже."
 links:
   - title: "learn.javascript.ru: data-атрибуты"
     url: https://learn.javascript.ru/dom-attributes-and-properties
   - title: "learn.javascript.ru: отправка формы"
     url: https://learn.javascript.ru/forms-submit
+game:
+  type: "quiz"
+  title: "Фильтр и форма"
+  levels:
+    - task: "Как прочитать type в JavaScript?"
+      code: "<article class=\"card\" data-type=\"cat\">"
+      options:
+        - "card.dataset.type"
+        - "card.data-type"
+        - "card.type"
+        - "card.getType()"
+      answer: 1
+      why: "Атрибуты data-… лежат в dataset."
+    - task: "Что станет с карточкой, у которой data-type=\"dog\"?"
+      code: "card.hidden = card.dataset.type !== 'cat';"
+      options:
+        - "Спрячется"
+        - "Покажется"
+        - "Будет ошибка"
+        - "Станет кошкой"
+      answer: 1
+      why: "'dog' !== 'cat' — это true, а hidden = true прячет карточку."
+    - task: "Что делает event.preventDefault() в обработчике submit?"
+      options:
+        - "Не даёт странице перезагрузиться"
+        - "Очищает форму"
+        - "Отправляет форму"
+        - "Проверяет поля"
+      answer: 1
+    - task: "Код с ошибкой. Кликни на строку с ней."
+      code: |
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(function (card) {
+          card.hidden = card.dataset.type !== filter;
+        };
+      answer: 4
+      why: "forEach( … ) — круглая скобка тоже должна закрыться: });"
 warmup:
   task: "Сделай фильтр. У каждой кнопки есть data-filter, у каждой карточки — data-type. По клику на кнопку покажи только карточки с тем же типом (остальным поставь hidden = true). Кнопка «Все» (data-filter=\"all\") показывает все карточки."
   html: |
@@ -75,9 +113,11 @@ mistakes:
     a: "Если у .card в CSS есть display: flex или grid, он перебивает hidden. В стартовом style.css от этого есть правило [hidden] { display: none !important; } — проверь, что оно не удалено, или добавь его в начало файла."
 blocks: [filters, form]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 У любого элемента можно хранить свои данные в атрибутах `data-…`: `<article data-type="cat">`. В JS они доступны через `dataset`: `card.dataset.type` вернёт `"cat"`. Так мы помечаем карточки для фильтра.
 
@@ -110,7 +150,13 @@ document.querySelectorAll('[data-filter]').forEach(function (button) {
   height={130}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

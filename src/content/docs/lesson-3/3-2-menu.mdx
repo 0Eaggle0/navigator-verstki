@@ -5,12 +5,52 @@ minutes: 20
 goal: Ставим логотип, меню и кнопку шапки в одну ровную строку
 sidebar:
   order: 2
+tableOfContents: false
 fast: "возьми блок «Шапка с меню» — в нём шапка уже на Flexbox. Поменяй тексты и цвета."
 links:
   - title: "Дока: justify-content"
     url: https://doka.guide/css/justify-content/
   - title: "Дока: gap"
     url: https://doka.guide/css/gap/
+game:
+  type: "ghost"
+  title: "Собери шапку"
+  height: 130
+  html: |
+    <i class="logo"></i>
+    <i class="menu"></i>
+    <i class="btn"></i>
+  css: |
+    .board {
+      background: #2b2750;
+    }
+    .board > * {
+      display: block;
+      border: 2px solid #0e0d26;
+    }
+    .logo { width: 90px; height: 44px; background: #ffc930; }
+    .menu { width: 140px; height: 20px; background: repeating-linear-gradient(90deg, #eceaf7 0 36px, transparent 36px 52px); border: 0; }
+    .btn { width: 80px; height: 32px; background: #f07a4a; }
+  levels:
+    - task: "Логотип, меню и кнопка лежат столбиком. Поставь их в строку."
+      target: "display: flex;"
+      hint: "display: flex;"
+    - task: "Разнеси по краям: логотип слева, кнопка справа, меню посередине."
+      start: |
+        display: flex;
+      target: "display: flex; justify-content: space-between;"
+    - task: "Они разной высоты. Выровняй по вертикали по центру."
+      start: |
+        display: flex;
+        justify-content: space-between;
+      target: "display: flex; justify-content: space-between; align-items: center;"
+      hint: "align-items: center;"
+    - task: "Отодвинь всё от краёв шапки: padding: 0 24px."
+      start: |
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      target: "display: flex; justify-content: space-between; align-items: center; padding: 0 24px;"
 warmup:
   task: "Поставь шапку в строку: у .header — flex, логотип слева, кнопка справа, всё по центру по вертикали. Пункты меню (ul) тоже поставь в строку с промежутком 24px и убери у списка точки."
   html: |
@@ -74,9 +114,11 @@ mistakes:
     a: "У ul есть стандартный padding-left. Сбрось его: padding: 0; margin: 0;"
 blocks: [header]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Шапка почти всегда устроена одинаково: слева логотип, посередине или справа меню, с краю кнопка. Это три ребёнка у `<header>` — и одна строка `display: flex` ставит их в ряд.
 
@@ -101,7 +143,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={110}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

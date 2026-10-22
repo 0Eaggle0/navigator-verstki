@@ -5,11 +5,59 @@ minutes: 20
 goal: Разбираемся, как Grid раскладывает элементы по колонкам
 sidebar:
   order: 1
+tableOfContents: false
 links:
   - title: "Grid Garden — игра (уровни 1–10)"
     url: https://cssgridgarden.com/#ru
   - title: "Дока: гайд по Grid"
     url: https://doka.guide/css/grid-guide/
+game:
+  type: "ghost"
+  title: "Грядки"
+  height: 230
+  html: |
+    <i class="sp sp-flower"></i>
+    <i class="sp sp-flower"></i>
+    <i class="sp sp-flower"></i>
+    <i class="sp sp-flower"></i>
+    <i class="sp sp-flower"></i>
+    <i class="sp sp-flower"></i>
+  css: |
+    .board {
+      background: repeating-conic-gradient(#4a9a3a 0 25%, #55a843 0 50%) 0 0 / 32px 32px;
+    }
+    .board > * {
+      height: 44px;
+      background-color: #7a5230;
+      background-size: auto 70%;
+      box-shadow: inset 0 -4px #0003;
+    }
+  levels:
+    - task: "Сетка уже включена. Сделай три колонки одинаковой ширины: 1fr 1fr 1fr."
+      start: |
+        display: grid;
+      target: "display: grid; grid-template-columns: 1fr 1fr 1fr;"
+      hint: "grid-template-columns: 1fr 1fr 1fr;"
+    - task: "Первая колонка — вдвое шире остальных."
+      start: |
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+      target: "display: grid; grid-template-columns: 2fr 1fr 1fr;"
+      hint: "2fr 1fr 1fr"
+    - task: "Три колонки ровно по 80px. Используй repeat."
+      start: |
+        display: grid;
+      target: "display: grid; grid-template-columns: repeat(3, 80px);"
+      hint: "repeat(3, 80px)"
+    - task: "Снова три равные колонки через repeat — и промежуток 12px."
+      start: |
+        display: grid;
+      target: "display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px;"
+      hint: "repeat(3, 1fr) и gap: 12px"
+    - task: "Последняя грядка — на всю ширину: от первой линии до последней."
+      selector: ".board > :last-child"
+      target: "grid-column: 1 / -1;"
+      hint: "grid-column: 1 / -1;"
 warmup:
   task: "Разложи шесть плиток в сетку из трёх одинаковых колонок: у .grid включи grid, задай три колонки через repeat(3, 1fr) и промежуток 12px."
   html: |
@@ -57,9 +105,11 @@ mistakes:
     a: Flexbox — для одного ряда (меню, кнопки). Grid — для сетки из рядов и колонок (карточки, галерея, футер из колонок).
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Flexbox думает рядами: элементы идут друг за другом в строку. **Grid** думает сеткой: сначала рисуем колонки, потом элементы сами раскладываются по ячейкам. Поэтому сетку карточек удобнее делать на Grid — все колонки ровные, даже на последней неполной строке.
 
@@ -78,7 +128,13 @@ Flexbox думает рядами: элементы идут друг за др�
   height={140}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

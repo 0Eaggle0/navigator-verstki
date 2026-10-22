@@ -5,11 +5,62 @@ minutes: 20
 goal: Задаём отступы и ширину блоков как в макете
 sidebar:
   order: 3
+tableOfContents: false
 links:
   - title: "Дока: блочная модель"
     url: https://doka.guide/css/box-model/
   - title: "Дока: box-sizing"
     url: https://doka.guide/css/box-sizing/
+game:
+  type: "ghost"
+  title: "Монеты в коробке"
+  height: 240
+  html: |
+    <i class="sp sp-coin"></i>
+    <i class="sp sp-coin"></i>
+    <i class="sp sp-coin"></i>
+  css: |
+    .board {
+      background: #cfe6ff;
+    }
+    .board > * {
+      display: block;
+      width: 120px;
+      height: 36px;
+      background-color: #ffffff99;
+      background-size: auto 80%;
+      border: 2px solid #2b2750;
+    }
+  levels:
+    - task: "Монеты прилипли к краю. Отодвинь их: у .board внутренний отступ padding: 32px."
+      target: "padding: 32px;"
+      hint: "padding: 32px;"
+    - task: "Теперь каждой монете — внешний отступ снизу 16px."
+      selector: ".board > *"
+      target: "margin-bottom: 16px;"
+      hint: "Внешний отступ — margin. Снизу — margin-bottom."
+    - task: "Сделай монеты шире: width: 200px."
+      selector: ".board > *"
+      start: |
+        margin-bottom: 16px;
+      target: "margin-bottom: 16px; width: 200px;"
+    - task: "Мы добавили padding: 0 20px — и монеты стали шире 200 px! Добавь box-sizing: border-box, чтобы отступ был внутри ширины."
+      selector: ".board > *"
+      start: |
+        margin-bottom: 16px;
+        width: 200px;
+        padding: 0 20px;
+      target: "margin-bottom: 16px; width: 200px; padding: 0 20px; box-sizing: border-box;"
+      hint: "box-sizing: border-box;"
+    - task: "Поставь монеты по центру, как контейнер: margin: 0 auto 16px — сверху 0, по бокам auto, снизу 16px."
+      selector: ".board > *"
+      start: |
+        margin-bottom: 16px;
+        width: 200px;
+        padding: 0 20px;
+        box-sizing: border-box;
+      target: "width: 200px; padding: 0 20px; box-sizing: border-box; margin: 0 auto 16px;"
+      hint: "Замени margin-bottom на margin: 0 auto 16px;"
 warmup:
   task: "Сделай карточку .card ровно 200 px шириной вместе с рамкой и отступами: width 200px, padding 16px, рамка 2px, box-sizing: border-box, снизу внешний отступ 24px. Затем ограничь .container шириной 320px и поставь по центру."
   html: |
@@ -56,9 +107,11 @@ mistakes:
     a: "Правый клик по элементу → «Просмотреть код» (F12). Внизу вкладки Styles есть схема блока: оранжевое — margin, зелёное — padding. Наведи на элемент — отступы подсветятся на странице."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 Каждый элемент на странице — прямоугольник из четырёх слоёв: **контент** → **padding** (внутренний отступ) → **border** (рамка) → **margin** (внешний отступ до соседей). Это и есть блочная модель.
 
@@ -78,7 +131,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   height={130}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

@@ -5,11 +5,53 @@ minutes: 20
 goal: Подключаем шрифты из макета и храним цвета в переменных
 sidebar:
   order: 2
+tableOfContents: false
 links:
   - title: "Дока: кастомные свойства (переменные)"
     url: https://doka.guide/css/custom-properties/
   - title: "Google Fonts"
     url: https://fonts.google.com/
+game:
+  type: "quiz"
+  title: "Переменные и шрифты"
+  levels:
+    - task: "Как покрасить кнопку цветом из переменной?"
+      code: |
+        :root {
+          --accent: #FF6B35;
+        }
+      options:
+        - "background: var(--accent);"
+        - "background: --accent;"
+        - "background: $accent;"
+        - "background: var(accent);"
+      answer: 1
+      why: "Переменную читают через var(), с двумя минусами в имени."
+    - task: "Кликни на строку с ошибкой."
+      code: |
+        :root {
+          --text: #1E1E1E;
+          --accent #FF6B35;
+        }
+        .button {
+          background: var(--accent);
+        }
+      answer: 3
+      why: "Между именем и значением нужно двоеточие: --accent: #FF6B35;"
+    - task: "Зачем нужен сброс стилей?"
+      options:
+        - "Убрать стандартные отступы браузера, чтобы вёрстка совпала с макетом"
+        - "Удалить все стили сайта"
+        - "Ускорить загрузку"
+        - "Подключить шрифт"
+      answer: 1
+    - task: "Откуда взять код для подключения шрифта Montserrat?"
+      options:
+        - "Google Fonts → Get embed code"
+        - "Скопировать из Figma картинкой"
+        - "Написать <font>Montserrat</font>"
+        - "Шрифт подключать не нужно"
+      answer: 1
 warmup:
   task: "Создай в :root переменную --accent со значением #FF6B35 и покрась ею фон кнопки через var(--accent). Убери отступ у body (margin: 0) и задай body шрифт Montserrat, sans-serif."
   html: |
@@ -57,9 +99,11 @@ mistakes:
     a: Спроси модератора — шрифт можно скачать файлом. Или замени на похожий из Google Fonts, это нормально.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 **Шрифт** из макета подключаем с [Google Fonts](https://fonts.google.com/): находим шрифт, выбираем начертания (например, 400 и 700), жмём **Get embed code** и копируем строки `<link>` в `<head>` — выше строки со `style.css`. Потом пишем в CSS `font-family: 'Montserrat', sans-serif;`. Слово `sans-serif` — запасной шрифт на случай, если основной не загрузился.
 
@@ -84,7 +128,13 @@ body { margin: 0; padding: 16px; font-family: Arial, sans-serif; color: var(--te
   height={150}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 
