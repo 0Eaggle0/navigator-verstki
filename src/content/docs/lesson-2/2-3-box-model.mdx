@@ -86,7 +86,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 ## Делаем свой сайт
 
-1. Внутри каждой секции оберните содержимое в `<div class="container">`. Секция даёт фон на всю ширину, а контейнер держит контент по центру.
+1. Внутри каждой секции оберните содержимое в `<div class="container">`. Секция даёт фон на всю ширину, а контейнер держит контент по центру. **В шапке и подвале — тоже:** `<header class="header"><div class="container">логотип, меню, кнопка</div></header>`.
 2. Задайте `.container` ширину контейнера из паспорта стиля и `margin: 0 auto`. Добавьте боковые отступы `padding: 0 16px`, чтобы на телефоне текст не прилипал к краю.
 3. Задайте секциям вертикальные отступы из макета: `padding: 80px 0`.
 4. Откройте DevTools (F12) и сравните отступы с Figma.
@@ -118,12 +118,30 @@ h2 {
 ```
 
 ```html
-<section class="pets">
+<header class="header">
   <div class="container">
-    <h2>Ищут дом</h2>
-    <!-- карточки -->
+    <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+    <nav>
+      <ul class="menu">…</ul>
+    </nav>
+    <a class="button" href="#pets">Взять питомца</a>
   </div>
-</section>
+</header>
+
+<main>
+  <section class="pets" id="pets">
+    <div class="container">
+      <h2>Ищут дом</h2>
+      <!-- карточки -->
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  <div class="container">
+    <!-- контакты -->
+  </div>
+</footer>
 ```
 </Hint>
 

@@ -16,11 +16,13 @@ warmup:
   html: |
     <header class="header">
       <a class="logo" href="#">ТИММЕЙТ</a>
-      <nav class="menu">
-        <a href="#">Анкеты</a>
-        <a href="#">Как это работает</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Анкеты</a></li>
+          <li><a href="#">Как это работает</a></li>
+        </ul>
       </nav>
-      <a class="header-button" href="#">Найти команду</a>
+      <a class="button" href="#">Найти команду</a>
     </header>
   css: |
     body {
@@ -37,7 +39,7 @@ warmup:
     .menu a {
     }
 
-    .header-button {
+    .button {
     }
   checks:
     - selector: ".header"
@@ -50,7 +52,7 @@ warmup:
     - selector: ".menu a"
       style: { text-decoration-line: "none" }
       fail: "У ссылок меню осталось подчёркивание. Нужно: text-decoration: none;"
-    - js: "const s = getComputedStyle(doc.querySelector('.header-button')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(s.borderTopLeftRadius) > 0"
+    - js: "const s = getComputedStyle(doc.querySelector('.button')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(s.borderTopLeftRadius) > 0"
       fail: "Кнопке нужен фон (background) и скругление углов (border-radius)"
 checklist:
   - Цвета и шрифты шапки взяты из переменных
@@ -81,14 +83,14 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <Preview
   html={`<header class="header">
   <a class="logo" href="#">ТИММЕЙТ</a>
-  <nav class="menu"><a href="#">Анкеты</a> <a href="#">Как это работает</a></nav>
-  <a class="header-button" href="#">Найти команду</a>
+  <nav><ul class="menu"><li><a href="#">Анкеты</a></li><li><a href="#">Как это работает</a></li></ul></nav>
+  <a class="button" href="#">Найти команду</a>
 </header>`}
   css={`body { margin: 0; background: #EEF2FF; }
 .header { padding: 16px 24px; background: #fff; }
 .logo { font-size: 24px; font-weight: 700; color: #4F46E5; text-decoration: none; }
 .menu a { margin-right: 16px; color: #1E1E1E; text-decoration: none; }
-.header-button { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #4F46E5; color: #fff; text-decoration: none; }`}
+.button { display: inline-block; padding: 10px 20px; border-radius: 999px; background: #4F46E5; color: #fff; text-decoration: none; }`}
   height={160}
 />
 
@@ -103,7 +105,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 1. Задайте шапке фон и внутренние отступы из макета.
 2. Оформите логотип: размер, начертание, цвет. Если логотип — картинка, задайте ей высоту.
 3. Уберите подчёркивание у пунктов меню, задайте цвет и размер шрифта.
-4. Оформите кнопку в шапке: фон, цвет текста, отступы, скругление.
+4. Оформите класс `.button`: фон, цвет текста, отступы, скругление. Это общий стиль для всех кнопок-ссылок — в шапке, на первом экране, в карточках. Оформите один раз, и все кнопки станут кнопками.
 
 Шапка может пока стоять «столбиком» — в строку её поставим на следующем занятии.
 
@@ -131,13 +133,13 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   text-decoration: none;
 }
 
+/* промежутки между пунктами зададим в 3.2 через gap */
 .menu a {
-  margin-right: 24px;
   color: var(--color-text);
   text-decoration: none;
 }
 
-.header-button {
+.button {
   display: inline-block;
   padding: 10px 20px;
   border-radius: 999px;

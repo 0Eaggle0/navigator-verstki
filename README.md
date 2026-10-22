@@ -133,7 +133,7 @@ src/data/blocks.json       список блоков (ready: false — «ско�
 src/components/            компоненты шага: песочница, подсказки, чек-лист…
 src/lib/                   прогресс (localStorage), автопроверки, подсчёт маршрута
 src/content.config.ts      какие поля бывают у шага
-public/starter/            стартовый шаблон для команд (index.html, style.css, img/)
+public/starter/            стартовый шаблон для команд (index.html, style.css, img/) и шаблон секции для работы вчетвером (section.html, section.css)
 public/img/                картинки для примеров и разминок: img/barsik.svg и др.
 templates/step.mdx         образец шага
 ```

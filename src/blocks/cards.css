@@ -1,6 +1,10 @@
 /* СЕТКА КАРТОЧЕК. Вставь в конец style.css */
-.cards-section {
-  padding: 48px 24px;          /* что менять: отступы секции */
+.pets {
+  padding: 48px 0;             /* что менять: отступы секции */
+}
+
+.pets .container {
+  padding: 0 24px;
 }
 
 .cards {
@@ -20,24 +24,24 @@
   background: #fff5ec;         /* что менять: фон карточки */
 }
 
-.card__img {
+.card img {
   width: 100%;
   aspect-ratio: 3 / 2;         /* все картинки одинаковой высоты */
   object-fit: cover;           /* картинка заполняет рамку без искажений */
   border-radius: 12px;
 }
 
-.card__title {
+.card h3 {
   margin: 0;
   font-size: 20px;
 }
 
-.card__text {
+.card p {
   margin: 0;
   color: #555555;
 }
 
-.card__button {
+.card .button {
   margin-top: auto;            /* кнопка прижата к низу карточки */
   align-self: flex-start;
   padding: 8px 16px;

@@ -1,11 +1,15 @@
 /* ПЕРВЫЙ ЭКРАН. Вставь в конец style.css */
 .hero {
+  padding: 48px 0;             /* что менять: отступы по макету */
+  background: #FFF8F0;         /* что менять: фон первого экрана */
+}
+
+.hero .container {
   display: flex;
   flex-wrap: wrap;             /* на узком экране картинка уходит под текст */
   align-items: center;
   gap: 32px;
-  padding: 48px 24px;          /* что менять: отступы по макету */
-  background: #FFF8F0;         /* что менять: фон первого экрана */
+  padding: 0 24px;
 }
 
 .hero__text,
@@ -26,7 +30,7 @@
   color: #555555;              /* что менять: цвет пояснения */
 }
 
-.hero__button {
+.hero .button {
   display: inline-block;
   padding: 14px 28px;
   border-radius: 999px;
@@ -37,8 +41,8 @@
   transition: 0.2s;
 }
 
-.hero__button:hover,
-.hero__button:focus-visible {
+.hero .button:hover,
+.hero .button:focus-visible {
   background: #E85A24;         /* что менять: цвет кнопки при наведении */
 }
 

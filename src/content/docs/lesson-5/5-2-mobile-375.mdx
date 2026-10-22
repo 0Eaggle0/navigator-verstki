@@ -13,15 +13,17 @@ links:
     url: https://doka.guide/css/media/
 warmup:
   width: 375
-  task: "На телефоне страница уехала вбок. В медиазапросе @media (max-width: 600px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно."
+  task: "На телефоне страница уехала вбок. В медиазапросе @media (max-width: 768px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно."
   html: |
     <header class="header">
       <a class="logo" href="#">ТИММЕЙТ</a>
-      <nav class="menu">
-        <a href="#">Анкеты</a>
-        <a href="#">Рейтинг</a>
-        <a href="#">Отзывы</a>
-        <a href="#">Войти</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Анкеты</a></li>
+          <li><a href="#">Рейтинг</a></li>
+          <li><a href="#">Отзывы</a></li>
+          <li><a href="#">Войти</a></li>
+        </ul>
       </nav>
     </header>
     <div class="cards">
@@ -44,6 +46,9 @@ warmup:
     .menu {
       display: flex;
       gap: 32px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
     }
 
     .cards {
@@ -62,7 +67,7 @@ warmup:
     /* медиазапрос для телефона */
   checks:
     - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
-      fail: "В CSS пока нет медиазапроса @media (max-width: 600px) { … }"
+      fail: "В CSS пока нет медиазапроса @media (max-width: 768px) { … }"
     - selector: ".header"
       style: { flex-direction: "column" }
       fail: "Шапка на телефоне должна быть столбиком: flex-direction: column;"
@@ -102,7 +107,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <p>Сузь окно — колонок станет меньше.</p>`}
   css={`.cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .cards div { padding: 16px; background: #DBEAFE; border-radius: 8px; }
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .cards { grid-template-columns: 1fr; }
 }`}
   height={170}
@@ -120,7 +125,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 2. Идите по списку поломок из шага 5.1 сверху вниз. Для каждой секции решите: что встаёт столбиком, сколько колонок у сеток, что уменьшить.
 3. Всё пишите в один медиазапрос в конце `style.css`.
 4. Прокрутите страницу вбок — если она двигается, найдите виновника (подсказка в «Частые ошибки»).
-5. Проверьте ещё ширину 768 px (планшет): там часто хорошо смотрятся две колонки.
+5. Проверьте ещё ширину 1024 px (планшет): там часто хорошо смотрятся две колонки.
 
 <BlockLinks />
 
@@ -134,7 +139,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 <Hint title="Решение">
 ```css
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   .header .container {
     flex-direction: column;
     gap: 12px;

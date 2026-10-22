@@ -16,16 +16,16 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 				<div class="sandbox__editors">
 					<label>
 						HTML
-						<textarea name="html" spellcheck="false" autocapitalize="off" rows="10" />
+						<textarea name="html" spellcheck="false" autocapitalize="off" wrap="off" rows="10" />
 					</label>
 					<label>
 						CSS
-						<textarea name="css" spellcheck="false" autocapitalize="off" rows="8" />
+						<textarea name="css" spellcheck="false" autocapitalize="off" wrap="off" rows="8" />
 					</label>
 					{hasJs && (
 						<label>
 							JavaScript
-							<textarea name="js" spellcheck="false" autocapitalize="off" rows="10" />
+							<textarea name="js" spellcheck="false" autocapitalize="off" wrap="off" rows="10" />
 						</label>
 					)}
 					<p class="sandbox__tip">Tab — отступ. Чтобы уйти из поля клавиатурой: Esc, потом Tab.</p>
@@ -70,7 +70,7 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 
 <script>
 	import { load, update } from '~/lib/storage';
-	import { runChecks, type Check } from '~/lib/checks';
+	import { runChecks, unclosedTag, type Check } from '~/lib/checks';
 	import { srcdoc } from '~/lib/srcdoc';
 
 	// Частые ошибки JavaScript — переводим на понятный язык
@@ -115,6 +115,9 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 			checker.addEventListener('load', () => {
 				if (!checks.length || !checker.contentDocument) return;
 				const results = runChecks(checker.contentDocument, checks);
+				// Незакрытый тег — первой строкой: из-за него остальные проверки врут
+				const open = unclosedTag(htmlBox.value);
+				if (open) results.unshift({ ok: false, message: `Похоже, не закрыт тег <${open}> — найди, где он должен закончиться, и поставь </${open}>` });
 				const failed = results.filter((r) => !r.ok);
 				// classList, а не className: иначе стирается класс, по которому Astro применяет стили
 				out.classList.toggle('is-wip', failed.length > 0);

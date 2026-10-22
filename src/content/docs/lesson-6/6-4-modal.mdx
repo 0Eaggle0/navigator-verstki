@@ -127,7 +127,7 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
 <BlockLinks />
 
 <Hint title="Подсказка 1">
-Если окно открывают несколько кнопок (в каждой карточке), найдите их все через `document.querySelectorAll('.open-modal')` и повесьте обработчик на каждую: `buttons.forEach((b) => b.addEventListener('click', () => modal.showModal()));`.
+Если окно открывают несколько кнопок (в каждой карточке), найдите их все через `document.querySelectorAll('.open-modal')` — он вернёт список. Потом повесьте обработчик на каждую кнопку списка. `forEach` читается как «для каждой кнопки `b` сделай…» (подробнее — в шаге 7.1): `buttons.forEach((b) => b.addEventListener('click', () => modal.showModal()));`.
 </Hint>
 
 <Hint title="Подсказка 2">

@@ -1,10 +1,10 @@
 // БУРГЕР-МЕНЮ. Вставь в script.js
-const burger = document.querySelector('.bheader__burger');
-const burgerMenu = document.querySelector('.bheader__menu');
+const burger = document.querySelector('.burger');
+const menu = document.querySelector('.menu');
 
 burger.addEventListener('click', function () {
   // toggle вернёт true, если меню открылось
-  const isOpen = burgerMenu.classList.toggle('open');
+  const isOpen = menu.classList.toggle('open');
   burger.setAttribute('aria-expanded', isOpen);
   burger.setAttribute('aria-label', isOpen ? 'Закрыть меню' : 'Открыть меню');
 });

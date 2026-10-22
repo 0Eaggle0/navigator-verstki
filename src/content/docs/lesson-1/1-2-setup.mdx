@@ -29,6 +29,8 @@ checklist:
   - Live Server запущен, страница открылась в браузере
   - После сохранения файла (Ctrl+S) браузер обновился сам
 mistakes:
+  - q: VS Code не устанавливается — просит пароль администратора
+    a: "На странице скачивания выбери вариант User Installer — он ставится без прав администратора. Если и он не ставится, работай в любом редакторе (даже в Блокноте), а страницу открывай двойным кликом по index.html и обновляй клавишей F5."
   - q: Нет кнопки Go Live
     a: Расширение Live Server не установлено или VS Code не перезапущен. Установи его на вкладке Extensions (Ctrl+Shift+X) и открой папку заново.
   - q: Стили не применяются
@@ -73,9 +75,9 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 Каждый участник делает это у себя на компьютере:
 
 1. Установите [VS Code](https://code.visualstudio.com/) и в нём расширение **Live Server** (вкладка Extensions, Ctrl+Shift+X).
-2. Скачайте стартовый шаблон — три файла:
-   <a href="../../starter/index.html" download>index.html</a>,
-   <a href="../../starter/style.css" download>style.css</a> и создайте рядом пустую папку `img`.
+2. Скачайте стартовый шаблон — два файла:
+   <a href="../../starter/index.html" download>index.html</a> и
+   <a href="../../starter/style.css" download>style.css</a>. Рядом создайте пустую папку `img`.
    Положите всё в одну папку, например `hvost-domoy`.
 3. В VS Code: «Файл → Открыть папку» и выберите эту папку.
 4. Откройте `index.html` и нажмите **Go Live** внизу справа. Страница откроется в браузере.

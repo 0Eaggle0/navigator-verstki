@@ -1,37 +1,45 @@
-/* ШАПКА С БУРГЕР-МЕНЮ. Вставь в конец style.css */
-.bheader {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-  gap: 12px 32px;
-  padding: 16px 24px;
+/* ШАПКА С БУРГЕР-МЕНЮ. Вставь в конец style.css.
+   Уже есть стили шапки (блок «Шапка с меню» или свои)? Бери только правила от .burger и ниже */
+.header {
+  padding: 16px 0;
   background: #ECFDF5;         /* что менять: фон шапки */
 }
 
-.bheader__logo {
+.header .container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 32px;
+  padding: 0 24px;
+}
+
+.logo {
   font-size: 22px;
   font-weight: 800;
   color: #047857;              /* что менять: цвет логотипа */
   text-decoration: none;
 }
 
-.bheader__menu {
+.menu {
   display: flex;
   gap: 24px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.bheader__menu a {
+.menu a {
   color: #1E1E1E;
   text-decoration: none;
 }
 
-.bheader__menu a:hover,
-.bheader__menu a:focus-visible {
+.menu a:hover,
+.menu a:focus-visible {
   color: #047857;
 }
 
-.bheader__burger {
+/* ===== Бургер ===== */
+.burger {
   display: none;               /* на компьютере бургер не нужен */
   padding: 4px 10px;
   font-size: 24px;
@@ -43,18 +51,27 @@
 
 /* Телефон: меню прячется под кнопку. что менять: 768px — ширина, где включается бургер */
 @media (max-width: 768px) {
-  .bheader__burger {
+  .header .container {
+    flex-direction: row;       /* логотип и ☰ в строку */
+    flex-wrap: wrap;           /* меню переносится ниже */
+  }
+
+  .burger {
     display: block;
   }
 
-  .bheader__menu {
+  .header nav {
+    order: 1;                  /* меню — последней строкой */
+    width: 100%;
+  }
+
+  .menu {
     display: none;
     flex-direction: column;
-    width: 100%;
     gap: 12px;
   }
 
-  .bheader__menu.open {        /* класс open ставит script.js */
+  .menu.open {                 /* класс open ставит script.js */
     display: flex;
   }
 }

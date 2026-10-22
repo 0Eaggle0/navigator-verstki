@@ -80,7 +80,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <Preview
   html={`<header class="header">
   <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
-  <nav class="menu">О нас · Питомцы · Помочь</nav>
+  <nav><ul class="menu"><li>О нас</li><li>Питомцы</li><li>Помочь</li></ul></nav>
 </header>
 <main>
   <section class="hero"><h1>Найди друга в приюте</h1></section>
@@ -123,8 +123,10 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 <body>
   <header class="header">
     <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
-    <nav class="menu">
-      <!-- пункты меню добавим в шаге 1.4 -->
+    <nav>
+      <ul class="menu">
+        <!-- пункты меню добавим в шаге 1.4 -->
+      </ul>
     </nav>
   </header>
 
@@ -137,8 +139,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
       <h2>Ищут дом</h2>
     </section>
 
-    <section class="steps">
-      <h2>Как забрать питомца</h2>
+    <section class="volunteer">
+      <h2>Стать волонтёром</h2>
     </section>
   </main>
 

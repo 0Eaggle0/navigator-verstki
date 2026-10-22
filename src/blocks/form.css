@@ -1,6 +1,10 @@
 /* ФОРМА. Вставь в конец style.css */
-.form-section {
-  padding: 48px 24px;          /* что менять: отступы секции */
+.volunteer {
+  padding: 48px 0;             /* что менять: отступы секции */
+}
+
+.volunteer .container {
+  padding: 0 24px;
 }
 
 .form {
@@ -36,6 +40,15 @@
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.error {
+  margin: 0;
+  color: #C62828;              /* что менять: цвет текста ошибки */
+}
+
+.error:empty {
+  display: none;               /* пустая ошибка не занимает места */
 }
 
 .form__button {

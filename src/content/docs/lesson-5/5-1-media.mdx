@@ -12,7 +12,7 @@ links:
     url: https://doka.guide/html/meta/
 warmup:
   width: 375
-  task: "Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 600px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column)."
+  task: "Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 768px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column)."
   html: |
     <h1>Куда сходить в Омске</h1>
     <div class="row">
@@ -41,7 +41,7 @@ warmup:
     /* медиазапрос для телефона */
   checks:
     - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
-      fail: "В CSS пока нет медиазапроса @media (max-width: 600px) { … }"
+      fail: "В CSS пока нет медиазапроса @media (max-width: 768px) { … }"
     - selector: "h1"
       style: { font-size: "24px" }
       fail: "На телефоне заголовок должен быть 24px — задай это внутри медиазапроса"
@@ -57,9 +57,9 @@ mistakes:
   - q: На телефоне сайт выглядит как уменьшенная копия
     a: "Нет строки <meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\"> в <head>. Без неё телефон притворяется широким экраном."
   - q: Медиазапрос не срабатывает
-    a: "Проверь скобки: после @media (max-width: 600px) идёт {, внутри — обычные правила со своими { }, и в конце закрывающая }. И медиазапрос должен стоять ниже обычных правил."
+    a: "Проверь скобки: после @media (max-width: 768px) идёт {, внутри — обычные правила со своими { }, и в конце закрывающая }. И медиазапрос должен стоять ниже обычных правил."
   - q: Какую ширину писать в max-width?
-    a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. Частые значения — 768px (планшет) и 600px (телефон).
+    a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. В этом курсе для телефона везде берём 768px — так медиазапросы из разных шагов совпадут.
 blocks: []
 ---
 import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/components';
@@ -69,12 +69,12 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 **Адаптив** — это когда один сайт хорошо выглядит и на компьютере, и на телефоне. Основной инструмент — **медиазапрос**: блок CSS, который работает только при нужной ширине экрана.
 
 ```css
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   h1 { font-size: 24px; }
 }
 ```
 
-Читается так: «если ширина экрана не больше 600 px, заголовку — 24 px». На широком экране правило внутри просто игнорируется. Медиазапросы ставят в самый конец `style.css`: так они перекрывают обычные правила выше.
+Читается так: «если ширина экрана не больше 768 px, заголовку — 24 px». На широком экране правило внутри просто игнорируется. Медиазапросы ставят в самый конец `style.css`: так они перекрывают обычные правила выше.
 
 Чтобы телефон не притворялся широким экраном, в `<head>` нужна строка `<meta name="viewport" content="width=device-width, initial-scale=1.0">`. В стартовом шаблоне она уже есть.
 
@@ -82,9 +82,9 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 <Preview
   html={`<h1>Куда сходить</h1>
-<p>Сузь окно браузера — на ширине меньше 600 px заголовок станет синим.</p>`}
+<p>Сузь окно браузера — на ширине меньше 768 px заголовок станет синим.</p>`}
   css={`h1 { font-size: 32px; }
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   h1 { color: #2563EB; }
 }`}
   height={140}
@@ -113,7 +113,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 <Hint title="Решение">
 ```css
-@media (max-width: 600px) {
+@media (max-width: 768px) {
   h1 {
     font-size: 24px;
   }

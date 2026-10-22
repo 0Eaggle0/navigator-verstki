@@ -5,7 +5,7 @@ minutes: 20
 goal: На телефоне прячем меню под кнопку ☰ и открываем по клику
 sidebar:
   order: 3
-fast: "возьми блок «Бургер-меню» — HTML, CSS и JS уже готовы. Поменяй пункты меню."
+fast: "возьми блок «Бургер-меню»: это та же шапка, что в блоке «Шапка с меню», только с кнопкой ☰. Классы те же, поэтому твои стили шапки продолжат работать. Добавь его CSS и JS."
 links:
   - title: "Дока: атрибут aria-expanded"
     url: https://doka.guide/a11y/aria-expanded/
@@ -18,10 +18,12 @@ warmup:
     <header class="header">
       <a class="logo" href="#">СКИНЕМСЯ</a>
       <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
-      <nav class="menu">
-        <a href="#">Мои сборы</a>
-        <a href="#">Как это работает</a>
-        <a href="#">Войти</a>
+      <nav>
+        <ul class="menu">
+          <li><a href="#">Мои сборы</a></li>
+          <li><a href="#">Как это работает</a></li>
+          <li><a href="#">Войти</a></li>
+        </ul>
       </nav>
     </header>
   css: |
@@ -43,12 +45,17 @@ warmup:
       cursor: pointer;
     }
 
+    nav {
+      width: 100%;              /* меню — отдельной строкой под логотипом */
+    }
+
     .menu {
       display: none;            /* на телефоне меню спрятано */
       flex-direction: column;
-      width: 100%;
       gap: 8px;
-      padding-top: 12px;
+      margin: 0;
+      padding: 12px 0 0;
+      list-style: none;
     }
 
     .menu.open {
@@ -101,9 +108,9 @@ burger.setAttribute('aria-expanded', isOpen);
 
 <Preview
   html={`<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
-<nav class="menu"><a href="#">Сборы</a><a href="#">Войти</a></nav>`}
+<nav><ul class="menu"><li><a href="#">Сборы</a></li><li><a href="#">Войти</a></li></ul></nav>`}
   css={`.burger { font-size: 24px; background: none; border: 0; cursor: pointer; }
-.menu { display: none; flex-direction: column; gap: 8px; }
+.menu { display: none; flex-direction: column; gap: 8px; padding: 0; list-style: none; }
 .menu.open { display: flex; }`}
   js={`const burger = document.querySelector('.burger');
 const menu = document.querySelector('.menu');
@@ -124,14 +131,14 @@ burger.addEventListener('click', function () {
 
 1. Добавьте в шапку кнопку `<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>`.
 2. В CSS спрячьте её на компьютере: `.burger { display: none; }`.
-3. В медиазапросе для телефона: покажите бургер, спрячьте меню, добавьте правило `.menu.open`.
+3. В медиазапросе для телефона (`max-width: 768px`): верните шапке строку с переносом, покажите бургер, поставьте `nav` отдельной строкой на всю ширину, спрячьте меню и добавьте правило `.menu.open`.
 4. В `script.js` переключайте класс `open` и `aria-expanded` по клику.
 5. Проверьте на 375 px и на 1280 px.
 
 <BlockLinks />
 
 <Hint title="Подсказка 1">
-Если в медиазапросе из занятия 5 меню стало столбиком, оставьте это: `.menu.open { display: flex; }` покажет его как раз столбиком.
+В занятии 5 шапка на телефоне стала столбиком. С бургером удобнее строка: логотип слева, ☰ справа, а меню — отдельной строкой ниже. Поэтому в медиазапросе снова пишем `.header .container { flex-direction: row; flex-wrap: wrap; }`. Правила бургера добавляйте в самый конец медиазапроса из занятия 5 — тогда они перебьют старые.
 </Hint>
 
 <Hint title="Подсказка 2">
@@ -155,14 +162,25 @@ burger.addEventListener('click', function () {
 }
 
 @media (max-width: 768px) {
+  /* логотип и ☰ в строку, меню переносится ниже */
+  .header .container {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
   .burger {
     display: block;
+  }
+
+  /* меню — отдельной строкой на всю ширину */
+  .header nav {
+    order: 1;
+    width: 100%;
   }
 
   .menu {
     display: none;
     flex-direction: column;
-    width: 100%;
   }
 
   .menu.open {

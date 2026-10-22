@@ -28,6 +28,16 @@ function pass(doc: Document, c: Check): boolean {
 	return true;
 }
 
+// Браузер сам «дозакрывает» теги, поэтому незакрытый тег ищем в исходном тексте:
+// открывающих <tag больше, чем закрывающих </tag>. Возвращает имя первого такого тега.
+const PAIRED = ['header', 'nav', 'main', 'section', 'footer', 'article', 'div', 'ul', 'ol', 'li', 'p', 'a', 'h1', 'h2', 'h3', 'button', 'form', 'label', 'dialog'];
+
+export function unclosedTag(html: string): string | null {
+	const code = html.replace(/<!--[\s\S]*?-->/g, '');
+	const count = (re: RegExp) => (code.match(re) || []).length;
+	return PAIRED.find((t) => count(new RegExp(`<${t}[\\s>]`, 'gi')) > count(new RegExp(`</${t}\\s*>`, 'gi'))) ?? null;
+}
+
 // Возвращает список проверок с результатом. Ошибка внутри правила = проверка не прошла.
 export function runChecks(doc: Document, checks: Check[]) {
 	return checks.map((c) => {

@@ -1,15 +1,20 @@
-<!-- ШАПКА С БУРГЕР-МЕНЮ. Вставь сразу после <body> вместо обычной шапки -->
-<header class="bheader">
-  <!-- что менять: название или логотип -->
-  <a class="bheader__logo" href="#">СКИНЕМСЯ</a>
+<!-- ШАПКА С БУРГЕР-МЕНЮ. Это та же шапка, что в блоке «Шапка с меню», плюс кнопка ☰.
+     Своя шапка уже есть? Добавь в неё только строку с кнопкой .burger — классы совпадают -->
+<header class="header">
+  <div class="container">
+    <!-- что менять: название или логотип -->
+    <a class="logo" href="#">СКИНЕМСЯ</a>
 
-  <!-- Кнопка видна только на телефоне. aria-label — подпись для программ экранного доступа -->
-  <button class="bheader__burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+    <!-- Кнопка видна только на телефоне. aria-label — подпись для программ экранного доступа -->
+    <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
 
-  <nav class="bheader__menu" aria-label="Главное меню">
-    <!-- что менять: пункты меню -->
-    <a href="#collections">Мои сборы</a>
-    <a href="#how">Как это работает</a>
-    <a href="#login">Войти</a>
-  </nav>
+    <nav aria-label="Главное меню">
+      <ul class="menu">
+        <!-- что менять: пункты меню -->
+        <li><a href="#collections">Мои сборы</a></li>
+        <li><a href="#how">Как это работает</a></li>
+        <li><a href="#login">Войти</a></li>
+      </ul>
+    </nav>
+  </div>
 </header>

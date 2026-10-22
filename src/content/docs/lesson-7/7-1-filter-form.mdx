@@ -5,7 +5,7 @@ minutes: 30
 goal: Делаем главную «живой» — фильтр карточек или проверку формы, смотря по кейсу
 sidebar:
   order: 1
-fast: "возьми блок «Фильтры» (для фильтра) или «Форма» (для формы) и допиши к нему JS из решения ниже."
+fast: "для фильтра возьми блок «Фильтры» целиком — HTML, CSS и JS — и поменяй тексты и data-type. Для формы возьми блок «Форма» и допиши к нему JS из решения ниже."
 links:
   - title: "learn.javascript.ru: data-атрибуты"
     url: https://learn.javascript.ru/dom-attributes-and-properties
@@ -72,7 +72,7 @@ mistakes:
   - q: Форма перезагружает страницу
     a: "В обработчике submit первой строкой пиши event.preventDefault(); — это отменяет отправку."
   - q: hidden не прячет карточку
-    a: "Если у .card в CSS есть display: flex или grid, он перебивает hidden. Добавь правило .card[hidden] { display: none; }."
+    a: "Если у .card в CSS есть display: flex или grid, он перебивает hidden. В стартовом style.css от этого есть правило [hidden] { display: none !important; } — проверь, что оно не удалено, или добавь его в начало файла."
 blocks: [filters, form]
 ---
 import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
@@ -175,18 +175,28 @@ buttons.forEach(function (button) {
 });
 ```
 
-Форма:
+Форма (подходит к блоку «Форма»: поля `name`, `phone`, `agree` и `<p class="error">`):
 
 ```js
 const form = document.querySelector('.form');
+const error = form.querySelector('.error');
 
 form.addEventListener('submit', function (event) {
   event.preventDefault();
-  const name = form.elements.name;
-  const error = form.querySelector('.error');
+  const name = form.elements.name.value.trim();
+  // оставляем в телефоне только цифры
+  const phone = form.elements.phone.value.replace(/\D/g, '');
 
-  if (name.value.trim() === '') {
+  if (name === '') {
     error.textContent = 'Напиши своё имя';
+    return;
+  }
+  if (phone.length < 10) {
+    error.textContent = 'В телефоне должно быть хотя бы 10 цифр';
+    return;
+  }
+  if (!form.elements.agree.checked) {
+    error.textContent = 'Поставь галочку согласия';
     return;
   }
   form.innerHTML = '<p>Спасибо, мы позвоним!</p>';

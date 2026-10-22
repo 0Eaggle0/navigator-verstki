@@ -23,7 +23,7 @@ warmup:
           <li><a href="#">Избранное</a></li>
         </ul>
       </nav>
-      <a class="header-button" href="#">Войти</a>
+      <a class="button" href="#">Войти</a>
     </header>
   css: |
     body { margin: 0; }
@@ -90,14 +90,14 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
   html={`<header class="header">
   <a class="logo" href="#">КУДА_СХОДИТЬ</a>
   <nav><ul class="menu"><li><a href="#">Афиша</a></li><li><a href="#">Бесплатно</a></li></ul></nav>
-  <a class="btn" href="#">Войти</a>
+  <a class="button" href="#">Войти</a>
 </header>`}
   css={`body { margin: 0; }
 .header { display: flex; justify-content: space-between; align-items: center; padding: 16px 24px; background: #111827; }
 .menu { display: flex; gap: 24px; margin: 0; padding: 0; list-style: none; }
 .header a { color: #fff; text-decoration: none; }
 .logo { font-weight: 700; }
-.btn { padding: 8px 16px; border: 1px solid #fff; border-radius: 8px; }`}
+.button { padding: 8px 16px; border: 1px solid #fff; border-radius: 8px; }`}
   height={110}
 />
 
@@ -109,15 +109,15 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 ## Делаем свой сайт
 
-1. Шапке своего сайта задайте `display: flex`, `justify-content: space-between`, `align-items: center`.
-2. Списку меню — `display: flex` и `gap` из макета, уберите точки и отступы.
-3. Если шапка внутри `.container`, flex ставится контейнеру внутри шапки, а не самой шапке — там лежат логотип и меню.
+1. Содержимое шапки лежит в `.container` (шаг 2.3). Поэтому flex ставим контейнеру внутри шапки: `.header .container`. Именно его дети — логотип, `nav` и кнопка.
+2. Задайте ему `display: flex`, `justify-content: space-between`, `align-items: center`.
+3. Списку меню `ul.menu` — `display: flex` и `gap` из макета, уберите точки и отступы.
 4. Сверьте с макетом расстояния между пунктами меню.
 
 <BlockLinks />
 
 <Hint title="Подсказка 1">
-Нарисуйте на листке, что лежит в чём: `header` → (`logo`, `nav` → `ul` → `li`, `button`). Flex нужен каждому, чьи дети должны стоять в ряд: это `header` и `ul`.
+Нарисуйте на листке, что лежит в чём: `header` → `.container` → (`logo`, `nav` → `ul` → `li`, `button`). Flex нужен каждому, чьи дети должны стоять в ряд: это `.container` в шапке и `ul`.
 </Hint>
 
 <Hint title="Подсказка 2">
@@ -126,7 +126,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck } from '~/co
 
 <Hint title="Решение">
 ```css
-.header {
+.header .container {
   display: flex;
   justify-content: space-between;
   align-items: center;
