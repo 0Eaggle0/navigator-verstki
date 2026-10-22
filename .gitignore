@@ -22,3 +22,9 @@ pnpm-debug.log*
 
 # скриншоты и логи проверок
 .playwright-mcp/
+
+# Служебные файлы для ИИ-помощника — только локально
+AGENTS.md
+CLAUDE.md
+SUMMARY.md
+.claude/
