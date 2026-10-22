@@ -24,6 +24,9 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       - uses: withastro/action@v6
+        with:
+          # Без кэша: старый кэш помнит удалённые страницы (moderator.mdx) и ломает сборку
+          cache: false
 
   deploy:
     needs: build
