@@ -1,39 +1,218 @@
 ---
-// Рекомендуемые блоки главной для выбранного кейса
+// Страница «Все блоки»: набор блоков главной для выбранного кейса, все блоки карточками с превью и стартовый шаблон
 import cases from '~/data/cases.json';
 import blocks from '~/data/blocks.json';
 import { url } from '~/lib/route';
+import { srcdoc } from '~/lib/srcdoc';
 type Id = keyof typeof blocks;
+
+const files = import.meta.glob<string>('/src/blocks/*', { query: '?raw', import: 'default', eager: true });
+const all = (Object.keys(blocks) as Id[])
+	.filter((id) => blocks[id].ready)
+	.map((id) => ({
+		id,
+		title: blocks[id].title,
+		js: `/src/blocks/${id}.js` in files,
+		doc: srcdoc(files[`/src/blocks/${id}.html`], files[`/src/blocks/${id}.css`]),
+	}));
 ---
 
-<div class="case-blocks not-content">
-	<p class="case-blocks__empty">Выбери кейс на <a href={url('/')}>главной</a> — здесь появится список блоков для твоей главной страницы.</p>
+<div class="gallery not-content">
+	<p class="gallery__empty">Выбери кейс на <a href={url('/')}>главной</a> — здесь появится набор блоков для твоей главной страницы.</p>
 	{
 		cases.map((c) => (
-			<section data-case={c.id} hidden>
-				<h2>Главная для кейса {c.title}</h2>
+			<section class="gallery__case" data-case={c.id} hidden>
+				<h2>Твоя главная · {c.title}</h2>
 				<ol>
 					{(c.blocks as Id[]).map((id) => (
-						<li>{blocks[id].ready ? <a href={url(`blocks/${id}/`)}>{blocks[id].title}</a> : <>{blocks[id].title} <em>(скоро)</em></>}</li>
+						<li>
+							<a href={url(`blocks/${id}/`)}>{blocks[id].title}</a>
+						</li>
 					))}
 				</ol>
 				<p>{c.note}</p>
 			</section>
 		))
 	}
+
+	<h2>Все блоки</h2>
+	<ul class="gallery__grid">
+		{
+			all.map((b) => (
+				<li>
+					<a href={url(`blocks/${b.id}/`)}>
+						<span class="gallery__thumb">
+							<iframe title="" tabindex="-1" aria-hidden="true" loading="lazy" sandbox="" srcdoc={b.doc} />
+						</span>
+						<span class="gallery__name">
+							{b.title}
+							{b.js && <span class="gallery__js">JS</span>}
+						</span>
+					</a>
+				</li>
+			))
+		}
+	</ul>
+
+	<section class="gallery__starter">
+		<div>
+			<h2>Стартовый шаблон</h2>
+			<p>Пустой проект со сбросом стилей и цветами-переменными. Рядом создай папку <code>img</code>.</p>
+		</div>
+		<p class="gallery__files">
+			<a class="a-btn a-btn--go" href={url('starter/index.html')} download>index.html</a>
+			<a class="a-btn a-btn--go" href={url('starter/style.css')} download>style.css</a>
+		</p>
+	</section>
 </div>
 
 <script>
 	import { load } from '~/lib/storage';
 	const chosen = load().case;
-	const sections = document.querySelectorAll<HTMLElement>('.case-blocks section');
+	const sections = document.querySelectorAll<HTMLElement>('.gallery__case');
 	sections.forEach((s) => (s.hidden = s.dataset.case !== chosen));
 	// Своя тема или кейс не выбран — показываем подсказку «выбери кейс»
-	if ([...sections].some((s) => !s.hidden)) document.querySelector<HTMLElement>('.case-blocks__empty')!.hidden = true;
+	if ([...sections].some((s) => !s.hidden)) document.querySelector<HTMLElement>('.gallery__empty')!.hidden = true;
 </script>
 
 <style>
-	.case-blocks h2 {
+	.gallery h2 {
+		margin: 0 0 0.9rem;
 		font-size: var(--sl-text-h3);
+	}
+	.gallery__empty,
+	.gallery__case {
+		margin-bottom: 2rem;
+	}
+	.gallery__case ol {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		margin: 0 0 0.75rem;
+		padding: 0;
+		list-style: none;
+		counter-reset: b;
+	}
+	.gallery__case li {
+		counter-increment: b;
+	}
+	.gallery__case li a {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		padding: 0.45rem 0.9rem 0.45rem 0.45rem;
+		font-weight: 600;
+		color: var(--a-text);
+		text-decoration: none;
+		background: var(--a-surface);
+		border-radius: 999px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 4px 0 var(--a-edge);
+	}
+	.gallery__case li a::before {
+		content: counter(b);
+		display: grid;
+		place-items: center;
+		width: 1.6rem;
+		height: 1.6rem;
+		font-size: var(--sl-text-sm);
+		color: var(--a-ink);
+		background: var(--a-coin);
+		border-radius: 50%;
+	}
+	.gallery__case li a:hover {
+		box-shadow:
+			inset 0 0 0 2px var(--a-sky),
+			0 4px 0 var(--a-edge);
+	}
+	.gallery__case p {
+		margin: 0;
+		color: var(--a-muted);
+	}
+	.gallery__grid {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+		gap: 1rem;
+		margin: 0 0 2.5rem;
+		padding: 0;
+		list-style: none;
+	}
+	.gallery__grid a {
+		display: flex;
+		flex-direction: column;
+		height: 100%;
+		overflow: hidden;
+		color: var(--a-text);
+		text-decoration: none;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 5px 0 var(--a-edge);
+		transition: transform 0.15s;
+	}
+	.gallery__grid a:hover {
+		transform: translateY(-3px);
+		box-shadow:
+			inset 0 0 0 2px var(--a-sky),
+			0 5px 0 var(--a-edge);
+	}
+	/* Превью: блок в 3 раза шире карточки, уменьшенный до её ширины — видна компьютерная версия */
+	.gallery__thumb {
+		position: relative;
+		height: 9rem;
+		margin: 2px 2px 0;
+		overflow: hidden;
+		background: #fff;
+		border-radius: 18px 18px 0 0;
+	}
+	.gallery__thumb iframe {
+		width: 300%;
+		height: 300%;
+		border: 0;
+		transform: scale(calc(1 / 3));
+		transform-origin: 0 0;
+		pointer-events: none;
+	}
+	.gallery__name {
+		display: flex;
+		gap: 0.5rem;
+		align-items: center;
+		justify-content: space-between;
+		padding: 0.8rem 1rem 0.9rem;
+		font-weight: 600;
+	}
+	.gallery__js {
+		padding: 0.05rem 0.5rem;
+		font-size: var(--sl-text-xs);
+		color: var(--a-ink);
+		background: var(--a-coin);
+		border-radius: 999px;
+	}
+	.gallery__starter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		align-items: center;
+		justify-content: space-between;
+		padding: 1.25rem 1.5rem;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
+	}
+	.gallery__starter h2 {
+		margin-bottom: 0.3rem;
+	}
+	.gallery__starter p {
+		margin: 0;
+		color: var(--a-muted);
+	}
+	.gallery__files {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
 	}
 </style>

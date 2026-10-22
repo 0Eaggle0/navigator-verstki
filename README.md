@@ -137,7 +137,7 @@ src/content/docs/          страницы сайта
   lesson-1/ … lesson-7/    шаги занятий (один файл = один шаг)
   blocks/                  страницы готовых блоков
   tasks/                   задачник: index.mdx + дополнительные задачи (html-menu.mdx …)
-  moderator/               раздел модератора: index.mdx (план занятий), sites.mdx (готовые сайты команд)
+  moderator/               раздел модератора: index.mdx (советы, критерии приёмки, чек-лист сдачи), sites.mdx (готовые сайты команд)
   index.mdx, route.mdx, cheatsheets.mdx
 src/blocks/                код блоков (.html + .css, у burger, modal, filters ещё .js)
 src/data/route.json        список занятий: номер, название, результат, минут на занятие

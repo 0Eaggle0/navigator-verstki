@@ -25,7 +25,7 @@ const columns = [
 	{
 		title: 'Модератору',
 		links: [
-			{ label: 'План занятий', href: url('moderator/') },
+			{ label: 'Для модератора', href: url('moderator/') },
 			{ label: 'Готовые сайты команд', href: url('moderator/sites/') },
 			{ label: 'Чек-лист сдачи', href: url('lesson-7/7-4-checklist/') },
 		],
@@ -70,6 +70,7 @@ const columns = [
 		flex-direction: column;
 		gap: 3rem;
 		margin-top: 3rem;
+		container-type: inline-size; /* колонки подвала — по ширине контента, а не окна */
 	}
 	.a-footer {
 		display: grid;
@@ -141,7 +142,7 @@ const columns = [
 		color: var(--a-muted);
 		border-top: 2px solid var(--a-line);
 	}
-	@media (max-width: 50rem) {
+	@container (max-width: 44rem) {
 		.a-footer {
 			grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
 		}

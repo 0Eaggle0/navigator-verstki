@@ -12,7 +12,6 @@ export { default as RouteTable } from './RouteTable.astro';
 export { default as TaskList } from './TaskList.astro';
 export { default as CaseBlocks } from './CaseBlocks.astro';
 export { default as Block } from './Block.astro';
-export { default as ModeratorPlan } from './ModeratorPlan.astro';
 export { default as ForCase } from './ForCase.astro';
 export { default as Badges } from './Badges.astro';
 export { default as Icon } from './Icon.astro';

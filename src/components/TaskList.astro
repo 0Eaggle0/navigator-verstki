@@ -1,6 +1,6 @@
 ---
-// Задачник: все задачи с песочницей, сгруппированные по темам.
-// Разминки из шагов маршрута + дополнительные задачи из папки tasks/.
+// Задачник: все игры и задачи плитками, по темам. Фильтр по типу, отметка «решено» из прогресса.
+// Игры и разминки — из шагов маршрута, дополнительные задачи — из папки tasks/.
 import { getCollection } from 'astro:content';
 import route from '~/data/route.json';
 import { getRoute, url } from '~/lib/route';
@@ -9,70 +9,218 @@ const { steps } = await getRoute();
 const extra = await getCollection('docs', (e) => e.id.startsWith('tasks/') && e.data.warmup);
 const lessonTopic = Object.fromEntries(route.lessons.map((l) => [l.n, l.topic]));
 
-const GAME = { ghost: 'расставь фигурки кодом', tags: 'найди теги на странице', quiz: 'квиз и поиск багов' };
+type Kind = 'game' | 'warmup' | 'task';
+const KINDS: Record<Kind, string> = { game: 'Игры', warmup: 'Разминки', task: 'Задачи' };
+const LABEL: Record<Kind, string> = { game: 'игра', warmup: 'разминка', task: 'задача' };
 const items = [
-	// Мини-игры шагов — «аркада»: быстрые уровни перед разминкой
 	...steps
 		.filter((s) => s.data.game)
 		.map((s) => ({
+			kind: 'game' as Kind,
+			id: s.id,
 			topic: s.data.topic ?? lessonTopic[s.data.lesson!],
 			href: url(s.id + '/#игра'),
 			title: s.data.game!.title,
-			label: `игра ${s.data.lesson}.${s.data.sidebar.order} · ${s.data.game!.levels.length} ур.`,
-			task: `${GAME[s.data.game!.type]} — к шагу «${s.data.title}»`,
+			num: `${s.data.lesson}.${s.data.sidebar.order}`,
 		})),
 	...steps
 		.filter((s) => s.data.warmup)
 		.map((s) => ({
+			kind: 'warmup' as Kind,
+			id: s.id,
 			topic: s.data.topic ?? lessonTopic[s.data.lesson!],
 			href: url(s.id + '/#разминка'),
 			title: s.data.title,
-			label: `разминка ${s.data.lesson}.${s.data.sidebar.order}`,
-			task: s.data.warmup!.task,
+			num: `${s.data.lesson}.${s.data.sidebar.order}`,
 		})),
 	...extra
 		.sort((a, b) => (a.data.sidebar.order ?? 0) - (b.data.sidebar.order ?? 0))
-		.map((t) => ({ topic: t.data.topic, href: url(t.id + '/'), title: t.data.title, label: 'доп. задача', task: t.data.warmup!.task })),
+		.map((t) => ({ kind: 'task' as Kind, id: t.id, topic: t.data.topic, href: url(t.id + '/'), title: t.data.title, num: '' })),
 ];
-const topics = Object.entries(route.topics).map(([id, name]) => ({ id, name, items: items.filter((i) => i.topic === id) }));
+// Тема получает цвет мира по порядку: HTML — мир 1, CSS — мир 2 …
+const topics = Object.entries(route.topics).map(([id, name], i) => ({ id, name, w: `w-${i + 1}`, items: items.filter((it) => it.topic === id) }));
 ---
 
-<div class="tasks not-content">
+<nav-tasks class="tasks not-content">
+	<div class="tasks__filter" role="group" aria-label="Какие задачи показать">
+		<button type="button" data-kind="" aria-pressed="true">Все <span>{items.length}</span></button>
+		{
+			(Object.keys(KINDS) as Kind[]).map((k) => (
+				<button type="button" data-kind={k} aria-pressed="false">
+					{KINDS[k]} <span>{items.filter((i) => i.kind === k).length}</span>
+				</button>
+			))
+		}
+	</div>
 	{
 		topics.map((t) => (
-			<section>
-				<h2 id={'topic-' + t.id}>{t.name}</h2>
-				<ol>
+			<section class:list={['tasks__topic', t.w]}>
+				<h2 id={'topic-' + t.id}>
+					{t.name} <span class="tasks__count" />
+				</h2>
+				<ul>
 					{t.items.map((i) => (
-						<li>
-							<a href={i.href}>{i.title}</a> <span class="tasks__label">{i.label}</span>
-							<p>{i.task}</p>
+						<li data-kind={i.kind} data-id={i.id}>
+							<a href={i.href}>
+								<span class:list={['tasks__kind', 'tasks__kind--' + i.kind]}>
+									{LABEL[i.kind]} {i.num}
+								</span>
+								<span class="tasks__title">{i.title}</span>
+								<span class="tasks__done" aria-label="решено" hidden>✓</span>
+							</a>
 						</li>
 					))}
-				</ol>
+				</ul>
 			</section>
 		))
 	}
-</div>
+</nav-tasks>
+
+<script>
+	import { load } from '~/lib/storage';
+
+	class Tasks extends HTMLElement {
+		connectedCallback() {
+			// Отметка «решено»: игра — games[], разминка и задача — solved[]
+			const p = load();
+			this.querySelectorAll<HTMLElement>('li').forEach((li) => {
+				const done = (li.dataset.kind === 'game' ? p.games : p.solved).includes(li.dataset.id!);
+				li.classList.toggle('is-done', done);
+				li.querySelector<HTMLElement>('.tasks__done')!.hidden = !done;
+			});
+			const buttons = [...this.querySelectorAll<HTMLButtonElement>('.tasks__filter button')];
+			const show = (kind: string) => {
+				buttons.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.kind === kind)));
+				this.querySelectorAll<HTMLElement>('.tasks__topic').forEach((s) => {
+					const lis = [...s.querySelectorAll<HTMLElement>('li')];
+					lis.forEach((li) => (li.hidden = !!kind && li.dataset.kind !== kind));
+					const shown = lis.filter((li) => !li.hidden);
+					s.hidden = !shown.length;
+					s.querySelector('.tasks__count')!.textContent = `${shown.filter((li) => li.classList.contains('is-done')).length} / ${shown.length}`;
+				});
+			};
+			buttons.forEach((b) => b.addEventListener('click', () => show(b.dataset.kind!)));
+			show('');
+		}
+	}
+	customElements.define('nav-tasks', Tasks);
+</script>
 
 <style>
-	.tasks h2 {
-		margin: 2rem 0 0.5rem;
+	.tasks__filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin-bottom: 1.5rem;
+	}
+	.tasks__filter span {
+		opacity: 0.7;
+	}
+	.tasks .tasks__filter button[aria-pressed='true'] {
+		color: var(--a-ink);
+		background: var(--a-coin);
+		box-shadow: 0 5px 0 var(--a-coin-edge);
+	}
+	.tasks__topic {
+		margin-bottom: 2rem;
+	}
+	.tasks__topic h2 {
+		display: flex;
+		gap: 0.75rem;
+		align-items: center;
+		margin: 0 0 0.9rem;
 		font-size: var(--sl-text-h3);
 	}
-	.tasks ol {
-		padding-left: 1.5rem;
+	.tasks__topic h2::before {
+		content: '';
+		width: 0.9rem;
+		height: 0.9rem;
+		border-radius: 50%;
+		background: var(--w);
+		box-shadow: 0 3px 0 var(--w-edge);
 	}
-	.tasks li {
-		margin-bottom: 1rem;
+	.tasks__count {
+		font-size: var(--sl-text-sm);
+		font-weight: 500;
+		color: var(--a-muted);
 	}
-	.tasks__label {
-		padding: 0 0.4rem;
+	.tasks ul {
+		display: grid;
+		grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+		gap: 0.9rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.tasks li[hidden] {
+		display: none;
+	}
+	.tasks li a {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		height: 100%;
+		padding: 0.9rem 1rem 1rem;
+		color: var(--a-text);
+		text-decoration: none;
+		background: var(--a-surface);
+		border-radius: 16px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			inset 0 4px 0 var(--w),
+			0 5px 0 var(--a-edge);
+		transition: transform 0.15s;
+	}
+	.tasks li a:hover {
+		transform: translateY(-3px);
+		box-shadow:
+			inset 0 0 0 2px var(--w),
+			inset 0 4px 0 var(--w),
+			0 5px 0 var(--a-edge);
+	}
+	.tasks li.is-done a {
+		box-shadow:
+			inset 0 0 0 2px var(--a-go),
+			inset 0 4px 0 var(--w),
+			0 5px 0 var(--a-edge);
+	}
+	.tasks__kind {
+		align-self: flex-start;
+		padding: 0.1rem 0.55rem;
 		font-size: var(--sl-text-xs);
-				background: var(--sl-color-gray-6);
+		font-weight: 600;
+		color: var(--a-ink);
+		border-radius: 999px;
 	}
-	.tasks p {
-		margin: 0.25rem 0 0;
-		color: var(--sl-color-gray-2);
+	.tasks__kind--game {
+		background: var(--a-pink);
+	}
+	.tasks__kind--warmup {
+		background: var(--a-sky);
+	}
+	.tasks__kind--task {
+		background: var(--a-coin);
+	}
+	.tasks__title {
+		font-weight: 600;
+		line-height: 1.3;
+	}
+	.tasks__done {
+		position: absolute;
+		top: 0.7rem;
+		right: 0.8rem;
+		display: grid;
+		place-items: center;
+		width: 1.5rem;
+		height: 1.5rem;
+		font-size: 0.85rem;
+		font-weight: 800;
+		color: var(--a-ink);
+		background: var(--a-go);
+		border-radius: 50%;
+	}
+	.tasks__done[hidden] {
+		display: none;
 	}
 </style>
