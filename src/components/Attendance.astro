@@ -1,0 +1,548 @@
+---
+// Журнал команды для модератора: участники и отметки «был / не был» по датам занятий.
+// Занятия — по пятницам, 10 штук, последнее 20 ноября. Хранится только в этом браузере (localStorage).
+const LAST = Date.UTC(2026, 10, 20); // 20 ноября 2026
+const COUNT = 10;
+const MONTHS = ['янв', 'фев', 'мар', 'апр', 'мая', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
+const dates = Array.from({ length: COUNT }, (_, i) => {
+	const d = new Date(LAST - (COUNT - 1 - i) * 7 * 864e5);
+	return { iso: d.toISOString().slice(0, 10), day: d.getUTCDate(), month: MONTHS[d.getUTCMonth()] };
+});
+---
+
+<nav-attendance class="att not-content" data-dates={JSON.stringify(dates)}>
+	<div class="att__top">
+		<p class="att__today" aria-live="polite"></p>
+		<form class="att__add">
+			<label class="att__sr" for="att-name">Имя участника</label>
+			<input id="att-name" name="name" maxlength="40" autocomplete="off" placeholder="Имя участника" required />
+			<button type="submit" class="a-btn--go">Добавить</button>
+		</form>
+	</div>
+
+	<div class="att__scroll">
+		<table>
+			<thead>
+				<tr>
+					<th scope="col" class="att__name">Участник</th>
+					{
+						dates.map((d, i) => (
+							<th scope="col" class="att__date" data-date={d.iso}>
+								<span class="att__n">{i + 1}</span>
+								<b>{d.day}</b>
+								<span>{d.month}</span>
+							</th>
+						))
+					}
+					<th scope="col" class="att__total">Был</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<p class="att__empty">Добавь участников команды — и отмечай, кто был на занятии.</p>
+	</div>
+	<p class="att__legend">
+		<span class="att__dot att__dot--y"></span> был <span class="att__dot att__dot--n"></span> не был · нажатие меняет отметку
+	</p>
+</nav-attendance>
+
+<script>
+	import { burst } from '~/lib/fx';
+
+	type Mark = 'y' | 'n';
+	type Data = { members: { id: string; name: string }[]; marks: Record<string, Record<string, Mark>> };
+	const KEY = 'nav-attendance';
+	const LABEL = { '': 'нет отметки', y: 'был', n: 'не был' };
+	const NEXT: Record<string, Mark | ''> = { '': 'y', y: 'n', n: '' };
+	const COLORS = ['var(--a-go)', 'var(--a-sky)', 'var(--a-pink)', 'var(--a-coin)'];
+
+	const read = (): Data => {
+		try {
+			const d = JSON.parse(localStorage.getItem(KEY) || 'null');
+			if (d?.members) return d;
+		} catch {
+			// нет хранилища — журнал работает до перезагрузки
+		}
+		return { members: [], marks: {} };
+	};
+	const write = (d: Data) => {
+		try {
+			localStorage.setItem(KEY, JSON.stringify(d));
+		} catch {
+			// без хранилища отметки не сохранятся
+		}
+	};
+	const localIso = (d = new Date()) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+	const color = (name: string) => COLORS[[...name].reduce((s, c) => s + c.charCodeAt(0), 0) % COLORS.length];
+
+	class Attendance extends HTMLElement {
+		data = read();
+		dates: { iso: string; day: number; month: string }[] = [];
+		today = localIso();
+		body!: HTMLTableSectionElement;
+
+		connectedCallback() {
+			this.dates = JSON.parse(this.dataset.dates!);
+			this.body = this.querySelector('tbody')!;
+			// Сегодняшнее занятие подсвечено, будущие — бледнее
+			this.querySelectorAll<HTMLElement>('th[data-date]').forEach((th) => {
+				th.classList.toggle('is-today', th.dataset.date === this.today);
+				th.classList.toggle('is-future', th.dataset.date! > this.today);
+			});
+			this.data.members.forEach((m) => this.body.append(this.row(m.id, m.name)));
+			this.querySelector('form')!.addEventListener('submit', (e) => {
+				e.preventDefault();
+				const input = this.querySelector('input')!;
+				const name = input.value.trim();
+				if (!name) return;
+				const id = Date.now().toString(36);
+				this.data.members.push({ id, name });
+				write(this.data);
+				const tr = this.row(id, name);
+				tr.classList.add('is-new');
+				this.body.append(tr);
+				input.value = '';
+				input.focus();
+				this.update();
+			});
+			this.update();
+			// Сегодняшнее (или ближайшее) занятие — в поле зрения, если таблица не влезает
+			const scroll = this.querySelector<HTMLElement>('.att__scroll')!;
+			const target = this.querySelector<HTMLElement>('th.is-today') ?? this.querySelector<HTMLElement>('th.is-future');
+			const name = this.querySelector<HTMLElement>('thead .att__name')!;
+			if (target && scroll.scrollWidth > scroll.clientWidth) scroll.scrollLeft = target.offsetLeft - name.offsetWidth - 8;
+		}
+
+		row(id: string, name: string) {
+			const tr = document.createElement('tr');
+			tr.dataset.id = id;
+			const th = document.createElement('th');
+			th.scope = 'row';
+			th.className = 'att__name';
+			th.innerHTML = '<span class="att__avatar"></span><span class="att__who"></span><button type="button" class="att__del"></button>';
+			const avatar = th.querySelector<HTMLElement>('.att__avatar')!;
+			avatar.textContent = [...name][0].toUpperCase();
+			avatar.style.setProperty('--c', color(name));
+			th.querySelector('.att__who')!.textContent = name;
+			const del = th.querySelector<HTMLButtonElement>('.att__del')!;
+			del.textContent = '×';
+			del.setAttribute('aria-label', `Убрать ${name} из команды`);
+			// Удаление в два нажатия: первое спрашивает, второе удаляет
+			let timer = 0;
+			del.addEventListener('click', () => {
+				if (!del.classList.contains('is-ask')) {
+					del.classList.add('is-ask');
+					del.textContent = 'Убрать?';
+					timer = window.setTimeout(() => {
+						del.classList.remove('is-ask');
+						del.textContent = '×';
+					}, 3000);
+					return;
+				}
+				clearTimeout(timer);
+				this.data.members = this.data.members.filter((m) => m.id !== id);
+				delete this.data.marks[id];
+				write(this.data);
+				tr.classList.add('is-leaving');
+				const gone = () => {
+					tr.remove();
+					this.update();
+				};
+				tr.addEventListener('animationend', gone, { once: true });
+				if (matchMedia('(prefers-reduced-motion: reduce)').matches) gone();
+			});
+			tr.append(th);
+
+			for (const d of this.dates) {
+				const td = document.createElement('td');
+				const b = document.createElement('button');
+				b.type = 'button';
+				b.className = 'att__mark';
+				b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path class="y" d="M5 12.5l4.5 4.5L19 7.5"/><path class="n" d="M7 7l10 10M17 7L7 17"/></svg>';
+				const set = (s: Mark | '') => {
+					b.dataset.state = s;
+					b.setAttribute('aria-label', `${name}, ${d.day} ${d.month}: ${LABEL[s]}`);
+				};
+				set(this.data.marks[id]?.[d.iso] ?? '');
+				if (d.iso === this.today) td.classList.add('is-today');
+				if (d.iso > this.today) td.classList.add('is-future');
+				b.addEventListener('click', () => {
+					const s = NEXT[b.dataset.state ?? ''];
+					const marks = (this.data.marks[id] ??= {});
+					if (s) marks[d.iso] = s;
+					else delete marks[d.iso];
+					write(this.data);
+					set(s);
+					b.classList.remove('is-pop');
+					void b.offsetWidth; // перезапуск анимации
+					b.classList.add('is-pop');
+					this.update(d.iso);
+				});
+				td.append(b);
+				tr.append(td);
+			}
+
+			const total = document.createElement('td');
+			total.className = 'att__total';
+			total.innerHTML = '<b></b><span class="att__bar"><i></i></span>';
+			tr.append(total);
+			return tr;
+		}
+
+		// Счётчики у участников и строка «сегодня»; changed — дата, где только что поставили отметку
+		update(changed?: string) {
+			const { members, marks } = this.data;
+			this.querySelector<HTMLElement>('.att__empty')!.hidden = members.length > 0;
+			this.querySelector('table')!.classList.toggle('is-empty', !members.length);
+			this.body.querySelectorAll('tr').forEach((tr) => {
+				const was = Object.values(marks[tr.dataset.id!] ?? {}).filter((m) => m === 'y').length;
+				tr.querySelector('.att__total b')!.textContent = `${was}/${this.dates.length}`;
+				tr.querySelector<HTMLElement>('.att__bar i')!.style.width = `${(was / this.dates.length) * 100}%`;
+			});
+
+			const here = members.filter((m) => marks[m.id]?.[this.today] === 'y').length;
+			const next = this.dates.find((d) => d.iso >= this.today);
+			const info = this.querySelector('.att__today')!;
+			if (next?.iso === this.today) info.innerHTML = members.length ? `Сегодня занятие · на месте <b>${here} из ${members.length}</b>` : '<b>Сегодня занятие</b>';
+			else if (next) info.innerHTML = `Следующее занятие — <b>${next.day} ${next.month}</b>`;
+			else info.textContent = 'Все занятия прошли';
+
+			// Вся команда на месте — праздник
+			if (changed === this.today && members.length > 1 && here === members.length) burst(this.querySelector('th.is-today')!);
+		}
+	}
+	customElements.define('nav-attendance', Attendance);
+</script>
+
+<style is:global>
+	/* Глобально: строки таблицы создаёт скрипт, у них нет класса области видимости Astro. Все правила начинаются с .att */
+	.att {
+		display: block;
+		padding: 1.25rem;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
+	}
+	.att__sr {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		overflow: hidden;
+		clip-path: inset(50%);
+		white-space: nowrap;
+	}
+
+	/* Верх: сегодня + добавить участника */
+	.att__top {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem 1rem;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+	.att__today {
+		margin: 0;
+		padding: 0.45rem 0.9rem;
+		font-size: var(--sl-text-sm);
+		color: var(--a-text);
+		background: var(--a-surface-2);
+		border-radius: 999px;
+	}
+	.att__today b {
+		font-family: var(--a-font);
+		color: var(--a-coin);
+	}
+	.att__add {
+		display: flex;
+		gap: 0.5rem;
+		flex: 1 1 16rem;
+		min-width: 0;
+		max-width: 24rem;
+	}
+	.att__add input {
+		flex: 1;
+		width: 100%;
+		min-width: 0;
+		padding: 0.6rem 0.9rem;
+		font: inherit;
+		color: var(--a-text);
+		background: var(--a-bg);
+		border: 0;
+		border-radius: 14px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+		transition: box-shadow 0.2s;
+	}
+	.att__add input:focus {
+		outline: none;
+		box-shadow: inset 0 0 0 2px var(--a-sky);
+	}
+
+	/* Таблица: имена закреплены слева, даты прокручиваются */
+	.att__scroll {
+		overflow-x: auto;
+		padding-block: 0.25rem;
+		scrollbar-width: thin;
+	}
+	.att table {
+		width: 100%;
+		margin: 0;
+		border-collapse: separate;
+		border-spacing: 0;
+	}
+	.att th,
+	.att td {
+		padding: 0.3rem 0.2rem;
+		text-align: center;
+		vertical-align: middle;
+		background: none;
+		border: 0;
+	}
+	.att table.is-empty .att__total {
+		visibility: hidden;
+	}
+	.att__name {
+		position: sticky;
+		left: 0;
+		z-index: 1;
+		min-width: 8.5rem;
+		text-align: left !important;
+		background: var(--a-surface) !important;
+	}
+	thead .att__name,
+	thead .att__total {
+		font: 700 0.75rem/1 var(--a-font);
+		color: var(--a-muted);
+		vertical-align: bottom;
+	}
+	.att__date {
+		min-width: 2.6rem;
+		font-size: 0.7rem;
+		line-height: 1.15;
+		color: var(--a-muted);
+	}
+	.att__date b {
+		display: block;
+		font: 800 1rem/1.1 var(--a-font);
+		color: var(--a-text);
+	}
+	.att__n {
+		display: block;
+		margin-bottom: 0.2rem;
+		font: 700 0.6rem/1 var(--a-font);
+		opacity: 0.7;
+	}
+	.att__date.is-today {
+		color: var(--a-ink);
+		background: var(--a-coin);
+		border-radius: 14px 14px 0 0;
+	}
+	.att__date.is-today b {
+		color: var(--a-ink);
+	}
+	.att td.is-today {
+		background: color-mix(in srgb, var(--a-coin) 16%, transparent);
+	}
+	.att tbody tr:last-child td.is-today {
+		border-radius: 0 0 14px 14px;
+	}
+	.att .is-future {
+		opacity: 0.55;
+	}
+
+	/* Участник */
+	.att__name .att__avatar {
+		display: inline-grid;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		margin-right: 0.55rem;
+		font: 800 0.85rem/1 var(--a-font);
+		color: var(--a-ink);
+		vertical-align: middle;
+		background: var(--c);
+		border-radius: 50%;
+		box-shadow: 0 3px 0 color-mix(in srgb, var(--c) 60%, #000);
+	}
+	.att__name .att__who {
+		font-weight: 600;
+		color: var(--a-text);
+		vertical-align: middle;
+	}
+	.att__name .att__del {
+		margin: 0 0 0 0.4rem;
+		padding: 0.1rem 0.45rem;
+		font: 700 0.8rem/1.2 var(--a-font);
+		color: var(--a-muted);
+		vertical-align: middle;
+		background: none;
+		border: 0;
+		border-radius: 999px;
+		box-shadow: none !important;
+		transform: none !important;
+		opacity: 0;
+		transition:
+			opacity 0.2s,
+			background 0.2s,
+			color 0.2s;
+	}
+	.att tr:hover .att__del,
+	.att .att__del:focus-visible,
+	.att .att__del.is-ask {
+		opacity: 1;
+	}
+	.att .att__del:hover,
+	.att .att__del.is-ask {
+		color: var(--a-ink);
+		background: var(--a-brick);
+	}
+	@media (hover: none) {
+		.att .att__del {
+			opacity: 0.6;
+		}
+	}
+
+	/* Отметка: пусто → был → не был */
+	.att .att__mark {
+		display: grid;
+		place-items: center;
+		width: 2.2rem;
+		height: 2.2rem;
+		margin: 0 auto;
+		padding: 0;
+		background: transparent;
+		border: 0;
+		border-radius: 50%;
+		box-shadow: inset 0 0 0 2px var(--a-line) !important;
+		cursor: pointer;
+		transition:
+			background 0.25s,
+			box-shadow 0.25s,
+			transform 0.15s;
+	}
+	.att .att__mark:hover {
+		transform: scale(1.08);
+		box-shadow: inset 0 0 0 2px var(--a-sky) !important;
+	}
+	.att .att__mark:active {
+		transform: scale(0.92);
+	}
+	.att .att__mark svg {
+		width: 1.15rem;
+		height: 1.15rem;
+		fill: none;
+		stroke: var(--a-ink);
+		stroke-width: 3.2;
+		stroke-linecap: round;
+		stroke-linejoin: round;
+	}
+	.att .att__mark path {
+		stroke-dasharray: 30;
+		stroke-dashoffset: 30;
+		transition: stroke-dashoffset 0.35s 0.05s ease-out;
+	}
+	.att .att__mark[data-state='y'] {
+		background: var(--a-go);
+		box-shadow: 0 3px 0 var(--a-go-edge) !important;
+	}
+	.att .att__mark[data-state='n'] {
+		background: var(--a-brick);
+		box-shadow: 0 3px 0 var(--a-brick-edge) !important;
+	}
+	.att .att__mark[data-state='y'] .y,
+	.att .att__mark[data-state='n'] .n {
+		stroke-dashoffset: 0;
+	}
+	.att .att__mark.is-pop {
+		animation: att-pop 0.35s cubic-bezier(0.3, 1.6, 0.5, 1);
+	}
+	@keyframes att-pop {
+		0% {
+			transform: scale(0.7);
+		}
+		100% {
+			transform: scale(1);
+		}
+	}
+
+	/* Итого: число и полоска */
+	.att__total {
+		min-width: 4rem;
+	}
+	.att .att__total b {
+		display: block;
+		font: 800 0.85rem/1.2 var(--a-font);
+		color: var(--a-text);
+	}
+	.att .att__bar {
+		display: block;
+		height: 0.35rem;
+		margin-top: 0.3rem;
+		overflow: hidden;
+		background: var(--a-surface-2);
+		border-radius: 999px;
+	}
+	.att .att__bar i {
+		display: block;
+		height: 100%;
+		background: var(--a-go);
+		border-radius: 999px;
+		transition: width 0.5s cubic-bezier(0.3, 1.3, 0.5, 1);
+	}
+
+	/* Появление и удаление строки */
+	.att tr.is-new {
+		animation: att-in 0.45s cubic-bezier(0.3, 1.3, 0.5, 1);
+	}
+	.att tr.is-leaving {
+		animation: att-out 0.3s ease-in forwards;
+	}
+	@keyframes att-in {
+		from {
+			opacity: 0;
+			transform: translateY(-0.6rem);
+		}
+	}
+	@keyframes att-out {
+		to {
+			opacity: 0;
+			transform: translateX(1.5rem);
+		}
+	}
+
+	.att__empty {
+		margin: 0.5rem 0 0.25rem;
+		padding: 1rem;
+		text-align: center;
+		color: var(--a-muted);
+		border-radius: 14px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.att__empty[hidden] {
+		display: none;
+	}
+	.att__legend {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.35rem;
+		align-items: center;
+		margin: 0.9rem 0 0;
+		font-size: var(--sl-text-xs);
+		color: var(--a-muted);
+	}
+	.att__dot {
+		display: inline-block;
+		width: 0.75rem;
+		height: 0.75rem;
+		border-radius: 50%;
+	}
+	.att__dot--y {
+		background: var(--a-go);
+	}
+	.att__dot--n {
+		margin-left: 0.4rem;
+		background: var(--a-brick);
+	}
+</style>
