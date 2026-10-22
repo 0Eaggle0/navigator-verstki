@@ -305,7 +305,7 @@ body::before {
   .hero { min-height: 560px; }
   .hero__content { padding: 24px; }
   .hero h1 { font-size: 36px; }
-  .hero__tags-top { top: 16px; right: 16px; }
+  .hero__tags-top { position: relative; top: auto; right: auto; justify-content: flex-end; margin-bottom: auto; padding: 16px 16px 0; }
   .mascot { padding: 20px; }
   .mascot__info { flex-direction: column; align-items: flex-start; }
   .mascot__moods { flex-direction: column; align-items: stretch; }

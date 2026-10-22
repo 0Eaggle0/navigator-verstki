@@ -137,7 +137,8 @@ src/content/docs/          страницы сайта
   lesson-1/ … lesson-7/    шаги занятий (один файл = один шаг)
   blocks/                  страницы готовых блоков
   tasks/                   задачник: index.mdx + дополнительные задачи (html-menu.mdx …)
-  index.mdx, route.mdx, cheatsheets.mdx, moderator.mdx
+  moderator/               раздел модератора: index.mdx (план занятий), sites.mdx (готовые сайты команд)
+  index.mdx, route.mdx, cheatsheets.mdx
 src/blocks/                код блоков (.html + .css, у burger, modal, filters ещё .js)
 src/data/route.json        список занятий: номер, название, результат, минут на занятие
 src/data/cases.json        кейсы и рекомендуемые блоки главной для каждого
@@ -148,6 +149,8 @@ src/lib/                   прогресс (localStorage), автопровер
                            fx.ts (конфетти), games/ghost.ts (игра «Призрак»), island.ts (3D-остров на three.js)
 src/content.config.ts      какие поля бывают у шага
 public/starter/            стартовый шаблон для команд (index.html, style.css, img/) и шаблон секции для работы вчетвером (section.html, section.css)
+src/moderator-sites/       код готовых сайтов команд: <кейс>/index.html, style.css, script.js
+public/mod-sites/          картинки готовых сайтов: <кейс>/img/
 public/img/                картинки для примеров и разминок: img/barsik.svg и др.
 templates/step.mdx         образец шага
 ```
@@ -162,10 +165,15 @@ templates/step.mdx         образец шага
 
 **Профиль.** При первом заходе сайт просит создать профиль: имя, команда, кейс (или своя тема), роль (ученик или модератор) и часть сайта. Профиль хранится в браузере, поменять — кнопка с именем в шапке. Ученику не видно ссылок на раздел модератора.
 
-**Раздел модератора закрыт кодом доступа.** Всё, что в `src/content/docs/moderator.mdx` обёрнуто в `<ModSecret>…</ModSecret>`, при сборке шифруется (`src/integrations/moderator-lock.mjs`). Коды — в переменной `MODERATOR_CODES`, через запятую:
+**Раздел модератора закрыт кодом доступа.** Всё, что в `src/content/docs/moderator/` обёрнуто в `<ModSecret>…</ModSecret>`, при сборке шифруется (`src/integrations/moderator-lock.mjs`). Коды — в переменной `MODERATOR_CODES`, через запятую:
 - локально — в файле `.env` (образец — `.env.example`, сам `.env` в гит не попадает);
 - на GitHub — **Settings → Secrets and variables → Actions → New repository secret**, имя `MODERATOR_CODES`.
 
 Выдать доступ — добавить код и пересобрать сайт (любой push или **Actions → Run workflow**). Забрать — убрать код и пересобрать. Модератор вводит код один раз, браузер его запоминает. В `npm run dev` раздел виден без кода — только у себя на компьютере.
+
+**Готовые сайты команд** (`/moderator/sites/`) — главные страницы по макетам команд: превью «Компьютер / Телефон», код, «Открыть в новой вкладке» и «Скачать сайт (.zip)». Код сайтов попадает на сайт только в зашифрованном виде. Чтобы добавить сайт:
+1. Положите `index.html`, `style.css`, `script.js` в `src/moderator-sites/<кейс>/`. В `index.html` подключайте их ровно так: `<link rel="stylesheet" href="style.css">` и `<script src="script.js"></script>` — превью подставляет код по этим строкам.
+2. Картинки — в `public/mod-sites/<кейс>/img/`, в коде путь `img/имя.png`. Картинки лежат открыто, это не код.
+3. Добавьте строку в массив `SITES` в `src/components/TeamSites.astro`: `id` (имя папки), кейс, название, подпись и ссылку на макет.
 
 **Прогресс учеников** (выбранный кейс, пройденные шаги и игры, чек-листы, черновики разминок) хранится только в браузере, в localStorage, под ключом `nav-v1`. Сервера нет. Если хранилище отключено, сайт работает, но ничего не запоминает.
