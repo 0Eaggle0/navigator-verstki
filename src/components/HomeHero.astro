@@ -12,14 +12,14 @@ const order = steps.map((s) => [s.id, url(s.id + '/'), s.data.soon]);
 	<div class="home-hero__text">
 		<h1 id="home-title">Сверстай свой сайт, проходя уровни</h1>
 		<p class="home-hero__lead">
-			7 миров по одному занятию: от макета в Figma до сайта, который открывается по ссылке. Байт объясняет, игры тренируют,
+			7 уроков по 80 минут: от макета в Figma до сайта, который открывается по ссылке. Байт объясняет, игры тренируют,
 			разминки проверяют код сами.
 		</p>
 		<div class="home-hero__btns">
 			<nav-continue data-order={JSON.stringify(order)}>
 				<a class="a-btn a-btn--go a-btn--big" href={order[0][1]}>Начать</a>
 			</nav-continue>
-			<a class="a-btn a-btn--big" href={url('route/')}>Карта миров</a>
+			<a class="a-btn a-btn--big" href={url('route/')}>Карта уроков</a>
 		</div>
 		<dl class="home-hero__stats" data-total={steps.length}>
 			<div>

@@ -6,7 +6,7 @@ import { getRoute, url, LIMIT_MINUTES, PER_LESSON } from '~/lib/route';
 
 const { lessons, total, warnings } = await getRoute();
 const count = lessons.reduce((n, l) => n + l.steps.length, 0);
-const MINIMUM = 5; // после этого мира — замок «Минимум»
+const MINIMUM = 5; // после этого урока — замок «Минимум»
 // Смещение кнопок уровней влево-вправо: тропа петляет
 const WAVE = [0, 1, 2, 1, 0, -1, -2, -1];
 const STAR = 'M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9.3l6.6-.8z';
@@ -30,7 +30,7 @@ const STAR = 'M12 2.5l2.9 6 6.6.8-4.9 4.6 1.3 6.5L12 17.2l-5.9 3.2 1.3-6.5L2.5 9
 					<div class="world__banner">
 						<span class="world__n">{l.n}</span>
 						<div>
-							<h2 class="world__title">Мир {l.n}. {l.title}</h2>
+							<h2 class="world__title">Урок {l.n}. {l.title}</h2>
 							<p class="world__result">{l.result}</p>
 						</div>
 						<span class="world__min">{l.minutes} мин</span>

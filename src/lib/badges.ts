@@ -34,8 +34,8 @@ export const BADGES: { id: string; title: string; how: string; rule: (p: Progres
 	},
 	{
 		id: 'world',
-		title: 'Мир пройден',
-		how: 'Пройди все уровни одного занятия',
+		title: 'Урок пройден',
+		how: 'Пройди все уровни одного урока',
 		rule: (p, ls) => !!ls && [1, 2, 3, 4, 5, 6, 7].some((n) => allDone(p, byLesson(ls, n))),
 	},
 	{
@@ -47,11 +47,11 @@ export const BADGES: { id: string; title: string; how: string; rule: (p: Progres
 	{
 		id: 'minimum',
 		title: 'Минимум',
-		how: 'Пройди миры 1–5: главная свёрстана и адаптивна',
+		how: 'Пройди уроки 1–5: главная свёрстана и адаптивна',
 		rule: (p, ls) => !!ls && [1, 2, 3, 4, 5].every((n) => allDone(p, byLesson(ls, n))),
 	},
 	{ id: 'gamer', title: 'Игроман', how: 'Пройди 10 мини-игр', rule: (p) => p.games.length >= 10 },
-	{ id: 'final', title: 'Игра пройдена', how: 'Пройди все уровни всех миров', rule: (p, ls) => !!ls && allDone(p, ls) },
+	{ id: 'final', title: 'Игра пройдена', how: 'Пройди все уровни всех уроков', rule: (p, ls) => !!ls && allDone(p, ls) },
 ];
 
 // Проверяем значки и показываем тост за каждый новый
