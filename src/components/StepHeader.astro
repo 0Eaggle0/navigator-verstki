@@ -4,6 +4,7 @@
 // для звёзд и значков и следит за новыми значками.
 import Default from '@astrojs/starlight/components/PageTitle.astro';
 import Icon from './Icon.astro';
+import WorldScene from './WorldScene.astro';
 import { LESSONS, getLevels } from '~/lib/route';
 
 const { entry } = Astro.locals.starlightRoute;
@@ -13,6 +14,7 @@ const levels = await getLevels();
 const maxStars = entry.data.warmup ? 3 : 2;
 ---
 
+{isStep && <WorldScene n={lesson!} />}
 <Default />
 <script id="nav-levels" type="application/json" set:html={JSON.stringify(levels)} />
 {

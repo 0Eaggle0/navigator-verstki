@@ -1,0 +1,301 @@
+---
+// Мини-игра шага из поля game во frontmatter. Сейчас тип ghost: «поставь фигурки на призраков».
+// Ученик пишет CSS внутри замка «селектор { … }», поле обновляется на лету.
+const { entry } = Astro.locals.starlightRoute;
+const g = entry.data.game;
+---
+
+{
+	g && (
+		<nav-game
+			class="game not-content"
+			data-id={entry.id}
+			data-html={g.html}
+			data-css={g.css}
+			data-height={g.height}
+			data-levels={JSON.stringify(g.levels)}
+		>
+			<div class="game__head">
+				<span class="game__title px-font">{g.title}</span>
+				<ol class="game__pips" aria-label="Уровни игры">
+					{g.levels.map((_, i) => (
+						<li>
+							<button type="button" aria-label={`Уровень ${i + 1}`}>{i + 1}</button>
+						</li>
+					))}
+				</ol>
+			</div>
+			<div class="game__grid">
+				<div class="game__side">
+					<p class="game__task" />
+					<label class="game__editor">
+						<span class="sr-only">Твой CSS</span>
+						<code class="game__lock" aria-hidden="true" />
+						<textarea spellcheck="false" autocapitalize="off" wrap="off" rows="4" />
+						<code class="game__lock" aria-hidden="true">{'}'}</code>
+					</label>
+					<p class="game__status px-font" aria-live="polite" />
+					<div class="game__btns">
+						<button type="button" class="game__next" hidden>
+							Дальше ▸
+						</button>
+						<button type="button" class="game__hint-btn">
+							Подсказка
+						</button>
+					</div>
+					<p class="game__hint" hidden />
+				</div>
+				<div class="game__view">
+					<iframe title="Игровое поле" sandbox="allow-same-origin" tabindex="-1" style={`height:${g.height}px`} />
+					<div class="game__win px-font" role="status" hidden>
+						<b>Игра пройдена!</b>
+						<span>Теперь — разминка ниже</span>
+					</div>
+				</div>
+			</div>
+		</nav-game>
+	)
+}
+
+<script>
+	import { load, update } from '~/lib/storage';
+	import { ghostDoc, score, type GhostLevel } from '~/lib/games/ghost';
+	import { burst, shake } from '~/lib/fx';
+
+	class Game extends HTMLElement {
+		connectedCallback() {
+			const { id = '', html = '', css = '', height = '240' } = this.dataset;
+			const levels: GhostLevel[] = JSON.parse(this.dataset.levels!);
+			const $ = <T extends Element>(s: string) => this.querySelector<T>(s)!;
+			const box = $<HTMLTextAreaElement>('textarea');
+			const frame = $<HTMLIFrameElement>('iframe');
+			const status = $<HTMLElement>('.game__status');
+			const next = $<HTMLButtonElement>('.game__next');
+			const hint = $<HTMLElement>('.game__hint');
+			const pips = [...this.querySelectorAll<HTMLButtonElement>('.game__pips button')];
+			const codes = levels.map((l) => l.start ?? '');
+			const passed = new Set<number>(load().games.includes(id) ? levels.map((_, i) => i) : []);
+			let n = 0;
+
+			const render = () => (frame.srcdoc = ghostDoc(html, css, levels, n, box.value, +height));
+			const open = (i: number) => {
+				n = i;
+				const l = levels[n];
+				$('.game__task').textContent = l.task;
+				$('.game__lock').textContent = `${l.selector ?? '.board'} {`;
+				box.value = codes[n];
+				hint.hidden = true;
+				hint.textContent = l.hint ?? 'Сравни, где стоят фигурки и где их призраки. Какое свойство это меняет?';
+				frame.style.width = l.width ? l.width + 'px' : '';
+				pips.forEach((p, k) => {
+					p.classList.toggle('is-on', k === n);
+					p.classList.toggle('is-done', passed.has(k));
+					p.setAttribute('aria-current', String(k === n));
+				});
+				next.hidden = true;
+				render();
+			};
+
+			frame.addEventListener('load', () => {
+				const { hit, total } = score(frame.contentDocument!);
+				const win = total > 0 && hit === total;
+				status.textContent = win ? 'Все на месте!' : `На месте: ${hit} из ${total}`;
+				status.classList.toggle('is-win', win);
+				if (!win || next.hidden === false) return;
+				const first = !passed.has(n);
+				passed.add(n);
+				pips[n].classList.add('is-done');
+				next.hidden = n === levels.length - 1;
+				if (first) burst(frame);
+				if (passed.size === levels.length && !load().games.includes(id)) {
+					update((p) => p.games.push(id));
+					const banner = $<HTMLElement>('.game__win');
+					banner.hidden = false;
+					setTimeout(() => (banner.hidden = true), 2600);
+				}
+			});
+
+			let timer: number;
+			box.addEventListener('input', () => {
+				codes[n] = box.value;
+				clearTimeout(timer);
+				timer = window.setTimeout(render, 250);
+			});
+			next.addEventListener('click', () => open(n + 1));
+			$('.game__hint-btn').addEventListener('click', () => {
+				hint.hidden = !hint.hidden;
+				if (!hint.hidden) shake(hint);
+			});
+			pips.forEach((p, i) => p.addEventListener('click', () => open(i)));
+			open(0);
+		}
+	}
+	customElements.define('nav-game', Game);
+</script>
+
+<style>
+	.game {
+		display: block;
+		margin: 1.5rem 3px;
+		padding: 1rem;
+		background: #141333;
+		color: #eceaf7;
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink),
+			0 0 0 6px var(--px-coin);
+	}
+	.game__head {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+		justify-content: space-between;
+		margin-bottom: 1rem;
+	}
+	.game__title {
+		font-size: 0.75rem;
+		line-height: 1.6;
+		color: var(--px-coin);
+	}
+	.game__pips {
+		display: flex;
+		gap: 0.35rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+	.game__pips li {
+		margin: 0;
+	}
+	.game .game__pips button {
+		min-width: 2rem;
+		padding: 0.3rem 0.4rem;
+		font-size: 0.6rem;
+		color: #eceaf7;
+		background: #2b2750;
+	}
+	.game .game__pips button.is-done {
+		color: #10260f;
+		background: var(--px-grass);
+	}
+	.game .game__pips button.is-on {
+		outline: 3px solid var(--px-coin);
+		outline-offset: 2px;
+	}
+	.game__grid {
+		display: grid;
+		grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+		gap: 1rem;
+	}
+	.game__task {
+		margin: 0 0 0.75rem;
+		font-size: var(--sl-text-base);
+		line-height: 1.5;
+	}
+	.game__editor {
+		display: block;
+		padding: 0.5rem 0.75rem;
+		font: 0.95rem/1.5 var(--sl-font-mono);
+		background: #0b0a22;
+		border: 2px solid #3b386c;
+	}
+	.game__lock {
+		display: block;
+		padding: 0;
+		font: inherit;
+		color: #a8a4cc;
+		background: none;
+	}
+	.game__editor textarea {
+		display: block;
+		width: 100%;
+		margin: 0.15rem 0;
+		padding: 0.15rem 0 0.15rem 1rem;
+		font: inherit;
+		color: #ffe08a;
+		background: #1b1a3f;
+		border: 0;
+		resize: vertical;
+		caret-color: var(--px-coin);
+	}
+	.game__editor textarea:focus-visible {
+		outline: 2px solid var(--px-coin);
+	}
+	.game__status {
+		margin: 0.75rem 0 0;
+		font-size: 0.65rem;
+		color: #a8a4cc;
+	}
+	.game__status.is-win {
+		color: var(--px-grass);
+	}
+	.game__btns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem;
+		margin-top: 0.6rem;
+	}
+	.game .game__next {
+		color: #1e1b3a;
+		background: var(--px-coin);
+	}
+	.game__hint {
+		margin: 0.6rem 0 0;
+		padding: 0.5rem 0.75rem;
+		font-size: var(--sl-text-sm);
+		border-left: 4px solid var(--px-coin);
+		background: #25244f;
+	}
+	.game__hint[hidden],
+	.game__next[hidden] {
+		display: none;
+	}
+	.game__view {
+		position: relative;
+		min-width: 0;
+		overflow-x: auto;
+	}
+	.game iframe {
+		display: block;
+		width: 100%;
+		border: 0;
+		image-rendering: pixelated;
+	}
+	.game__win {
+		position: absolute;
+		inset: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+		align-items: center;
+		justify-content: center;
+		background: #1b1a3fe6;
+		animation: game-win 0.3s steps(3) both;
+	}
+	.game__win[hidden] {
+		display: none;
+	}
+	.game__win b {
+		font-size: 1.1rem;
+		font-weight: 400;
+		color: var(--px-coin);
+		text-shadow: 3px 3px 0 #000;
+	}
+	.game__win span {
+		font-size: 0.6rem;
+	}
+	@keyframes game-win {
+		from {
+			transform: scale(0.6);
+			opacity: 0;
+		}
+	}
+	@media (max-width: 50rem) {
+		.game__grid {
+			grid-template-columns: 1fr;
+		}
+	}
+</style>

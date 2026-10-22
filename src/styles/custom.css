@@ -168,7 +168,48 @@ header.header {
 		transform: translateY(120%);
 	}
 }
+/* Шаг — игровой экран: колонки «На этой странице» нет, контент шире */
+:root:has(.hud) {
+	--sl-content-width: 52rem;
+}
+
+/* Монеты из src/lib/fx.ts */
+.px-coin-fx {
+	position: fixed;
+	z-index: 100;
+	margin: -10px 0 0 -10px;
+	line-height: 0;
+	pointer-events: none;
+}
+
+/* Переход между страницами: пиксельное затемнение. Браузеры без поддержки просто пропускают */
+@view-transition {
+	navigation: auto;
+}
+::view-transition-old(root) {
+	animation: px-out 0.25s steps(4) both;
+}
+::view-transition-new(root) {
+	animation: px-in 0.3s steps(5) both;
+}
+@keyframes px-out {
+	to {
+		opacity: 0;
+		transform: translateY(-12px);
+	}
+}
+@keyframes px-in {
+	from {
+		opacity: 0;
+		transform: translateY(12px);
+	}
+}
+
 @media (prefers-reduced-motion: reduce) {
+	::view-transition-old(root),
+	::view-transition-new(root) {
+		animation: none !important;
+	}
 	*,
 	*::before,
 	*::after {

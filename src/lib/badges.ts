@@ -50,6 +50,7 @@ export const BADGES: { id: string; title: string; how: string; rule: (p: Progres
 		how: 'Пройди миры 1–5: главная свёрстана и адаптивна',
 		rule: (p, ls) => !!ls && [1, 2, 3, 4, 5].every((n) => allDone(p, byLesson(ls, n))),
 	},
+	{ id: 'gamer', title: 'Игроман', how: 'Пройди 10 мини-игр', rule: (p) => p.games.length >= 10 },
 	{ id: 'final', title: 'Игра пройдена', how: 'Пройди все уровни всех миров', rule: (p, ls) => !!ls && allDone(p, ls) },
 ];
 

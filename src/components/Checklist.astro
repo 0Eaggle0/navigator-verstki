@@ -18,10 +18,21 @@ const items = entry.data.checklist;
 		)
 	}
 	<button type="button" class="checklist__done" aria-pressed="false">Шаг пройден</button>
+	<dialog class="clear" aria-labelledby="clear-title">
+		<p id="clear-title" class="clear__title px-font">Уровень пройден!</p>
+		<p class="clear__stars" />
+		<p class="clear__note" />
+		<div class="clear__btns">
+			<a class="clear__next px-font" href="#" hidden>Следующий уровень ▸</a>
+			<form method="dialog"><button>Остаться</button></form>
+		</div>
+	</dialog>
 </nav-checklist>
 
 <script>
 	import { load, update } from '~/lib/storage';
+	import { getLevels, stars, maxStars } from '~/lib/badges';
+	import { burst } from '~/lib/fx';
 
 	class Checklist extends HTMLElement {
 		connectedCallback() {
@@ -44,13 +55,121 @@ const items = entry.data.checklist;
 					p.done = p.done.includes(id) ? p.done.filter((d) => d !== id) : [...p.done, id];
 				});
 				show(next.done.includes(id));
+				if (next.done.includes(id)) celebrate(next);
 			});
+
+			// Экран «Уровень пройден»: звёзды по одной и ссылка на следующий шаг
+			const dialog = this.querySelector('dialog')!;
+			const celebrate = (p: ReturnType<typeof load>) => {
+				const level = getLevels()?.find((l) => l.id === id);
+				if (!level || !dialog.showModal) return;
+				const got = stars(p, level);
+				const max = maxStars(level);
+				const box = dialog.querySelector('.clear__stars')!;
+				box.innerHTML = '';
+				for (let i = 0; i < max; i++) {
+					const s = document.createElement('span');
+					s.textContent = '★';
+					s.className = i < got ? 'is-on' : '';
+					s.style.animationDelay = `${0.2 + i * 0.25}s`;
+					box.append(s);
+				}
+				box.setAttribute('aria-label', `Звёзд: ${got} из ${max}`);
+				dialog.querySelector('.clear__note')!.textContent =
+					got === max ? 'Все звёзды собраны!' : 'Звёзды можно добрать: реши разминку и пройди без подсказок.';
+				const nextLink = document.querySelector<HTMLAnchorElement>('.pagination-links a[rel="next"]');
+				const a = dialog.querySelector<HTMLAnchorElement>('.clear__next')!;
+				a.hidden = !nextLink;
+				if (nextLink) a.href = nextLink.href;
+				dialog.showModal();
+				burst(dialog.querySelector('.clear__title')!, 20);
+			};
 		}
 	}
 	customElements.define('nav-checklist', Checklist);
 </script>
 
 <style>
+	/* Экран «Уровень пройден» */
+	.clear {
+		margin: auto;
+		max-width: min(26rem, calc(100vw - 2rem));
+		padding: 1.5rem;
+		text-align: center;
+		color: #eceaf7;
+		background: #1b1a3f;
+		border: 0;
+		box-shadow:
+			0 -4px 0 0 var(--px-coin),
+			0 4px 0 0 var(--px-coin),
+			-4px 0 0 0 var(--px-coin),
+			4px 0 0 0 var(--px-coin);
+		animation: clear-pop 0.3s steps(3);
+	}
+	.clear::backdrop {
+		background: #0e0d26b3;
+	}
+	.clear__title {
+		margin: 0;
+		font-size: 1.1rem;
+		color: var(--px-coin);
+		text-shadow: 3px 3px 0 #000;
+	}
+	.clear__stars {
+		display: flex;
+		gap: 0.75rem;
+		justify-content: center;
+		margin: 1.25rem 0 0.75rem;
+		font-size: 2.5rem;
+		line-height: 1;
+	}
+	.clear__stars :global(span) {
+		color: #3b386c;
+		animation: star-pop 0.3s steps(3) both;
+	}
+	.clear__stars :global(.is-on) {
+		color: var(--px-coin);
+		text-shadow: 3px 3px 0 #7a5600;
+	}
+	.clear__note {
+		margin: 0 0 1.25rem;
+		font-size: var(--sl-text-sm);
+		color: #c3bfdf;
+	}
+	.clear__btns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+		justify-content: center;
+	}
+	.clear__btns form {
+		margin: 0;
+	}
+	.clear__next {
+		padding: 0.6rem 1rem;
+		font-size: 0.7rem;
+		color: #1e1b3a;
+		text-decoration: none;
+		background: var(--px-coin);
+		box-shadow: inset 0 -4px 0 0 #0003;
+	}
+	.clear__next[hidden] {
+		display: none;
+	}
+	@keyframes clear-pop {
+		from {
+			transform: scale(0.5);
+		}
+	}
+	@keyframes star-pop {
+		from {
+			transform: scale(0);
+		}
+		60% {
+			transform: scale(1.4);
+		}
+	}
 	.checklist {
 		display: block;
 		margin-block: 2.5rem 1rem;

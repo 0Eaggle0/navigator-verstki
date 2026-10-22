@@ -1,0 +1,200 @@
+---
+// Теория диалогом: проводник «Байт» рассказывает по одной реплике.
+// В шаге оборачиваем обычный текст теории: <Npc> …абзацы, код, <Preview /> … </Npc>
+// Каждый блок внутри — одна реплика. Без JS всё видно сразу.
+import { svg } from '~/lib/sprites';
+---
+
+<nav-npc class="npc not-content">
+	<div class="npc__who" aria-hidden="true">
+		<span class="npc__sprite" set:html={svg('byte', 64)} />
+		<span class="npc__name px-font">Байт</span>
+	</div>
+	<div class="npc__talk">
+		<div class="npc__lines sl-markdown-content"><slot /></div>
+		<div class="npc__controls" hidden>
+			<button type="button" class="npc__next">Дальше ▸</button>
+			<button type="button" class="npc__all">Показать всё</button>
+			<span class="npc__count px-font" aria-hidden="true"></span>
+		</div>
+	</div>
+</nav-npc>
+
+<script>
+	const calm = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+	// Печатает текст блока по буквам. Возвращает функцию «допечатать сразу»
+	function type(el: Element) {
+		const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+		const nodes: [Text, string][] = [];
+		while (walker.nextNode()) {
+			const t = walker.currentNode as Text;
+			nodes.push([t, t.data]);
+			t.data = '';
+		}
+		let i = 0;
+		let pos = 0;
+		const timer = setInterval(() => {
+			for (let step = 0; step < 3 && i < nodes.length; step++) {
+				const [t, full] = nodes[i];
+				t.data = full.slice(0, ++pos);
+				if (pos >= full.length) (i++, (pos = 0));
+			}
+			if (i >= nodes.length) clearInterval(timer);
+		}, 16);
+		return () => {
+			clearInterval(timer);
+			nodes.forEach(([t, full]) => (t.data = full));
+		};
+	}
+
+	class Npc extends HTMLElement {
+		connectedCallback() {
+			const lines = [...this.querySelector('.npc__lines')!.children] as HTMLElement[];
+			if (lines.length < 2) return;
+			const controls = this.querySelector<HTMLElement>('.npc__controls')!;
+			const next = this.querySelector<HTMLButtonElement>('.npc__next')!;
+			const count = this.querySelector('.npc__count')!;
+			let shown = 1;
+			let finish: (() => void) | null = null;
+			const sync = () => {
+				lines.forEach((l, i) => (l.hidden = i >= shown));
+				count.textContent = `${shown}/${lines.length}`;
+				if (shown >= lines.length) controls.hidden = true;
+			};
+			controls.hidden = false;
+			sync();
+
+			next.addEventListener('click', () => {
+				// Первый клик во время печати — допечатать, второй — следующая реплика
+				if (finish) return void (finish(), (finish = null));
+				shown++;
+				sync();
+				const line = lines[shown - 1];
+				// Код и превью не печатаем, только обычный текст
+				if (!calm() && line.matches('p, ul, ol, blockquote')) {
+					finish = type(line);
+					setTimeout(() => (finish = null), 4000);
+				}
+				this.classList.remove('is-talking');
+				void this.offsetWidth;
+				this.classList.add('is-talking');
+			});
+			this.querySelector('.npc__all')!.addEventListener('click', () => {
+				finish?.();
+				shown = lines.length;
+				sync();
+			});
+		}
+	}
+	customElements.define('nav-npc', Npc);
+</script>
+
+<style>
+	.npc {
+		display: grid;
+		grid-template-columns: auto 1fr;
+		gap: 1rem;
+		align-items: start;
+		margin-block: 1.5rem;
+	}
+	.npc__who {
+		display: flex;
+		flex-direction: column;
+		gap: 0.4rem;
+		align-items: center;
+		position: sticky;
+		top: calc(var(--sl-nav-height, 4rem) + 1rem);
+	}
+	.npc__sprite {
+		display: block;
+		animation: npc-idle 1.6s steps(2) infinite;
+	}
+	.npc.is-talking .npc__sprite {
+		animation: npc-hop 0.4s steps(3);
+	}
+	.npc__name {
+		font-size: 0.6rem;
+		color: var(--px-coin);
+	}
+	/* Облачко реплики с хвостиком к проводнику */
+	.npc__talk {
+		position: relative;
+		min-width: 0;
+		padding: 1rem 1.25rem;
+		color: var(--px-panel-text);
+		background: var(--px-panel);
+		box-shadow:
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink),
+			-3px 0 0 0 var(--px-ink),
+			3px 0 0 0 var(--px-ink);
+	}
+	.npc__talk::before {
+		content: '';
+		position: absolute;
+		top: 1.5rem;
+		left: -15px;
+		width: 12px;
+		height: 12px;
+		background: var(--px-panel);
+		box-shadow:
+			-3px 0 0 0 var(--px-ink),
+			0 -3px 0 0 var(--px-ink),
+			0 3px 0 0 var(--px-ink);
+	}
+	.npc__lines > :global([hidden]) {
+		display: none !important;
+	}
+	/* Анимация запускается заново, когда реплика перестаёт быть hidden */
+	.npc__lines > :global(*) {
+		animation: npc-line 0.25s steps(3);
+	}
+	.npc__controls {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		align-items: center;
+		margin-top: 1rem;
+	}
+	.npc__controls[hidden] {
+		display: none;
+	}
+	.npc__next {
+		color: #1e1b3a !important;
+		background: var(--px-coin) !important;
+	}
+	.npc__count {
+		margin-left: auto;
+		font-size: 0.6rem;
+		color: var(--sl-color-gray-3);
+	}
+	@media (max-width: 40rem) {
+		.npc {
+			grid-template-columns: 1fr;
+		}
+		.npc__who {
+			position: static;
+			flex-direction: row;
+		}
+		.npc__talk::before {
+			display: none;
+		}
+	}
+	@keyframes npc-idle {
+		50% {
+			transform: translateY(-3px);
+		}
+	}
+	@keyframes npc-hop {
+		50% {
+			transform: translateY(-10px);
+		}
+	}
+	@keyframes npc-line {
+		from {
+			opacity: 0;
+			transform: translateY(6px);
+		}
+	}
+</style>

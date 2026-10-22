@@ -12,10 +12,11 @@ export type Progress = {
 	solved: string[]; // id страниц, где разминка решена
 	hints: string[]; // id шагов, где открывали подсказку (для звезды «без подсказок»)
 	badges: string[]; // полученные значки
+	games: string[]; // id страниц, где пройдена мини-игра
 };
 
 export function load(): Progress {
-	const empty: Progress = { done: [], checklist: {}, drafts: {}, solved: [], hints: [], badges: [] };
+	const empty: Progress = { done: [], checklist: {}, drafts: {}, solved: [], hints: [], badges: [], games: [] };
 	try {
 		return { ...empty, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
 	} catch {

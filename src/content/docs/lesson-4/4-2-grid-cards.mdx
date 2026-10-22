@@ -5,12 +5,62 @@ minutes: 30
 goal: Ставим карточки в сетку, которая сама подстраивается под ширину
 sidebar:
   order: 2
+tableOfContents: false
 fast: "возьми блок «Сетка карточек» и поменяй картинки, заголовки и тексты на свои."
 links:
   - title: "Дока: grid-template-columns"
     url: https://doka.guide/css/grid-template-columns/
   - title: "Дока: object-fit"
     url: https://doka.guide/css/object-fit/
+game:
+  type: ghost
+  title: "Рассади питомцев по клеткам"
+  height: 300
+  html: |
+    <i class="sp sp-cat"></i>
+    <i class="sp sp-dog"></i>
+    <i class="sp sp-cat"></i>
+    <i class="sp sp-dog"></i>
+    <i class="sp sp-cat"></i>
+    <i class="sp sp-dog"></i>
+  css: |
+    .board {
+      background: repeating-conic-gradient(#4a9a3a 0 25%, #55a843 0 50%) 0 0 / 32px 32px;
+    }
+    .board > * {
+      display: inline-block;
+      min-width: 44px;
+      height: 44px;
+      background-color: #ffffff33;
+      background-size: auto 80%;
+      box-shadow: inset 0 -4px #0003;
+    }
+  levels:
+    - task: "Питомцы толпятся в одну строку. Включи сетку — у .board нужен display: grid. Каждый встанет на свою строку."
+      target: "display: grid;"
+      hint: "Напиши одну строку: display: grid;"
+    - task: "Сделай три колонки одинаковой ширины. Колонки задаёт grid-template-columns, а три равные доли — repeat(3, 1fr)."
+      start: "display: grid;
+"
+      target: "display: grid; grid-template-columns: repeat(3, 1fr);"
+      hint: "grid-template-columns: repeat(3, 1fr);"
+    - task: "Питомцам тесно. Добавь промежуток 16px между клетками."
+      start: "display: grid;
+grid-template-columns: repeat(3, 1fr);
+"
+      target: "display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;"
+      hint: "Промежуток в сетке — свойство gap."
+    - task: "Пусть сетка сама решает, сколько колонок влезет: каждая не уже 60px. Замени repeat(3, 1fr) на repeat(auto-fill, minmax(60px, 1fr))."
+      start: "display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 16px;
+"
+      target: "display: grid; grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); gap: 16px;"
+      hint: "grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));"
+    - task: "Первый кот — король, ему нужна клетка на две колонки. Здесь ты пишешь CSS для первого питомца: grid-column: span 2."
+      selector: ".board > :first-child"
+      target: "grid-column: span 2;"
+      hint: "span 2 — «растянуть на 2 колонки»."
 warmup:
   task: "Поставь карточки в сетку: у .cards — grid, колонки через repeat(auto-fill, minmax(140px, 1fr)) и промежуток 16px. Картинкам карточек задай object-fit: cover, чтобы они не сплющивались."
   html: |
@@ -74,9 +124,11 @@ mistakes:
     a: "Сделай карточку флекс-столбиком (display: flex; flex-direction: column;), а кнопке добавь margin-top: auto — она прижмётся к низу."
 blocks: [cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
+
+<Npc>
 
 В шаге 4.1 колонок было ровно три. Но на телефоне три колонки не поместятся. Есть запись, при которой сетка сама решает, сколько колонок влезает:
 
@@ -103,7 +155,13 @@ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   height={200}
 />
 
+</Npc>
+
 <Links />
+
+## Игра
+
+<Game />
 
 ## Разминка
 

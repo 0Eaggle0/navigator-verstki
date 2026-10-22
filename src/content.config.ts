@@ -35,6 +35,27 @@ const step = z.object({
 			checks: z.array(check).default([]),
 		})
 		.optional(),
+	// Мини-игра перед разминкой. ghost: фигурки из html нужно поставить на «призраков» —
+	// туда, куда их ставит CSS target. Ученик пишет CSS для selector (по умолчанию .board)
+	game: z
+		.object({
+			type: z.enum(['ghost']),
+			title: z.string(),
+			html: z.string(), // фигурки на поле: <i class="sp sp-cat"></i> …
+			css: z.string().default(''), // оформление поля, ученик его не видит
+			height: z.number().default(240), // высота поля в px
+			levels: z.array(
+				z.object({
+					task: z.string(),
+					target: z.string(), // CSS-решение уровня
+					start: z.string().optional(), // что уже написано в редакторе
+					selector: z.string().optional(), // для какого селектора пишет ученик
+					hint: z.string().optional(),
+					width: z.number().optional(), // ширина поля в px, например 375
+				})
+			),
+		})
+		.optional(),
 	checklist: z.array(z.string()).default([]),
 	mistakes: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
 	blocks: z.array(z.string()).default([]),
