@@ -97,6 +97,15 @@ warmup:
       fail: "После клика «Собаки» должны остаться только собаки — не забудь показывать карточки обратно (hidden = false)"
     - js: "doc.querySelector('[data-filter=all]').click(); return [...doc.querySelectorAll('.card')].every((c) => !c.hidden)"
       fail: "Кнопка «Все» должна показывать все карточки"
+team:
+  - task: "Сверстай кнопки фильтра или поля формы по макету."
+    hint: "Кнопки фильтра — button с data-filter, поля формы — с label."
+  - task: "Разметь карточки атрибутами data-… или добавь форме места для ошибок."
+    hint: "data-type=\"cat\" у карточки, <p class=\"error\"> под полем."
+  - task: "Напиши JS фильтра или проверки формы по примеру из теории."
+    hint: "Фильтр: forEach и hidden. Форма: submit, preventDefault, проверка полей."
+  - task: "Проверь все варианты: каждый фильтр или форму с пустыми и верными полями."
+    hint: "Пустое поле, неправильный телефон, всё верно — три проверки минимум."
 checklist:
   - Фильтр или форма работает на моей главной
   - Нажатая кнопка фильтра выделена (или форма показывает понятные ошибки)
@@ -113,7 +122,7 @@ mistakes:
     a: "Если у .card в CSS есть display: flex или grid, он перебивает hidden. В стартовом style.css от этого есть правило [hidden] { display: none !important; } — проверь, что оно не удалено, или добавь его в начало файла."
 blocks: [filters, form]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -191,6 +200,8 @@ document.querySelectorAll('[data-filter]').forEach(function (button) {
 1. Разметьте карточки атрибутами `data-…` (для фильтра) или добавьте форме места для текста ошибок.
 2. Напишите JS по примеру из теории и разминки.
 3. Проверьте все варианты: каждый фильтр по очереди или форму с пустыми и правильными полями.
+
+<TeamTasks />
 
 <BlockLinks />
 

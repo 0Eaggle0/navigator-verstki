@@ -64,6 +64,8 @@ const step = z.object({
 			),
 		})
 		.optional(),
+	// «Кто что делает»: задачи шага для участников 1–4 по порядку (части — src/data/parts.json)
+	team: z.array(z.object({ task: z.string(), hint: z.string().optional() })).max(4).optional(),
 	checklist: z.array(z.string()).default([]),
 	mistakes: z.array(z.object({ q: z.string(), a: z.string() })).default([]),
 	blocks: z.array(z.string()).default([]),

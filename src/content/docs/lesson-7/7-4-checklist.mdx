@@ -65,6 +65,15 @@ warmup:
       fail: "У картинки нет alt — опиши, что на ней"
     - js: "return [...doc.querySelectorAll('a')].every((a) => a.hasAttribute('href'))"
       fail: "У ссылки нет href — без него это не ссылка"
+team:
+  - task: "Проверь сайт в режиме телефона 375 px: нет прокрутки вбок, всё читается."
+    hint: "Пролистай всю страницу сверху вниз, а не только первый экран."
+  - task: "Прогони сайт через W3C Validator и исправь ошибки."
+    hint: "Чаще всего — незакрытые теги и картинки без alt."
+  - task: "Сверь страницу с макетом на 1280 px."
+    hint: "Шрифты, цвета, отступы — сверху вниз по паспорту стиля."
+  - task: "Проверь консоль, все ссылки и интерактив по чек-листу."
+    hint: "Ссылка с href=\"#\" — не ошибка, но лучше, чтобы она вела к секции."
 checklist:
   - Все пункты чек-листа сдачи отмечены (список ниже)
   - Сайт открывается по ссылке с телефона
@@ -77,7 +86,7 @@ mistakes:
     a: "Приоритет: сайт открывается по ссылке → нет прокрутки вбок на телефоне → alt у картинок → остальное."
 blocks: []
 ---
-import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game } from '~/components';
+import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -121,6 +130,8 @@ import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game } from '~/components';
 - [ ] Фильтр карточек или форма с проверкой
 - [ ] Выбор пользователя сохраняется в localStorage
 - [ ] В консоли нет ошибок
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Быстрая проверка `alt`: в консоли сайта выполните `document.querySelectorAll('img:not([alt])')` — покажет картинки без описания.

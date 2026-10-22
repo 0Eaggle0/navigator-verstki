@@ -69,6 +69,15 @@ warmup:
       fail: "После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика"
     - js: "return !doc.body.classList.contains('dark')"
       fail: "Второй клик не убирает тёмную тему. Используй toggle, а не add"
+team:
+  - task: "Сделай кнопку, которая переключает класс в шапке — например, подсветку пункта меню."
+    hint: "querySelector → addEventListener(\"click\") → classList.toggle."
+  - task: "Сделай реакцию на клик в первом экране, если она есть на макете."
+    hint: "Сначала опиши в CSS, как выглядит «нажатое» состояние: .button.active."
+  - task: "Сделай кнопку «в избранное» на карточке: по клику переключается класс."
+    hint: "Для всех карточек сразу — querySelectorAll и forEach."
+  - task: "Проверь, что в консоли нет ошибок, и собери JS всех в общий script.js."
+    hint: "Ошибка «Cannot read properties of null» — селектор ничего не нашёл."
 checklist:
   - Умею найти элемент через document.querySelector
   - Понимаю, что делает addEventListener('click', …)
@@ -83,7 +92,7 @@ mistakes:
     a: "В addEventListener передают саму функцию, без скобок: addEventListener('click', toggleTheme). Со скобками она вызовется сразу."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -134,6 +143,8 @@ btn.addEventListener('click', function () {
 2. Опишите в CSS, как элемент выглядит в «нажатом» состоянии, через дополнительный класс: `.fav.active`.
 3. В `script.js` найдите элемент и переключайте класс по клику.
 4. Проверьте в браузере и в консоли: ошибок нет, класс переключается (видно в DevTools → Elements).
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Порядок всегда один: сначала `const кнопка = document.querySelector(…)`, потом `кнопка.addEventListener('click', function () { … })`, внутри — `classList.toggle`.

@@ -100,6 +100,15 @@ warmup:
     - selector: ".menu"
       style: { list-style-type: "none" }
       fail: "У списка остались точки. Нужно: list-style: none;"
+team:
+  - task: "Поставь шапку в строку: flex на .header .container, разнеси по краям, выровняй по центру."
+    hint: "display: flex; justify-content: space-between; align-items: center;"
+  - task: "Поставь пункты меню в ряд: ul.menu — flex и gap."
+    hint: "Убери точки и отступы списка: list-style: none; margin: 0; padding: 0;"
+  - task: "Проверь: шапка на всех страницах одинаковая, если вы делаете несколько страниц."
+    hint: "Если страница одна — помоги участнику 1 сверить отступы с макетом."
+  - task: "Сверь расстояния в шапке с Figma и поправь gap и padding."
+    hint: "Расстояние между пунктами меню в Figma — показывает красная линия при наведении с Alt."
 checklist:
   - Логотип, меню и кнопка в одной строке, как в макете
   - Промежутки между пунктами меню одинаковые (через gap)
@@ -114,7 +123,7 @@ mistakes:
     a: "У ul есть стандартный padding-left. Сбрось его: padding: 0; margin: 0;"
 blocks: [header]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -161,6 +170,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 2. Задайте ему `display: flex`, `justify-content: space-between`, `align-items: center`.
 3. Списку меню `ul.menu` — `display: flex` и `gap` из макета, уберите точки и отступы.
 4. Сверьте с макетом расстояния между пунктами меню.
+
+<TeamTasks />
 
 <BlockLinks />
 

@@ -103,6 +103,18 @@ warmup:
     # - js: "doc.querySelector('.burger').click(); return doc.querySelector('.menu').classList.contains('open')"  # проверка клика
     #   fail: "Нужно ровно 3 пункта"
 
+# «Кто что делает»: задачи для участников 1–4 по порядку частей сайта
+# (1 шапка и подвал, 2 первый экран, 3 карточки, 4 остальные секции — src/data/parts.json)
+team:
+  - task: "Что делает участник 1"
+    hint: "Подсказка к задаче"
+  - task: "Что делает участник 2"
+    hint: "Подсказка"
+  - task: "Что делает участник 3"
+    hint: "Подсказка"
+  - task: "Что делает участник 4"
+    hint: "Подсказка"
+
 checklist:                           # 3–4 пункта
   - "Первый пункт «готово»"
   - "Второй пункт"
@@ -114,7 +126,7 @@ mistakes:
 
 blocks: [header, cards]              # готовые блоки по теме (id из src/data/blocks.json)
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -153,6 +165,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Np
 
 1. Что конкретно сделать в проекте команды.
 2. …
+
+<TeamTasks />
 
 <BlockLinks />
 

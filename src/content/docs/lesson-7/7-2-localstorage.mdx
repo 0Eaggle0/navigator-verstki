@@ -100,6 +100,15 @@ warmup:
       fail: "После клика у кнопки ♥ нет класса active"
     - js: "doc.querySelector('[data-id=barsik] .fav').click(); const ok = !JSON.parse(localStorage.getItem('favorites') || '[]').includes('barsik'); localStorage.removeItem('favorites'); return ok"
       fail: "Второй клик должен убрать \"barsik\" из списка favorites"
+team:
+  - task: "Реши с командой, что сохраняем и под каким ключом."
+    hint: "Ключ — понятное слово латиницей: favorites, theme, draft."
+  - task: "Напиши сохранение: при клике или вводе — localStorage.setItem."
+    hint: "Список сохраняй через JSON.stringify."
+  - task: "Напиши восстановление при загрузке страницы."
+    hint: "JSON.parse(localStorage.getItem(key)) || [] — и отметь нужные карточки."
+  - task: "Оберни работу с хранилищем в try/catch и проверь: F5 — выбор на месте."
+    hint: "В DevTools → Application → Local Storage видно, что сохранилось."
 checklist:
   - Выбор пользователя сохраняется в localStorage
   - После перезагрузки страницы выбор на месте
@@ -114,7 +123,7 @@ mistakes:
     a: "localStorage хранит только строки. Массивы и объекты сохраняй через JSON.stringify, читай через JSON.parse."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -192,6 +201,8 @@ like.addEventListener('click', function () {
 2. При загрузке страницы прочитайте данные и восстановите вид.
 3. При изменении — сохраните.
 4. Проверьте: выберите что-нибудь, обновите страницу (F5) — выбор на месте. Данные видно в DevTools → Application → Local Storage.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Заведите две маленькие функции и пользуйтесь только ими: `load()` читает список (в `try`), `save(list)` сохраняет (в `try`). Так проще не забыть JSON.

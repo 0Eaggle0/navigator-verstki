@@ -91,6 +91,15 @@ warmup:
     - selector: ".grid"
       style: { column-gap: "12px", row-gap: "12px" }
       fail: "Между плитками нет промежутка gap: 12px"
+team:
+  - task: "Пройди Grid Garden до 10 уровня. Посчитай колонки в подвале."
+    hint: "Колонки подвала — классика для grid: repeat(3, 1fr) или 4."
+  - task: "Пройди Grid Garden. Реши, нужен ли grid в первом экране или хватит flex."
+    hint: "Две колонки «текст — картинка» отлично делаются и флексом."
+  - task: "Пройди Grid Garden. Посчитай колонки и промежутки у карточек на макете."
+    hint: "Промежуток между карточками в Figma — это будущий gap."
+  - task: "Пройди Grid Garden. Найди сетки в остальных секциях: шаги, отзывы, галерея."
+    hint: "Запиши: сколько колонок и какой gap."
 checklist:
   - Знаю, чем Grid отличается от Flexbox
   - Умею задать колонки через grid-template-columns и fr
@@ -105,7 +114,7 @@ mistakes:
     a: Flexbox — для одного ряда (меню, кнопки). Grid — для сетки из рядов и колонок (карточки, галерея, футер из колонок).
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -145,6 +154,8 @@ Flexbox думает рядами: элементы идут друг за др�
 1. Пройдите [Grid Garden](https://cssgridgarden.com/#ru) до 10-го уровня (10 минут).
 2. Найдите на макете всё, что выглядит как сетка: карточки, галерея, колонки в футере. Посчитайте, сколько там колонок и какие промежутки.
 3. Запишите это рядом с паспортом стиля — пригодится в следующих двух шагах.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Колонок в сетке столько, сколько значений в `grid-template-columns`: `1fr 1fr` — две, `repeat(4, 1fr)` — четыре.

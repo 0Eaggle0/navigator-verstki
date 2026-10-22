@@ -59,6 +59,15 @@ warmup:
       fail: "Какая-то картинка не загрузилась — проверь имя файла: img/barsik.svg и img/sharik.svg"
     - js: "const h = doc.querySelector('a').getAttribute('href'); return h === 'about.html' || h === './about.html'"
       fail: "Ссылка должна быть относительной: href=\"about.html\""
+team:
+  - task: "Создай репозиторий на GitHub и загрузи файлы проекта."
+    hint: "Загружай содержимое папки, а не саму папку: index.html должен лежать в корне."
+  - task: "Проверь пути: картинки и стили подключены как img/… и style.css, без C:\\."
+    hint: "Поиск «C:» по файлам — Ctrl+Shift+F в VS Code."
+  - task: "Проверь имена файлов: латиница, маленькие буквы, без пробелов."
+    hint: "Cat.JPG и cat.jpg для GitHub — разные файлы."
+  - task: "Включи Pages, открой сайт по ссылке с телефона и разошли ссылку команде."
+    hint: "Settings → Pages → Deploy from a branch → main → / (root)."
 checklist:
   - Главный файл называется index.html и лежит в корне репозитория
   - Все пути относительные, имена файлов латиницей без пробелов
@@ -73,7 +82,7 @@ mistakes:
     a: "Перетаскивай в окно загрузки содержимое папки проекта (index.html, style.css, script.js, папку img), а не саму папку."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -109,6 +118,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 4. Откройте **Settings** → **Pages**. В **Source** выберите **Deploy from a branch**, ветка `main`, папка `/ (root)` → **Save**.
 5. Через 1–2 минуты вверху страницы Pages появится ссылка на сайт. Откройте её с компьютера и с телефона.
 6. Нашли ошибку? Исправьте файл на компьютере и загрузите его снова через **Add file** → **Upload files** — сайт обновится сам.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Перед загрузкой откройте `index.html` в VS Code и поищите (Ctrl+F) `C:` и `src="/` — всё найденное нужно исправить на относительные пути.

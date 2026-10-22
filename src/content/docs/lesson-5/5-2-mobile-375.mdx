@@ -111,6 +111,15 @@ warmup:
       fail: "Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;"
     - js: "return doc.documentElement.scrollWidth <= doc.documentElement.clientWidth"
       fail: "Есть горизонтальная прокрутка — что-то шире экрана. Проверь меню и сетку"
+team:
+  - task: "Шапка на телефоне: меню под логотипом или уменьшенное, подвал — колонки в столбик."
+    hint: "grid-template-columns: 1fr для подвала. Бургер сделаем в 6.3."
+  - task: "Первый экран на телефоне: текст над картинкой, заголовок меньше."
+    hint: "flex-direction: column и меньший font-size у h1 внутри медиазапроса."
+  - task: "Карточки на телефоне: одна колонка, без прокрутки вбок."
+    hint: "Если сетка через auto-fill — проверь минимальную ширину в minmax."
+  - task: "Остальные секции на телефоне — в столбик, меньше отступы."
+    hint: "Отступ секций на телефоне можно уменьшить вдвое: padding: 40px 0."
 checklist:
   - На 375 px нет горизонтальной прокрутки
   - Сетки перестроены в 1–2 колонки
@@ -125,7 +134,7 @@ mistakes:
     a: Медиазапрос должен стоять ниже обычных правил. Если он выше, обычные правила его перебивают.
 blocks: [header, cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -170,6 +179,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 3. Всё пишите в один медиазапрос в конце `style.css`.
 4. Прокрутите страницу вбок — если она двигается, найдите виновника (подсказка в «Частые ошибки»).
 5. Проверьте ещё ширину 1024 px (планшет): там часто хорошо смотрятся две колонки.
+
+<TeamTasks />
 
 <BlockLinks />
 

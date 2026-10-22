@@ -112,6 +112,15 @@ warmup:
       fail: "Когда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)"
     - js: "doc.querySelector('.burger').click(); return !doc.querySelector('.menu').classList.contains('open') && doc.querySelector('.burger').getAttribute('aria-expanded') === 'false'"
       fail: "Второй клик должен закрыть меню и вернуть aria-expanded=\"false\""
+team:
+  - task: "Добавь кнопку-бургер в шапку и напиши JS: по клику меню открывается."
+    hint: "classList.toggle(\"open\") и aria-expanded — из теории шага."
+  - task: "Проверь первый экран на 375 px с открытым меню: ничего не перекрыто."
+    hint: "Если меню наезжает на текст — у шапки должна быть своя высота, без position."
+  - task: "Проверь карточки на 375 px после правок шапки."
+    hint: "Горизонтальной прокрутки быть не должно."
+  - task: "Спрячь бургер на компьютере и покажи на телефоне в медиазапросе."
+    hint: ".burger { display: none; } и в @media — display: block."
 checklist:
   - На 375 px меню спрятано, видна кнопка ☰
   - По клику меню открывается и закрывается
@@ -126,7 +135,7 @@ mistakes:
     a: Незрячие пользователи с программой экранного доступа услышат «меню развёрнуто» или «свёрнуто». Без этого кнопка ☰ для них — непонятный символ.
 blocks: [burger]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -179,6 +188,8 @@ burger.addEventListener('click', function () {
 3. В медиазапросе для телефона (`max-width: 768px`): верните шапке строку с переносом, покажите бургер, поставьте `nav` отдельной строкой на всю ширину, спрячьте меню и добавьте правило `.menu.open`.
 4. В `script.js` переключайте класс `open` и `aria-expanded` по клику.
 5. Проверьте на 375 px и на 1280 px.
+
+<TeamTasks />
 
 <BlockLinks />
 

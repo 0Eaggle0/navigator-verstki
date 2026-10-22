@@ -116,6 +116,15 @@ warmup:
       fail: "Нет тега <footer> — оберни в него подвал"
     - js: "return doc.querySelectorAll('h1').length === 1"
       fail: "На странице должен быть ровно один <h1>"
+team:
+  - task: "Сделай header с логотипом и nav, а в самом низу — footer."
+    hint: "Меню — внутри nav: <ul class=\"menu\"> с пунктами li > a."
+  - task: "Сделай section class=\"hero\" с одним h1."
+    hint: "h1 на странице один — это главный заголовок первого экрана."
+  - task: "Сделай section для карточек с заголовком h2 и пустым блоком .cards."
+    hint: "Класс секции возьми из списка блоков команды, например class=\"pets\"."
+  - task: "Сделай остальные секции по списку из 1.1, у каждой — h2."
+    hint: "Порядок секций в коде — как на макете сверху вниз."
 checklist:
   - На странице есть header, main и footer
   - Меню лежит в nav внутри header
@@ -132,7 +141,7 @@ mistakes:
     a: Их понимают поисковики и программы экранного доступа для незрячих. И код читать проще — сразу видно, где что.
 blocks: [header]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -184,6 +193,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 4. Сохраните и проверьте в браузере: заголовки идут в том же порядке, что на макете.
 
 Контент (тексты, картинки, кнопки) переносим в следующем шаге — сейчас только каркас.
+
+<TeamTasks />
 
 <BlockLinks />
 

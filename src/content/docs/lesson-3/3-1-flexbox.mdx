@@ -92,6 +92,15 @@ warmup:
     - selector: ".row"
       style: { align-items: "center" }
       fail: "Кружки не по центру по вертикали. Нужно: align-items: center;"
+team:
+  - task: "Пройди Flexbox Froggy до 10 уровня и найди на макете ряды в шапке и подвале."
+    hint: "Ряд — когда элементы стоят слева направо: логотип, меню, кнопка."
+  - task: "Пройди Froggy и найди ряды в первом экране: текст и картинка, кнопки."
+    hint: "Две кнопки рядом — тоже ряд."
+  - task: "Пройди Froggy и найди ряды в карточках: цена и дата, иконки, навыки."
+    hint: "Строка внутри карточки — маленький флекс."
+  - task: "Пройди Froggy и найди ряды в остальных секциях: шаги, иконки, соцсети."
+    hint: "Запиши список рядов — пригодится в 3.4."
 checklist:
   - "Понимаю, что display: flex ставится родителю, а не детям"
   - Знаю разницу justify-content (вдоль ряда) и align-items (поперёк)
@@ -106,7 +115,7 @@ mistakes:
     a: "Flex по умолчанию сжимает детей, чтобы поместились в ряд. Задай им ширину и flex-shrink: 0 или разреши перенос flex-wrap: wrap."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -146,6 +155,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 1. Пройдите [Flexbox Froggy](https://flexboxfroggy.com/#ru) до 10-го уровня. На это есть 10 минут, дальше — по желанию дома.
 2. Найдите на своём макете все места, где элементы стоят **в ряд**: шапка, первый экран, кнопки, иконки, футер. Запишите их — это задачи на следующие шаги.
 3. Попробуйте на своей странице: поставьте `display: flex` шапке и посмотрите, что изменилось.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Запомните правило: «flex — родителю, выравнивание — родителю». Детям обычно ничего писать не нужно.

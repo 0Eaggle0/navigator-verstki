@@ -101,6 +101,15 @@ warmup:
     - selector: ".footer__cols"
       style: { column-gap: "24px" }
       fail: "Между колонками нет промежутка gap: 24px"
+team:
+  - task: "Сверстай подвал сеткой из колонок, внизу — строка с копирайтом."
+    hint: "Строку на всю ширину — grid-column: 1 / -1."
+  - task: "Доведи первый экран: сравни с макетом на 1280 px и поправь отличия."
+    hint: "Открой макет и страницу рядом, ширина окна — как у макета."
+  - task: "Доведи карточки: кнопки на одной линии, одинаковые картинки."
+    hint: "Карточка — flex-столбик, кнопке margin-top: auto."
+  - task: "Оформи остальные секции и собери общий файл с модератором."
+    hint: "Свой CSS начинай с класса секции, например .reviews …, чтобы не сломать чужое."
 checklist:
   - Все секции макета свёрстаны сверху донизу
   - Подвал разбит на колонки, как в макете
@@ -115,7 +124,7 @@ mistakes:
     a: "У fr делится свободное место. Если у колонки длинный текст, задай ей minmax(0, 1fr) или просто сократи текст."
 blocks: [steps, form, footer]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -187,6 +196,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Np
 3. Для каждой секции решите: ряд или сетка? Сделайте раскладку, потом оформление.
 4. Сверстайте подвал сеткой из колонок.
 5. Откройте страницу на ширине 1280 px рядом с макетом и поправьте заметные отличия.
+
+<TeamTasks />
 
 <BlockLinks />
 

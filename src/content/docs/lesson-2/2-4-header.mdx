@@ -89,6 +89,15 @@ warmup:
       fail: "У ссылок меню осталось подчёркивание. Нужно: text-decoration: none;"
     - js: "const s = getComputedStyle(doc.querySelector('.button')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && parseFloat(s.borderTopLeftRadius) > 0"
       fail: "Кнопке нужен фон (background) и скругление углов (border-radius)"
+team:
+  - task: "Оформи шапку: фон, отступы, логотип и ссылки меню без подчёркивания."
+    hint: "text-decoration: none убирает линию, color — свой цвет ссылок."
+  - task: "Оформи общий класс .button: фон, цвет текста, отступы, скругление."
+    hint: "Кнопке-ссылке нужен display: inline-block, иначе вертикальные отступы не работают."
+  - task: "Проверь кнопки в карточках: они должны взять стиль .button."
+    hint: "Если кнопка в карточке другая — добавь правило .card .button."
+  - task: "Оформи заголовки h1, h2 и текст по паспорту стиля."
+    hint: "Размеры и начертания — из паспорта, цвет — переменными."
 checklist:
   - Цвета и шрифты шапки взяты из переменных
   - Размеры логотипа и пунктов меню совпадают с макетом
@@ -103,7 +112,7 @@ mistakes:
     a: "Задай ей высоту из макета: .logo img { height: 40px; } — ширина подстроится сама."
 blocks: [header]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -151,6 +160,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 4. Оформите класс `.button`: фон, цвет текста, отступы, скругление. Это общий стиль для всех кнопок-ссылок — в шапке, на первом экране, в карточках. Оформите один раз, и все кнопки станут кнопками.
 
 Шапка может пока стоять «столбиком» — в строку её поставим на следующем занятии.
+
+<TeamTasks />
 
 <BlockLinks />
 

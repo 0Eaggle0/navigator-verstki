@@ -110,6 +110,15 @@ warmup:
     - selector: ".card img"
       style: { object-fit: "cover" }
       fail: "Картинки сплющены. Нужно: object-fit: cover;"
+team:
+  - task: "Помоги с картинками: экспортируй недостающие фото для карточек."
+    hint: "Фото карточек одного размера смотрятся аккуратнее: обрежь их в Figma одинаково."
+  - task: "Сверь первый экран и карточки: одинаковые ли отступы у секций."
+    hint: "У всех секций padding сверху и снизу должен совпадать с макетом."
+  - task: "Поставь карточки в сетку и оформи одну карточку по макету."
+    hint: "repeat(auto-fill, minmax(…, 1fr)) и gap. Картинкам — aspect-ratio и object-fit: cover."
+  - task: "Сделай сетку в своей секции, если она там есть: шаги или отзывы."
+    hint: "Три шага в ряд — grid-template-columns: repeat(3, 1fr)."
 checklist:
   - Карточки стоят в сетке, колонок столько же, сколько в макете
   - Сетка сама перестраивается при сужении окна
@@ -124,7 +133,7 @@ mistakes:
     a: "Сделай карточку флекс-столбиком (display: flex; flex-direction: column;), а кнопке добавь margin-top: auto — она прижмётся к низу."
 blocks: [cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -197,6 +206,8 @@ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 2. Поставьте их в сетку через `repeat(auto-fill, minmax(…, 1fr))`. Минимальную ширину подберите так, чтобы на компьютере колонок было столько же, сколько в макете.
 3. Оформите одну карточку по макету, остальные подтянутся сами.
 4. Сузьте окно браузера — сетка должна перестраиваться без горизонтальной прокрутки.
+
+<TeamTasks />
 
 <BlockLinks />
 

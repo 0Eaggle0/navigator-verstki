@@ -93,6 +93,15 @@ warmup:
       fail: "У .container нет max-width: 320px"
     - js: "const c = doc.querySelector('.container').getBoundingClientRect(); const w = doc.documentElement.clientWidth; return Math.abs(c.left - (w - c.right)) < 2"
       fail: "Контейнер не по центру. Нужно: margin: 0 auto;"
+team:
+  - task: "Оберни содержимое шапки и подвала в .container."
+    hint: ".container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }"
+  - task: "То же в первом экране, задай секции отступы сверху и снизу из макета."
+    hint: "Отступ секции — padding: 80px 0. Сверь число с Figma."
+  - task: "То же в секции карточек, задай отступы внутри карточки."
+    hint: "Внутренний отступ карточки — padding, расстояние между карточками сделаем в 4.2."
+  - task: "То же в остальных секциях. Проверь box-sizing: border-box для всех элементов."
+    hint: "В стартовом шаблоне есть * { box-sizing: border-box; } — проверь, что не удалили."
 checklist:
   - "На всей странице стоит box-sizing: border-box (есть в сбросе)"
   - "Контент лежит в .container с max-width из макета и margin: 0 auto"
@@ -107,7 +116,7 @@ mistakes:
     a: "Правый клик по элементу → «Просмотреть код» (F12). Внизу вкладки Styles есть схема блока: оранжевое — margin, зелёное — padding. Наведи на элемент — отступы подсветятся на странице."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -149,6 +158,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 2. Задайте `.container` ширину контейнера из паспорта стиля и `margin: 0 auto`. Добавьте боковые отступы `padding: 0 16px`, чтобы на телефоне текст не прилипал к краю.
 3. Задайте секциям вертикальные отступы из макета: `padding: 80px 0`.
 4. Откройте DevTools (F12) и сравните отступы с Figma.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Контейнер один раз описывается в CSS, а в HTML используется в каждой секции:

@@ -100,6 +100,15 @@ warmup:
     - selector: ".feature"
       style: { align-items: "center" }
       fail: "Иконка и текст не по центру: align-items: center;"
+team:
+  - task: "Выровняй ряды в подвале: колонки ссылок, соцсети."
+    hint: "Иконки соцсетей — flex и gap."
+  - task: "Выровняй ряд кнопок в первом экране."
+    hint: "Две кнопки рядом — flex, gap, flex-wrap: wrap."
+  - task: "Выровняй ряды внутри карточки: цена и дата, навыки-«таблетки»."
+    hint: "Цена слева, дата справа — justify-content: space-between."
+  - task: "Выровняй остальные ряды: шаги «как это работает», преимущества."
+    hint: "Иконка над подписью — flex-direction: column и align-items: center."
 checklist:
   - Все ряды на странице выровнены через flex и gap
   - Одинаковые элементы в ряду одной ширины
@@ -111,7 +120,7 @@ mistakes:
     a: "align-items: center выравнивает сами блоки. Если строк текста несколько, добавь text-align: center."
 blocks: [steps]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -150,6 +159,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 ## Делаем свой сайт
 
 Найдите на макете оставшиеся ряды — кнопки, иконки, преимущества, соцсети — и выровняйте каждый через flex и `gap`. Шаг можно пропустить, если команда отстаёт: эти ряды не главное для минимума.
+
+<TeamTasks />
 
 <BlockLinks />
 

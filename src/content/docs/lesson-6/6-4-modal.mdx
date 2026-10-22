@@ -80,6 +80,15 @@ warmup:
       fail: "После клика по .open-modal окно не открылось. Нужно: modal.showModal()"
     - js: "doc.querySelector('.close-modal').click(); return !doc.querySelector('.modal').open"
       fail: "Кнопка .close-modal не закрывает окно. Нужно: modal.close()"
+team:
+  - task: "Оформи окно: отступы, скругление, ширина, затемнение ::backdrop."
+    hint: ".modal::backdrop { background: rgba(0, 0, 0, 0.5); }"
+  - task: "Привяжи главную кнопку первого экрана к открытию окна."
+    hint: "modal.showModal() по клику на кнопку."
+  - task: "Сверстай содержимое окна: заголовок, поля, кнопку «Закрыть»."
+    hint: "Поля — label + input, у кнопки закрытия — type=\"button\"."
+  - task: "Проверь окно на 375 px: помещается, закрывается по Esc и по кнопке."
+    hint: "Ширина окна — max-width: 90vw, чтобы не вылезало."
 checklist:
   - Окно открывается по кнопке и закрывается кнопкой и клавишей Esc
   - Под окном затемнение, страница за ним не кликается
@@ -94,7 +103,7 @@ mistakes:
     a: "Задай .modal { max-width: calc(100% - 32px); } — у окна всегда будут отступы по краям."
 blocks: [modal]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -166,6 +175,8 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
 2. Оформите окно: отступы, скругление, ширина, затемнение `::backdrop`.
 3. В `script.js` откройте окно по нужной кнопке и закройте по кнопке «Закрыть».
 4. Проверьте на 375 px: окно помещается на экран, закрывается по Esc.
+
+<TeamTasks />
 
 <BlockLinks />
 

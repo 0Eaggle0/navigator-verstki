@@ -92,6 +92,15 @@ warmup:
       fail: "Между колонками нет промежутка gap: 32px"
     - js: "const t = getComputedStyle(doc.querySelector('.hero__text')), i = getComputedStyle(doc.querySelector('.hero__img')); return t.flexGrow === '1' && i.flexGrow === '1'"
       fail: "Колонкам .hero__text и .hero__img нужно одинаково flex: 1;"
+team:
+  - task: "Помоги участнику 2: проверь, что в шапке ничего не съехало после flex."
+    hint: "Если шапка «развалилась» — проверь, что flex стоит на .container, а не на header."
+  - task: "Поставь текст и картинку первого экрана в ряд, задай пропорции через flex."
+    hint: "flex: 1 у обоих — поровну, flex: 2 и flex: 1 — две трети и треть."
+  - task: "Оформи заголовок, текст и кнопку первого экрана по паспорту стиля."
+    hint: "Картинке — max-width: 100%, чтобы не вылезала."
+  - task: "Сверь первый экран с макетом и составь список отличий для участника 2."
+    hint: "Смотри на отступы, размер заголовка и выравнивание по вертикали."
 checklist:
   - Текст и картинка стоят рядом, как в макете
   - Колонки выровнены по вертикали, между ними промежуток
@@ -106,7 +115,7 @@ mistakes:
     a: В HTML поменяй порядок блоков — справа окажется тот, что идёт вторым.
 blocks: [hero]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -177,6 +186,8 @@ h1 { margin-top: 0; font-size: 28px; }`}
 2. Поставьте их в ряд через flex, выровняйте, задайте промежуток из макета.
 3. Задайте колонкам ширину через `flex`, чтобы пропорции совпали с макетом.
 4. Оформите заголовок, текст и кнопку по паспорту стиля: размеры, цвета, отступы.
+
+<TeamTasks />
 
 <BlockLinks />
 

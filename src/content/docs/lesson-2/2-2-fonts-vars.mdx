@@ -85,6 +85,15 @@ warmup:
       fail: "У body остался стандартный отступ. Нужно: margin: 0;"
     - js: "return getComputedStyle(doc.body).fontFamily.includes('Montserrat')"
       fail: "У body нет шрифта Montserrat. Нужно: font-family: 'Montserrat', sans-serif;"
+team:
+  - task: "Подключи шрифты из паспорта стиля через Google Fonts."
+    hint: "Скопируй строки <link> из Get embed code в head, до подключения style.css."
+  - task: "Запиши цвета в :root переменными и задай body фон, цвет текста и шрифт."
+    hint: ":root { --accent: #FF6B35; } и дальше пиши var(--accent)."
+  - task: "Проверь сброс стилей: у body нет отступа, у списков нет точек."
+    hint: "В стартовом style.css сброс уже есть — посмотри, что он делает."
+  - task: "Пройдись по странице и замени цвета-числа в своих правилах на переменные."
+    hint: "Поиск по файлу — Ctrl+F, ищи «#»."
 checklist:
   - Шрифты из макета подключены через Google Fonts
   - Все цвета из паспорта стиля лежат в переменных в :root
@@ -99,7 +108,7 @@ mistakes:
     a: Спроси модератора — шрифт можно скачать файлом. Или замени на похожий из Google Fonts, это нормально.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -146,6 +155,8 @@ body { margin: 0; padding: 16px; font-family: Arial, sans-serif; color: var(--te
 2. В `style.css` в блоке `:root` запишите цвета из паспорта стиля переменными. В стартовом шаблоне уже есть заготовки `--color-text`, `--color-accent`.
 3. Замените `--font-main` на свой шрифт.
 4. Проверьте в браузере: текст сменил шрифт, фон и цвет текста как в макете.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 На Google Fonts: откройте шрифт → **Get font** → **Get embed code**. Справа будут два блока: `<link>` для HTML и `font-family` для CSS. Копируйте оба.

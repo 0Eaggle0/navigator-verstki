@@ -102,6 +102,15 @@ warmup:
     - selector: ".row"
       style: { flex-direction: "column" }
       fail: "На телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса"
+team:
+  - task: "Включи режим телефона 375 px и запиши, что ломается в шапке и подвале."
+    hint: "F12 → значок телефона (Ctrl+Shift+M). Чаще всего ломается меню."
+  - task: "Запиши поломки первого экрана на 375 px."
+    hint: "Обычно: текст и картинка не помещаются в ряд, заголовок слишком крупный."
+  - task: "Запиши поломки карточек на 375 px."
+    hint: "Проверь, нет ли горизонтальной прокрутки: потяни страницу вбок."
+  - task: "Проверь meta viewport в head и добавь в конец style.css пустой медиазапрос."
+    hint: "@media (max-width: 768px) { } — пишите в него все вместе в 5.2."
 checklist:
   - В head есть meta viewport
   - Умею включать режим устройства в DevTools (Ctrl+Shift+M)
@@ -116,7 +125,7 @@ mistakes:
     a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. В этом курсе для телефона везде берём 768px — так медиазапросы из разных шагов совпадут.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -164,6 +173,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 2. Откройте сайт, включите режим устройства в DevTools и поставьте ширину 375 px.
 3. Пролистайте страницу сверху вниз и запишите, что сломалось: где горизонтальная прокрутка, что вылезает, что слишком мелко или крупно.
 4. Добавьте в конец `style.css` пустой медиазапрос `@media (max-width: 768px) { }` — в следующем шаге будем его наполнять.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 В режиме устройства удобно выбрать **Dimensions: Responsive** и тянуть край страницы мышкой — видно, на какой ширине вёрстка начинает ломаться.

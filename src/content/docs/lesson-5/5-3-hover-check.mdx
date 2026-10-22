@@ -71,6 +71,15 @@ warmup:
       fail: "Правило .button:hover пустое — поменяй в нём, например, background"
     - js: "return parseFloat(getComputedStyle(doc.querySelector('.button')).transitionDuration) > 0"
       fail: "Смена цвета резкая. Добавь .button плавный переход: transition: 0.2s;"
+team:
+  - task: "Добавь :hover ссылкам меню и кнопке в шапке."
+    hint: "transition: 0.2s пиши в обычное правило, не в :hover."
+  - task: "Добавь :hover кнопкам первого экрана."
+    hint: "Удобно сразу вместе с :focus-visible — для тех, кто ходит по Tab."
+  - task: "Добавь :hover карточкам: лёгкий подъём или тень."
+    hint: "transform: translateY(-4px) — карточка «приподнимается»."
+  - task: "Сверь всю страницу с макетом на 1280 и 375 px, пройди чек-лист."
+    hint: "Составь общий список отличий и раздай их тем, чья это часть."
 checklist:
   - У всех кнопок и ссылок есть :hover
   - Страница сверена с макетом на 1280 px, заметные отличия исправлены
@@ -85,7 +94,7 @@ mistakes:
     a: На сенсорных экранах наведения нет, это нормально. Главное — чтобы без hover всё было понятно и кликабельно.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -124,6 +133,8 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 2. Добавьте `transition` к этим элементам.
 3. Сверьте страницу с макетом на 1280 px и на 375 px. Составьте список отличий и исправьте главные.
 4. Пройдите чек-лист ниже — если всё отмечено, **минимум проекта выполнен**. 🎉
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Если в макете нет отдельного состояния наведения, сделайте цвет кнопки чуть темнее. Хватит разницы в 10–15% яркости.

@@ -82,6 +82,15 @@ warmup:
       fail: "greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знак"
     - js: "return doc.querySelector('h1').textContent.startsWith('Привет, ')"
       fail: "В заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);"
+team:
+  - task: "Создай script.js и подключи его последней строкой перед </body>."
+    hint: "<script src=\"script.js\"></script> — путь как у style.css."
+  - task: "Проверь консоль: напиши console.log и посмотри результат в F12 → Console."
+    hint: "Красный текст в консоли — ошибка, её номер строки подскажет, где искать."
+  - task: "Найди на макете, что должно реагировать на клики: избранное, кнопки, переключатели."
+    hint: "Запиши список — это задачи для 6.2–7.2."
+  - task: "Договоритесь, кто пишет общий script.js. Остальные присылают ему кусочки."
+    hint: "Один файл — один хозяин: так меньше путаницы."
 checklist:
   - Файл script.js подключён в конце body
   - В консоли браузера (F12 → Console) видно сообщение из console.log
@@ -96,7 +105,7 @@ mistakes:
     a: "Функцию нужно вызвать: greet(name). Просто объявить мало."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
 
 ## Теория
 
@@ -147,6 +156,8 @@ document.querySelector('h1').textContent = greet(name);`}
 2. Подключите его в `index.html` последней строкой перед `</body>`: `<script src="script.js"></script>`.
 3. Напишите в `script.js` строку `console.log('Скрипт подключён!');`, сохраните и откройте консоль браузера (F12 → Console). Сообщение появилось — всё работает.
 4. Договоритесь в команде: JavaScript пишет один человек, остальные присылают ему свои кусочки. Иначе файл сломается от одновременных правок.
+
+<TeamTasks />
 
 <Hint title="Подсказка 1">
 Строки можно склеивать плюсом: `'Привет, ' + n + '!'`. Или использовать обратные кавычки: `` `Привет, ${n}!` `` — внутри `${}` подставится значение переменной.
