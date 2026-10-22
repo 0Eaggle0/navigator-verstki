@@ -1,8 +1,12 @@
 ---
 title: Для модератора
-description: План занятий по минутам, частые ошибки, работа в команде, критерии приёмки.
+description: Раздел для модераторов команд. Открывается кодом доступа.
+tableOfContents: false
+pagefind: false
 ---
-import { ModeratorPlan } from '~/components';
+import { ModeratorPlan, ModSecret } from '~/components';
+
+<ModSecret>
 
 ## Как вести пару
 
@@ -71,3 +75,5 @@ import { ModeratorPlan } from '~/components';
 4. Проверьте, что сайт собирается: локально `npm run build` или вкладка Actions на GitHub.
 
 Время маршрута пересчитается само. Если занятие не равно 80 минутам или весь маршрут длиннее 560 минут, при сборке появится предупреждение. Подробная инструкция — в `README.md` репозитория.
+
+</ModSecret>

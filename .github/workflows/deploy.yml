@@ -19,6 +19,8 @@ jobs:
       # Сайт будет по адресу https://<владелец>.github.io/<репозиторий>/
       SITE: https://${{ github.repository_owner }}.github.io
       BASE_PATH: /${{ github.event.repository.name }}
+      # Коды доступа к разделу модератора (Settings → Secrets and variables → Actions)
+      MODERATOR_CODES: ${{ secrets.MODERATOR_CODES }}
     steps:
       - uses: actions/checkout@v5
       - uses: withastro/action@v6

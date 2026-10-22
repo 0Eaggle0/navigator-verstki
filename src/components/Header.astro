@@ -4,6 +4,7 @@
 // Здесь же на каждой странице лежит список уровней для звёзд и значков (#nav-levels).
 import Search from 'virtual:starlight/components/Search';
 import ThemeSelect from 'virtual:starlight/components/ThemeSelect';
+import Profile from './Profile.astro';
 import { svg } from '~/lib/sprites';
 import { getRoute, getLevels, url } from '~/lib/route';
 
@@ -37,6 +38,7 @@ const sections = [
 		<nav-continue data-order={JSON.stringify(order)}>
 			<a class="a-btn a-btn--go a-header__go" href={order[0][1]}>Начать</a>
 		</nav-continue>
+		<Profile />
 		<ThemeSelect />
 	</div>
 </div>
@@ -172,8 +174,12 @@ const sections = [
 			gap: 0.5rem;
 		}
 		.a-header__stars,
-		.a-header :global(starlight-theme-select) {
+		.a-header :global(starlight-theme-select),
+		.a-header :global(.profile__name) {
 			display: none;
+		}
+		.a-header :global(.profile__chip) {
+			padding-inline-end: 0.3rem;
 		}
 	}
 	/* На телефоне от логотипа остаётся Байт: иначе не влезают поиск, «Продолжить» и меню */

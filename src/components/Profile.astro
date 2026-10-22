@@ -1,0 +1,352 @@
+---
+// Профиль — офлайн-регистрация. Кнопка с именем в шапке и окно «Создай профиль».
+// При первом заходе окно открывается само. Всё хранится в браузере (src/lib/storage.ts → profile).
+import cases from '~/data/cases.json';
+import { parts } from '~/data/parts.json';
+import { svg } from '~/lib/sprites';
+---
+
+<nav-profile class="profile">
+	<button type="button" class="profile__chip" aria-haspopup="dialog">
+		<span class="profile__avatar" aria-hidden="true">?</span>
+		<span class="profile__name">Профиль</span>
+	</button>
+
+	<dialog class="profile__dialog" aria-labelledby="profile-title">
+		<form method="dialog" class="profile__form not-content" novalidate>
+			<div class="profile__head">
+				<span set:html={svg('byte', 44)} />
+				<div>
+					<h2 id="profile-title">Создай профиль</h2>
+					<p>Хранится только в этом браузере. Поменять можно в любой момент — кнопка с именем в шапке.</p>
+				</div>
+			</div>
+
+			<fieldset class="profile__roles">
+				<legend>Кто ты</legend>
+				<label><input type="radio" name="role" value="student" checked /> <span>Ученик</span></label>
+				<label><input type="radio" name="role" value="moderator" /> <span>Модератор</span></label>
+			</fieldset>
+
+			<div class="profile__row">
+				<label>
+					Имя или ник
+					<input name="name" autocomplete="nickname" maxlength="30" placeholder="Аня" required />
+				</label>
+				<label>
+					Команда
+					<input name="team" maxlength="30" placeholder="Команда 3" />
+				</label>
+			</div>
+
+			<label>
+				Кейс команды
+				<select name="case">
+					<option value="">— выбери —</option>
+					{cases.map((c) => <option value={c.id}>{c.title}</option>)}
+					<option value="own">Своя тема</option>
+				</select>
+			</label>
+			<label class="profile__own" hidden>
+				Название своей темы
+				<input name="caseTitle" maxlength="40" placeholder="Например, «Клуб настолок»" />
+			</label>
+
+			<label class="profile__part">
+				Моя часть сайта
+				<select name="part">
+					{parts.map((p) => <option value={p.n}>{p.n}. {p.title}</option>)}
+				</select>
+				<span class="profile__hint">Части закреплены по номерам участников, но можно договориться иначе и поменять.</span>
+			</label>
+
+			<p class="profile__error" role="alert" hidden>Напиши имя или ник — так модератор поймёт, чей это компьютер.</p>
+
+			<div class="profile__btns">
+				<button type="submit" value="save" class="a-btn--go a-btn--big">Сохранить</button>
+				<button type="submit" value="cancel" formnovalidate class="profile__cancel">Позже</button>
+			</div>
+		</form>
+	</dialog>
+</nav-profile>
+
+<script>
+	import { load, update, type Profile } from '~/lib/storage';
+
+	class ProfileBox extends HTMLElement {
+		connectedCallback() {
+			const $ = <T extends Element>(s: string) => this.querySelector<T>(s)!;
+			const dialog = $<HTMLDialogElement>('dialog');
+			const form = $<HTMLFormElement>('form');
+			const f = (name: string) => form.elements.namedItem(name) as HTMLInputElement & HTMLSelectElement;
+			const own = $<HTMLElement>('.profile__own');
+			const part = $<HTMLElement>('.profile__part');
+			const error = $<HTMLElement>('.profile__error');
+
+			// Шапка: имя и первая буква в кружке; роль — на <html> для CSS
+			const show = () => {
+				const p = load();
+				const name = p.profile?.name;
+				$('.profile__name').textContent = name || 'Профиль';
+				$('.profile__avatar').textContent = name ? name[0].toUpperCase() : '?';
+				document.documentElement.dataset.role = p.profile?.role ?? 'student';
+			};
+			const sync = () => {
+				own.hidden = f('case').value !== 'own';
+				part.hidden = (form.querySelector<HTMLInputElement>('input[name=role]:checked')?.value ?? 'student') !== 'student';
+			};
+			const fill = () => {
+				const p = load();
+				const pr = p.profile;
+				f('name').value = pr?.name ?? '';
+				f('team').value = pr?.team ?? '';
+				f('case').value = p.case ?? '';
+				f('caseTitle').value = p.caseTitle ?? '';
+				f('part').value = String(pr?.part ?? 1);
+				form.querySelector<HTMLInputElement>(`input[name=role][value=${pr?.role ?? 'student'}]`)!.checked = true;
+				error.hidden = true;
+				$('#profile-title').textContent = pr ? 'Твой профиль' : 'Создай профиль';
+				sync();
+			};
+			const open = () => (fill(), dialog.showModal());
+
+			form.addEventListener('change', sync);
+			form.addEventListener('submit', (e) => {
+				const btn = (e as SubmitEvent).submitter as HTMLButtonElement | null;
+				if (btn?.value === 'cancel') return;
+				const name = f('name').value.trim();
+				if (!name) {
+					e.preventDefault();
+					error.hidden = false;
+					f('name').focus();
+					return;
+				}
+				const role = (form.querySelector<HTMLInputElement>('input[name=role]:checked')?.value ?? 'student') as Profile['role'];
+				update((p) => {
+					p.profile = { name, team: f('team').value.trim(), role, part: role === 'student' ? +f('part').value : undefined };
+					p.case = f('case').value || undefined;
+					p.caseTitle = p.case === 'own' ? f('caseTitle').value.trim() : undefined;
+				});
+				show();
+			});
+			f('name').addEventListener('input', () => (error.hidden = true));
+			$('.profile__chip').addEventListener('click', open);
+			// Открыть окно можно и из других мест: <button data-open-profile>
+			document.addEventListener('click', (e) => {
+				if ((e.target as Element).closest?.('[data-open-profile]')) open();
+			});
+			window.addEventListener('nav-progress', show);
+
+			show();
+			// Первый заход — сразу предлагаем создать профиль (кроме страниц, открытых без JS-хранилища)
+			if (!load().profile) {
+				try {
+					localStorage.setItem('nav-probe', '1');
+					localStorage.removeItem('nav-probe');
+					open();
+				} catch {
+					// хранилища нет — профиль не сохранится, не пристаём
+				}
+			}
+		}
+	}
+	customElements.define('nav-profile', ProfileBox);
+</script>
+
+<style>
+	.profile__chip {
+		display: inline-flex;
+		gap: 0.5rem;
+		align-items: center;
+		max-width: 11rem;
+		height: 2.6rem;
+		margin: 0 0 4px;
+		padding: 0 0.85rem 0 0.3rem;
+		font: 700 0.85rem var(--a-font);
+		color: var(--a-text);
+		background: var(--a-surface);
+		border: 0;
+		border-radius: 999px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 4px 0 var(--a-edge);
+		cursor: pointer;
+	}
+	.profile__chip:active {
+		transform: translateY(4px);
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.profile__chip:focus-visible {
+		outline: 3px solid var(--a-sky);
+		outline-offset: 3px;
+	}
+	.profile__avatar {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 2rem;
+		height: 2rem;
+		font-weight: 800;
+		color: var(--a-ink);
+		background: var(--a-pink);
+		border-radius: 50%;
+	}
+	.profile__name {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+
+	/* Окно профиля */
+	.profile__dialog {
+		width: min(32rem, calc(100vw - 1.5rem));
+		max-height: calc(100dvh - 2rem);
+		margin: auto;
+		padding: 0;
+		color: var(--a-text);
+		background: var(--a-bg);
+		border: 0;
+		border-radius: 24px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 8px 0 var(--a-edge),
+			0 30px 80px #0008;
+	}
+	.profile__dialog::backdrop {
+		background: #0e0b2bb3;
+		backdrop-filter: blur(4px);
+	}
+	.profile__dialog[open] {
+		animation: profile-in 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	@keyframes profile-in {
+		from {
+			transform: translateY(20px) scale(0.95);
+			opacity: 0;
+		}
+	}
+	.profile__form {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.5rem;
+	}
+	.profile__head {
+		display: flex;
+		gap: 1rem;
+		align-items: center;
+	}
+	.profile__head > span {
+		display: grid;
+		flex: none;
+		place-items: center;
+		width: 4rem;
+		height: 4rem;
+		background: var(--a-surface-2);
+		border-radius: 50%;
+	}
+	.profile__head h2 {
+		margin: 0;
+		font: 800 1.35rem var(--a-font);
+	}
+	.profile__head p {
+		margin: 0.25rem 0 0;
+		font-size: var(--sl-text-sm);
+		color: var(--a-muted);
+	}
+	.profile__form label {
+		display: flex;
+		flex-direction: column;
+		gap: 0.35rem;
+		font: 700 0.8rem var(--a-font);
+	}
+	.profile__form label[hidden] {
+		display: none;
+	}
+	.profile__form input:not([type='radio']),
+	.profile__form select {
+		width: 100%;
+		padding: 0.65rem 0.85rem;
+		font: 500 1rem var(--sl-font);
+		color: var(--a-text);
+		background: var(--a-surface);
+		border: 0;
+		border-radius: 12px;
+		box-shadow: inset 0 0 0 2px var(--a-line);
+	}
+	.profile__form input:focus-visible,
+	.profile__form select:focus-visible {
+		outline: 3px solid var(--a-sky);
+		outline-offset: 1px;
+	}
+	.profile__row {
+		display: grid;
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+		gap: 0.75rem;
+	}
+	.profile__hint {
+		font: 400 var(--sl-text-xs) var(--sl-font);
+		color: var(--a-muted);
+	}
+	/* Роль — две большие кнопки-переключателя */
+	.profile__roles {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		gap: 0.75rem;
+		margin: 0;
+		padding: 0;
+		border: 0;
+	}
+	.profile__roles legend {
+		margin-bottom: 0.35rem;
+		padding: 0;
+		font: 700 0.8rem var(--a-font);
+	}
+	.profile__roles label {
+		position: relative;
+		cursor: pointer;
+	}
+	.profile__roles input {
+		position: absolute;
+		opacity: 0;
+	}
+	.profile__roles span {
+		display: block;
+		padding: 0.75rem;
+		text-align: center;
+		font: 800 0.9rem var(--a-font);
+		background: var(--a-surface);
+		border-radius: 14px;
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 4px 0 var(--a-edge);
+	}
+	.profile__roles input:checked + span {
+		color: var(--a-ink);
+		background: var(--a-coin);
+		box-shadow: 0 4px 0 var(--a-coin-edge);
+	}
+	.profile__roles input:focus-visible + span {
+		outline: 3px solid var(--a-sky);
+		outline-offset: 3px;
+	}
+	.profile__error {
+		margin: 0;
+		font-size: var(--sl-text-sm);
+		color: var(--a-brick);
+	}
+	.profile__error[hidden] {
+		display: none;
+	}
+	.profile__btns {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		align-items: center;
+	}
+	@media (max-width: 30rem) {
+		.profile__row {
+			grid-template-columns: minmax(0, 1fr);
+		}
+	}
+</style>

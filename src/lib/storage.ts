@@ -3,8 +3,18 @@
 
 const KEY = 'nav-v1';
 
+// Профиль — офлайн-регистрация: хранится только в этом браузере
+export type Profile = {
+	name: string; // имя или ник
+	team: string; // номер или название команды
+	role: 'student' | 'moderator';
+	part?: number; // какую часть сайта делает ученик (1–4, см. src/data/parts.json)
+};
+
 export type Progress = {
-	case?: string; // выбранный кейс
+	profile?: Profile;
+	case?: string; // выбранный кейс (id из cases.json) или 'own' — своя тема
+	caseTitle?: string; // название своей темы, если case === 'own'
 	last?: string; // адрес последнего открытого шага
 	done: string[]; // id пройденных шагов (например "lesson-1/1-3-skeleton")
 	checklist: Record<string, number[]>; // отмеченные пункты чек-листа

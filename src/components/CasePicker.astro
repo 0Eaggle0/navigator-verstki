@@ -54,6 +54,15 @@ const COLOR: Record<string, number> = { watch: 3, teammate: 6, where: 5, tail: 4
 					</label>
 				))
 			}
+			<label class="picker__card picker__card--own w-7" data-case="own">
+				<input type="radio" name="case" value="own" />
+				<span class="picker__art picker__art--own" aria-hidden="true">
+					<i>+</i>
+				</span>
+				<span class="picker__chosen">твой кейс</span>
+				<strong class="picker__own-title">Своя тема</strong>
+				<span class="picker__about">Придумали свой проект? Укажи название в профиле — подсказки будут общими.</span>
+			</label>
 		</div>
 	</fieldset>
 </nav-case-picker>
@@ -65,12 +74,21 @@ const COLOR: Record<string, number> = { watch: 3, teammate: 6, where: 5, tail: 4
 
 	class CasePicker extends HTMLElement {
 		connectedCallback() {
-			const radio = this.querySelector<HTMLInputElement>(`input[value="${load().case}"]`);
-			if (radio) radio.checked = true;
+			// Отметка и название своей темы — из прогресса; профиль может поменять кейс
+			const sync = () => {
+				const p = load();
+				const radio = this.querySelector<HTMLInputElement>(`input[value="${p.case}"]`);
+				if (radio) radio.checked = true;
+				this.querySelector('.picker__own-title')!.textContent = p.case === 'own' && p.caseTitle ? p.caseTitle : 'Своя тема';
+			};
+			sync();
+			window.addEventListener('nav-progress', sync);
 			this.addEventListener('change', (e) => {
 				const input = e.target as HTMLInputElement;
 				update((p) => (p.case = input.value));
 				burst(input.closest('label')!);
+				// Своя тема — сразу открываем профиль, чтобы вписать название
+				if (input.value === 'own' && !load().caseTitle) document.querySelector<HTMLElement>('.profile__chip')?.click();
 			});
 			window.addEventListener('nav-progress', checkBadges);
 
@@ -343,5 +361,25 @@ const COLOR: Record<string, number> = { watch: 3, teammate: 6, where: 5, tail: 4
 	}
 	.picker__art--split em:nth-of-type(3) {
 		width: 45%;
+	}
+	/* Своя тема — пустой холст с плюсом */
+	.picker__art--own {
+		place-items: center;
+		background: repeating-linear-gradient(45deg, var(--w) 0 12px, color-mix(in srgb, var(--w) 85%, #fff) 12px 24px);
+	}
+	.picker__art--own i {
+		display: grid;
+		place-items: center;
+		width: 3rem;
+		height: 3rem;
+		font: 800 1.8rem/1 var(--a-font);
+		font-style: normal;
+		color: var(--a-ink);
+		background: #fff;
+		border-radius: 50%;
+		transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+	}
+	.picker__card--own:hover .picker__art--own i {
+		transform: rotate(90deg) scale(1.1);
 	}
 </style>

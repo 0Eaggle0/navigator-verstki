@@ -22,3 +22,5 @@ export { default as Island } from './Island.astro';
 export { default as HomeHero } from './HomeHero.astro';
 export { default as LevelPath } from './LevelPath.astro';
 export { default as Rules } from './Rules.astro';
+export { default as ModSecret } from './ModSecret.astro';
+export { default as Profile } from './Profile.astro';

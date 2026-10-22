@@ -524,3 +524,9 @@ starlight-lang-select select {
 .content-panel + .content-panel {
 	border-top: 0;
 }
+
+/* Раздел модератора виден только с ролью «модератор» (профиль). Сам раздел ещё и зашифрован */
+:root:not([data-role='moderator']) :is(li, p):has(> a[href*='/moderator/']),
+:root:not([data-role='moderator']) .a-footer__col:has(a[href*='/moderator/']) {
+	display: none;
+}

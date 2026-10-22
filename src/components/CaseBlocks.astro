@@ -28,7 +28,8 @@ type Id = keyof typeof blocks;
 	const chosen = load().case;
 	const sections = document.querySelectorAll<HTMLElement>('.case-blocks section');
 	sections.forEach((s) => (s.hidden = s.dataset.case !== chosen));
-	if (chosen) document.querySelector<HTMLElement>('.case-blocks__empty')!.hidden = true;
+	// Своя тема или кейс не выбран — показываем подсказку «выбери кейс»
+	if ([...sections].some((s) => !s.hidden)) document.querySelector<HTMLElement>('.case-blocks__empty')!.hidden = true;
 </script>
 
 <style>
