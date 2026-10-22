@@ -25,3 +25,4 @@ export { default as Rules } from './Rules.astro';
 export { default as ModSecret } from './ModSecret.astro';
 export { default as Profile } from './Profile.astro';
 export { default as TeamTasks } from './TeamTasks.astro';
+export { default as TeamSites } from './TeamSites.astro';

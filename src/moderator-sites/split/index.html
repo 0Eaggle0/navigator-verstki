@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Сплит — общие траты без неловкости</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=PT+Serif:wght@400;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Шапка -->
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="#">
+        <span class="logo__icon"><img src="img/logo.svg" alt="" width="15" height="15"></span>
+        <span class="logo__text">Сплит <small>Финансы</small></span>
+      </a>
+      <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+      <nav class="nav">
+        <ul class="menu">
+          <li><a href="#" class="menu__active">Главная</a></li>
+          <li><a href="#groups">Группы</a></li>
+          <li><a href="#">Сборы</a></li>
+          <li><a href="#">Расчеты</a></li>
+        </ul>
+      </nav>
+      <div class="header__tools">
+        <button class="icon-button" type="button" aria-label="Уведомления">
+          <img src="img/bell.svg" alt="" width="13" height="17"><i class="badge-dot"></i>
+        </button>
+        <button class="button" type="button" data-open-expense><img src="img/plus.svg" alt="" width="11" height="11"> Добавить расход</button>
+        <div class="user">
+          <span><b>Алексей М.</b> <em>+3 450 ₽</em></span>
+          <span class="user__icon"><img src="img/user.svg" alt="" width="12" height="12"></span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main">
+    <!-- Баланс: кому должны вы и кто должен вам -->
+    <section class="balance">
+      <article class="kpi">
+        <div class="kpi__top">
+          <div>
+            <p class="label label--accent"><i class="dot"></i> Вам должны</p>
+            <p class="kpi__sum">+4 800 <span class="rub">₽</span></p>
+          </div>
+          <span class="kpi__icon kpi__icon--pink"><img src="img/arrow-down.svg" alt="" width="12" height="13"></span>
+        </div>
+        <div class="kpi__bottom">
+          <p class="people">
+            <span class="faces"><i>МП</i><i class="pink">ДР</i><i>АК</i></span>
+            3 человека
+          </p>
+          <button class="chip-button" type="button" data-remind><img src="img/send.svg" alt="" width="13" height="11"> Напомнить</button>
+        </div>
+      </article>
+
+      <article class="kpi">
+        <div class="kpi__top">
+          <div>
+            <p class="label">Ваш долг</p>
+            <p class="kpi__sum">1 200 <span class="rub rub--dark">₽</span></p>
+          </div>
+          <span class="kpi__icon"><img src="img/arrow-up.svg" alt="" width="12" height="13"></span>
+        </div>
+        <div class="kpi__bottom">
+          <p class="people"><span class="faces"><i class="accent">ЛС</i></span> Вы должны Лене за кафе</p>
+          <button class="button button--small" type="button"><img src="img/bolt.svg" alt="" width="11" height="13"> Погасить через СБП</button>
+        </div>
+      </article>
+    </section>
+
+    <div class="layout">
+      <!-- Группы -->
+      <section class="groups" id="groups">
+        <div class="section-head">
+          <div>
+            <h2>Активные группы</h2>
+            <p>Путешествия, тусовки и общие счета</p>
+          </div>
+          <button class="chip-button chip-button--big" type="button"><img src="img/group-add.svg" alt="" width="18" height="12"> Создать новую группу</button>
+        </div>
+
+        <article class="group">
+          <img class="group__pic" src="img/group-altai.jpg" alt="Горы Алтая">
+          <div class="group__info">
+            <h3>Поездка на Алтай <span class="status status--active">Активен</span></h3>
+            <p>6 участников • Общие траты: 124 500 ₽</p>
+            <div class="progress"><span style="width: 72%"></span></div>
+          </div>
+          <div class="group__balance">
+            <p class="label">Ваш баланс</p>
+            <p class="group__sum accent">+3 400 ₽</p>
+            <p class="small">вам должны</p>
+          </div>
+        </article>
+
+        <article class="group">
+          <span class="group__pic group__pic--icon"><img src="img/cocktail.svg" alt="" width="21" height="21"></span>
+          <div class="group__info">
+            <h3>Бар в пятницу <span class="status">В процессе</span></h3>
+            <p>4 участника • Общие траты: 18 200 ₽</p>
+            <div class="progress"><span class="dark" style="width: 35%"></span></div>
+          </div>
+          <div class="group__balance">
+            <p class="label">Ваш баланс</p>
+            <p class="group__sum">−850 ₽</p>
+            <p class="small accent">ваш долг</p>
+          </div>
+        </article>
+
+        <article class="group">
+          <img class="group__pic" src="img/group-cottage.jpg" alt="Коттедж у леса">
+          <div class="group__info">
+            <h3>Коттедж на майские <span class="status status--done">Сбор завершен</span></h3>
+            <p>8 участников • Полный расчет за аренду</p>
+            <div class="progress"><span class="pink" style="width: 100%"></span></div>
+          </div>
+          <div class="group__balance">
+            <p class="label">Статус</p>
+            <p class="group__sum">0 ₽</p>
+            <p class="small">все рассчитаны</p>
+          </div>
+        </article>
+
+        <div class="tip">
+          <span class="tip__icon"><img src="img/optimize.svg" alt="" width="17" height="17"></span>
+          <div>
+            <p><b>Оптимизация долгов включена</b></p>
+            <p class="small">Система сократила 14 переводов между вашими друзьями до 3 прямых платежей</p>
+          </div>
+          <p class="label label--accent">Экономия времени</p>
+        </div>
+      </section>
+
+      <!-- Справа: сплит чека и операции -->
+      <aside class="sidebar">
+        <form class="card split-form" novalidate>
+          <div class="card__head">
+            <h3><img src="img/receipt.svg" alt="" width="17" height="18"> Быстрый сплит чека</h3>
+            <span class="status status--active">ФНС QR</span>
+          </div>
+          <label class="field">
+            <span class="field__label">Сумма чека</span>
+            <span class="field__box">
+              <span class="rub">₽</span>
+              <input name="sum" type="number" min="1" inputmode="numeric" placeholder="0">
+            </span>
+          </label>
+          <label class="field">
+            <span class="field__label">Сколько человек</span>
+            <span class="field__box"><input name="people" type="number" min="2" value="2"></span>
+          </label>
+          <div class="dropzone">
+            <span class="dropzone__icon"><img src="img/camera.svg" alt="" width="17" height="15"></span>
+            <b>Сфотографировать или загрузить QR</b>
+            <span class="small">Автоматическое распознавание позиций</span>
+          </div>
+          <p class="split-form__result" aria-live="polite"></p>
+          <button class="button button--wide" type="submit">Разделить чек</button>
+        </form>
+
+        <section class="card">
+          <div class="card__head">
+            <h3>Последние операции</h3>
+            <a class="link" href="#">Все</a>
+          </div>
+          <ul class="feed">
+            <li><span class="feed__icon"><img src="img/food.svg" alt="" width="11" height="15"></span><p><b>Обед в «Горыныче»</b><span class="small">Катя оплатила • Сегодня</span></p><p class="feed__sum">−640 ₽<span class="small">доля</span></p></li>
+            <li><span class="feed__icon feed__icon--pink"><img src="img/taxi.svg" alt="" width="14" height="14"></span><p><b>Такси до кемпинга</b><span class="small">Вы оплатили • Вчера</span></p><p class="feed__sum accent">+1 450 ₽<span class="small accent">вам вернут</span></p></li>
+            <li><span class="feed__icon"><img src="img/cart.svg" alt="" width="15" height="15"></span><p><b>Продукты в дорогу</b><span class="small">Артем • 24 мая</span></p><p class="feed__sum">−420 ₽<span class="small">доля</span></p></li>
+            <li><span class="feed__icon"><img src="img/check.svg" alt="" width="15" height="15"></span><p><b>Перевод от Максима</b><span class="small">Через СБП • 22 мая</span></p><p class="feed__sum accent">+2 500 ₽<span class="small">погашено</span></p></li>
+          </ul>
+        </section>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__about">
+          <a class="logo" href="#"><span class="logo__icon"><img src="img/logo-footer.svg" alt="" width="13" height="13"></span> <span class="logo__text">Сплит</span></a>
+          <p>Умный сервис совместных расходов, групповых счетов и копилок для путешествий, аренды и встреч с друзьями без лишних расчетов и неловкости.</p>
+          <p class="footer__chips"><span class="status"><i class="dot"></i> СБП Интеграция 2.0</span><span class="status status--active">Безопасно по ГОСТ</span></p>
+        </div>
+        <div>
+          <h4>Продукт</h4>
+          <ul><li><a href="#">Группы</a></li><li><a href="#">Сборы</a></li><li><a href="#">Оптимизация долгов</a></li><li><a href="#">QR-чеки и ФНС</a></li></ul>
+        </div>
+        <div>
+          <h4>Помощь</h4>
+          <ul><li><a href="#">Частые вопросы (FAQ)</a></li><li><a href="#">Служба поддержки</a></li><li><a href="#">Безопасность и шифрование</a></li><li><a href="#">Тарифы сервиса</a></li></ul>
+        </div>
+        <div>
+          <h4>Интеграции</h4>
+          <ul><li><a href="#">Система быстрых платежей</a></li><li><a href="#">Банки РФ и Open API</a></li><li><a href="#">Telegram-бот сплитов</a></li><li><a href="#">Экспорт выписок (CSV, PDF)</a></li></ul>
+        </div>
+      </div>
+      <div class="footer__bottom">
+        <p><b>© 2024 «Сплит Финанс». Все права защищены.</b> <a href="#">Политика конфиденциальности</a> <a href="#">Условия сервиса</a></p>
+        <p class="label">Валюта: <span class="currency"><i class="dot"></i> Российский рубль (RUB ₽)</span></p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Окно «Добавить расход» -->
+  <dialog class="modal">
+    <form class="modal__form" method="dialog" novalidate>
+      <h2>Новый расход</h2>
+      <label class="field"><span class="field__label">На что потратили</span><span class="field__box"><input name="title" placeholder="Пицца на всех"></span></label>
+      <label class="field"><span class="field__label">Сумма, ₽</span><span class="field__box"><input name="sum" type="number" min="1" placeholder="1200"></span></label>
+      <p class="modal__error" hidden>Заполни название и сумму больше нуля</p>
+      <div class="modal__buttons">
+        <button class="button" type="submit">Добавить</button>
+        <button class="chip-button chip-button--big" type="button" data-close>Отмена</button>
+      </div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>

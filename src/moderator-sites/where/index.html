@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>КУДА_СХОДИТЬ — афиша Омска</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Шапка -->
+  <header class="header">
+    <div class="container">
+      <a class="logo" href="#">
+        <span class="logo__icon"><img src="img/logo.svg" alt="" width="20" height="16"></span>
+        <span class="logo__text">КУДА_СХОДИТЬ
+          <small><img src="img/pin-small.svg" alt="" width="9" height="12"> Омск <img src="img/chevron-down.svg" alt="" width="7" height="4"></small>
+        </span>
+      </a>
+      <!-- На компьютере меню — в шапке, на телефоне — снизу экрана -->
+      <nav class="nav" aria-label="Разделы">
+        <a class="nav__link nav__link--active" href="#"><img src="img/nav-afisha.svg" alt="" width="17" height="18"> Афиша</a>
+        <a class="nav__link" href="#"><img src="img/nav-near.svg" alt="" width="17" height="17"> Рядом</a>
+        <a class="nav__link" href="#"><img src="img/nav-collections.svg" alt="" width="17" height="18"> Подборки</a>
+        <a class="nav__link" href="#going"><img src="img/nav-heart.svg" alt="" width="18" height="17"> Иду <b class="going-count" hidden>0</b></a>
+        <a class="nav__link" href="#"><img src="img/nav-profile.svg" alt="" width="15" height="15"> Профиль</a>
+      </nav>
+      <div class="header__tools">
+        <button class="round-button" type="button" aria-label="Быстрый поиск"><img src="img/search.svg" alt="" width="17" height="17"></button>
+        <span class="avatar"><img src="img/avatar.png" alt="Профиль"></span>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main">
+    <div class="title-row">
+      <div>
+        <h1>Куда сходить</h1>
+        <p class="subtitle"><b>Омск</b> · эти выходные</p>
+      </div>
+      <span class="live"><i></i> LIVE</span>
+    </div>
+
+    <!-- Фильтры -->
+    <div class="filters" role="group" aria-label="Фильтр событий">
+      <button class="filter" type="button" data-filter="all">Все</button>
+      <button class="filter filter--active" type="button" data-filter="free">Бесплатно · 0 ₽</button>
+      <button class="filter" type="button" data-filter="near">Рядом</button>
+      <button class="filter" type="button" data-filter="cinema">Кино</button>
+      <button class="filter" type="button" data-filter="quiz">Квизы</button>
+      <button class="filter" type="button" data-filter="music">Концерты</button>
+      <button class="filter" type="button" data-filter="art">Выставки</button>
+      <button class="filter" type="button" data-filter="sport">Спорт</button>
+    </div>
+
+    <!-- Подборка -->
+    <section class="digest">
+      <div class="digest__top">
+        <div>
+          <p class="digest__label"><img src="img/badge.svg" alt="" width="17" height="16"> Подборка выходных</p>
+          <h2>12 локаций без билетов в центре</h2>
+          <p class="muted">Любинский проспект, набережная Тухачевского и скейт-парк на Зеленом…</p>
+        </div>
+        <span class="digest__map"><img src="img/map.svg" alt="" width="20" height="20"></span>
+      </div>
+      <p class="digest__bottom"><span>Обновлено сегодня, 14:20</span><a href="#">Смотреть гид <img src="img/chevron-right.svg" alt="" width="5" height="8"></a></p>
+    </section>
+
+    <div class="events-head">
+      <h2><img src="img/fire.svg" alt="" width="13" height="16"> Главные события</h2>
+      <p class="found"><span class="found__count">5</span> найдено</p>
+    </div>
+
+    <!-- События. data-cat — тип, data-price — цена (0 = бесплатно), data-near — рядом -->
+    <div class="events">
+      <article class="event" data-id="cinema-square" data-cat="cinema" data-price="0" data-near="yes">
+        <p class="date"><b>СБ</b> 24 мая</p>
+        <div class="event__body">
+          <p class="event__tags"><span class="tag">Культура</span><span class="price price--free">0 ₽ <small>бесплатно</small></span></p>
+          <h3>Кинопоказ в сквере им. Дзержинского</h3>
+          <p class="event__meta"><span><img src="img/clock.svg" alt="" width="13" height="13"> 18:00</span><span class="muted"><img src="img/pin.svg" alt="" width="9" height="13"> Центр · Сквер</span></p>
+          <div class="event__foot">
+            <span class="muted small">Осталось 19 билетов</span>
+            <span class="event__buttons">
+              <button class="share" type="button" aria-label="Поделиться"><img src="img/share.svg" alt="" width="14" height="15"></button>
+              <button class="going" type="button" aria-pressed="false">Иду</button>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="event" data-id="quiz-cafe" data-cat="quiz" data-price="300" data-near="yes">
+        <p class="date"><b>СБ</b> 24 мая</p>
+        <div class="event__body">
+          <p class="event__tags"><span class="tag tag--pink">Квизы &amp; Настолки</span><span class="price">300 ₽</span></p>
+          <h3>Квиз в кафе «Одно Вино / Coffee Rooms»</h3>
+          <p class="event__meta"><span><img src="img/clock.svg" alt="" width="13" height="13"> 19:00</span><span class="muted"><img src="img/pin.svg" alt="" width="9" height="13"> ул. Ленина, 13</span></p>
+          <div class="event__foot">
+            <span class="muted small"><img src="img/people.svg" alt="" width="15" height="11"> Команды 2-6 чел</span>
+            <span class="event__buttons">
+              <button class="share" type="button" aria-label="Поделиться"><img src="img/share.svg" alt="" width="14" height="15"></button>
+              <button class="going" type="button" aria-pressed="false">Иду</button>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="event" data-id="fifa" data-cat="sport" data-price="0" data-near="no">
+        <p class="date"><b>ВС</b> 25 мая</p>
+        <div class="event__body">
+          <p class="event__tags"><span class="tag tag--blue">Активности</span><span class="price price--free">0 ₽ <small>свободный</small></span></p>
+          <h3>Турнир FIFA &amp; настольный теннис</h3>
+          <p class="muted small-text">Молодежное пространство «Дача Онегина»</p>
+          <p class="event__meta"><span><img src="img/clock.svg" alt="" width="13" height="13"> 12:00</span><span class="muted"><img src="img/pin.svg" alt="" width="9" height="13"> Библиотека Пушкина</span></p>
+          <div class="event__foot">
+            <span class="small accent"><img src="img/ticket.svg" alt="" width="13" height="9"> Регистрация открыта</span>
+            <span class="event__buttons">
+              <button class="share" type="button" aria-label="Поделиться"><img src="img/share.svg" alt="" width="14" height="15"></button>
+              <button class="going" type="button" aria-pressed="false">Иду</button>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="event" data-id="indie" data-cat="music" data-price="800" data-near="no">
+        <p class="date"><b>ВС</b> 25 мая</p>
+        <div class="event__body">
+          <p class="event__tags"><span class="tag tag--wine">Музыка</span><span class="price">800 ₽</span></p>
+          <h3>Инди-концерт омских резидентов</h3>
+          <p class="event__meta"><span><img src="img/clock.svg" alt="" width="13" height="13"> 20:00</span><span class="muted"><img src="img/pin.svg" alt="" width="9" height="13"> Ленинградская площадь</span></p>
+          <div class="event__foot">
+            <span class="muted small">Осталось 14 билетов</span>
+            <span class="event__buttons">
+              <button class="share" type="button" aria-label="Поделиться"><img src="img/share.svg" alt="" width="14" height="15"></button>
+              <button class="going" type="button" aria-pressed="false">Иду</button>
+            </span>
+          </div>
+        </div>
+      </article>
+
+      <article class="event" data-id="lubinsky" data-cat="art" data-price="0" data-near="yes">
+        <p class="date"><b>СБ</b> 24 мая</p>
+        <div class="event__body">
+          <p class="event__tags"><span class="tag">Город</span><span class="price price--free">0 ₽ <small>free walk</small></span></p>
+          <h3>Тайные дворики Любинского</h3>
+          <p class="event__meta"><span><img src="img/clock.svg" alt="" width="13" height="13"> 15:00</span><span class="muted"><img src="img/pin.svg" alt="" width="9" height="13"> Старт у памятника Любе</span></p>
+          <div class="event__foot">
+            <span class="muted small"><img src="img/walk.svg" alt="" width="9" height="14"> Пешком · 1.5 часа</span>
+            <span class="event__buttons">
+              <button class="share" type="button" aria-label="Поделиться"><img src="img/share.svg" alt="" width="14" height="15"></button>
+              <button class="going" type="button" aria-pressed="false">Иду</button>
+            </span>
+          </div>
+        </div>
+      </article>
+    </div>
+    <p class="empty" hidden>По этому фильтру пока ничего. Попробуй «Все».</p>
+
+    <!-- Предложить событие -->
+    <section class="suggest">
+      <div class="suggest__head">
+        <h2>Знаешь классное место?</h2>
+        <img src="img/add-place.svg" alt="" width="19" height="22">
+      </div>
+      <p class="muted">Добавь бесплатный квартирник, встречу или лекцию в Омске в ленту за 1 минуту.</p>
+      <button class="button" type="button" data-open-suggest>Предложить событие</button>
+    </section>
+  </main>
+
+  <!-- Окно «Предложить событие» -->
+  <dialog class="modal">
+    <form class="modal__form" method="dialog" novalidate>
+      <h2>Предложить событие</h2>
+      <label>Название <input name="title" placeholder="Квартирник на Лермонтова"></label>
+      <label>Когда <input name="date" type="date"></label>
+      <label>Где <input name="place" placeholder="Адрес или место"></label>
+      <p class="modal__error" hidden>Заполни название, дату и место</p>
+      <div class="modal__buttons">
+        <button class="button button--accent" type="submit">Отправить</button>
+        <button class="button" type="button" data-close>Отмена</button>
+      </div>
+    </form>
+  </dialog>
+
+  <p class="toast" role="status" hidden></p>
+  <script src="script.js"></script>
+</body>
+</html>

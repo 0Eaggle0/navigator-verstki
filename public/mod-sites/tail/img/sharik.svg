@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 200" role="img" aria-label="Пёс Шарик">
+  <rect width="300" height="200" fill="#dbeafe"/>
+  <ellipse cx="150" cy="115" rx="58" ry="52" fill="#a16207"/>
+  <ellipse cx="95" cy="100" rx="18" ry="40" fill="#713f12"/>
+  <ellipse cx="205" cy="100" rx="18" ry="40" fill="#713f12"/>
+  <circle cx="130" cy="105" r="7" fill="#1c1917"/>
+  <circle cx="170" cy="105" r="7" fill="#1c1917"/>
+  <ellipse cx="150" cy="132" rx="12" ry="9" fill="#1c1917"/>
+</svg>

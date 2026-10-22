@@ -52,6 +52,7 @@ export default defineConfig({
 				{ label: 'Шпаргалки и ссылки', link: '/cheatsheets/' },
 				{ label: 'Блоки для вашего сайта', items: [{ autogenerate: { directory: 'blocks' } }] },
 				{ label: 'Для модератора', link: '/moderator/' },
+				{ label: 'Готовые сайты команд', link: '/moderator/sites/' },
 			],
 		}),
 	],

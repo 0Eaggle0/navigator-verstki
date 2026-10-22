@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ХВОСТ_ДОМОЙ — приют для животных</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- ЗАГЛУШКА: макета команды пока нет. Страница собрана из готовых блоков навигатора
+       (шапка с бургером, первый экран, карточки, форма, подвал) — как пример «быстрого пути». -->
+<!-- ШАПКА С БУРГЕР-МЕНЮ. Это та же шапка, что в блоке «Шапка с меню», плюс кнопка ☰.
+     Своя шапка уже есть? Добавь в неё только строку с кнопкой .burger — классы совпадают -->
+<header class="header">
+  <div class="container">
+    <!-- что менять: название или логотип -->
+    <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+
+    <!-- Кнопка видна только на телефоне. aria-label — подпись для программ экранного доступа -->
+    <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+
+    <nav aria-label="Главное меню">
+      <ul class="menu">
+        <!-- что менять: пункты меню -->
+        <li><a href="#collections">Мои сборы</a></li>
+        <li><a href="#how">Как это работает</a></li>
+        <li><a href="#login">Войти</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+  <main>
+<!-- ПЕРВЫЙ ЭКРАН. Вставь внутрь <main> первой секцией -->
+<section class="hero">
+  <div class="container">
+    <div class="hero__text">
+      <!-- что менять: главный заголовок страницы — он один на всю страницу (h1) -->
+      <h1 class="hero__title">Найди друга в приюте</h1>
+      <!-- что менять: короткое пояснение, 1–2 предложения -->
+      <p class="hero__lead">Пройди тест из 5 вопросов — подскажем, какой питомец подойдёт именно тебе.</p>
+      <!-- что менять: текст кнопки под ваш кейс: «Создать комнату», «Найти команду», «Создать сбор» -->
+      <a class="button" href="#test">Пройти тест</a>
+    </div>
+    <!-- что менять: картинка из макета и её описание в alt -->
+    <img class="hero__img" src="img/sharik.svg" alt="Пёс Шарик ждёт хозяина">
+  </div>
+</section>
+
+<!-- СЕТКА КАРТОЧЕК. Вставь внутрь <main>. Классы те же, что в шагах маршрута: .cards, .card, .button -->
+<!-- что менять: класс и id секции -->
+<section class="pets" id="pets">
+  <div class="container">
+    <!-- что менять: заголовок секции -->
+    <h2>Ищут дом</h2>
+
+    <div class="cards">
+      <!-- Одна карточка = один <article>. Нужно больше — скопируй article целиком -->
+      <article class="card">
+        <!-- что менять: путь к картинке и описание в alt -->
+        <img src="img/barsik.svg" alt="Рыжий кот Барсик">
+        <!-- что менять: заголовок и текст карточки -->
+        <h3>Барсик</h3>
+        <p>2 года, любит спать на коленях</p>
+        <a class="button" href="#">Познакомиться</a>
+      </article>
+
+      <article class="card">
+        <img src="img/sharik.svg" alt="Пёс Шарик с висячими ушами">
+        <h3>Шарик</h3>
+        <p>4 года, обожает долгие прогулки</p>
+        <a class="button" href="#">Познакомиться</a>
+      </article>
+
+      <article class="card">
+        <img src="img/murka.svg" alt="Серая кошка Мурка">
+        <h3>Мурка</h3>
+        <p>1 год, спокойная и ласковая</p>
+        <a class="button" href="#">Познакомиться</a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ФОРМА «СТАТЬ ВОЛОНТЁРОМ». Вставь внутрь <main> -->
+<section class="volunteer" id="volunteer">
+  <div class="container">
+    <!-- что менять: заголовок и пояснение -->
+    <h2>Стать волонтёром</h2>
+    <p>Оставь контакты — мы позвоним и расскажем, чем можно помочь.</p>
+
+    <!-- action="#" — пока форма никуда не отправляется.
+         novalidate — браузер не проверяет поля сам: проверку делает script.js (занятие 7) -->
+    <form class="form" action="#" novalidate>
+      <!-- У каждого поля есть подпись label: по клику на неё курсор встаёт в поле -->
+      <label class="form__field">
+        Имя
+        <input type="text" name="name" placeholder="Аня">
+      </label>
+
+      <label class="form__field">
+        Телефон
+        <input type="tel" name="phone" placeholder="+7 900 000-00-00">
+      </label>
+
+      <label class="form__field">
+        <!-- что менять: варианты под ваш кейс -->
+        Чем хочешь помогать
+        <select name="help">
+          <option>Гулять с собаками</option>
+          <option>Фотографировать животных</option>
+          <option>Привозить корм</option>
+        </select>
+      </label>
+
+      <label class="form__check">
+        <input type="checkbox" name="agree">
+        Согласен на обработку данных
+      </label>
+
+      <!-- Сюда script.js пишет текст ошибки -->
+      <p class="error" aria-live="polite"></p>
+
+      <!-- что менять: текст кнопки -->
+      <button class="form__button" type="submit">Отправить</button>
+    </form>
+  </div>
+</section>
+
+  </main>
+<!-- ПОДВАЛ. Вставь после </main> -->
+<footer class="footer">
+  <div class="footer__cols">
+    <div>
+      <!-- что менять: название и описание проекта -->
+      <p class="footer__logo">ХВОСТ_ДОМОЙ</p>
+      <p>Помогаем животным из приютов Омска найти дом.</p>
+    </div>
+
+    <nav aria-label="Разделы сайта">
+      <p class="footer__title">Разделы</p>
+      <ul class="footer__links">
+        <!-- что менять: ссылки на секции вашей страницы (id секций) -->
+        <li><a href="#pets">Питомцы</a></li>
+        <li><a href="#test">Тест</a></li>
+        <li><a href="#volunteer">Волонтёрство</a></li>
+      </ul>
+    </nav>
+
+    <div>
+      <p class="footer__title">Контакты</p>
+      <!-- что менять: почта, телефон, соцсети -->
+      <p><a href="mailto:hello@example.ru">hello@example.ru</a></p>
+      <p><a href="#">Сообщество ВКонтакте</a></p>
+    </div>
+  </div>
+
+  <!-- что менять: год и название команды -->
+  <p class="footer__copy">© 2026 Команда проекта, Проектная школа ОмГТУ</p>
+</footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

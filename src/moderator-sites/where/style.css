@@ -1,0 +1,159 @@
+/* КУДА_СХОДИТЬ — афиша Омска. Макет в Figma — для телефона (390 px), компьютерная версия — по его мотивам */
+:root {
+  --bg: #111316;
+  --card: #1e2023;
+  --card-2: #1a1c1f;
+  --chip: #282a2d;
+  --line: #333538;
+  --text: #e2e2e6;
+  --muted: #d7c3ae;
+  --accent: #f5a623;
+  --accent-ink: #644000;
+  --font: 'Manrope', Arial, sans-serif;
+}
+
+/* Сброс */
+* { box-sizing: border-box; }
+body { margin: 0; font-family: var(--font); font-size: 15px; line-height: 1.45; color: var(--text); background: var(--bg); }
+img { display: block; max-width: 100%; }
+h1, h2, h3, p { margin: 0; }
+a { color: inherit; text-decoration: none; }
+button, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+[hidden] { display: none !important; }
+
+.container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.muted { color: var(--muted); }
+.accent { color: var(--accent); }
+.small { display: inline-flex; gap: 6px; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; }
+.small-text { font-size: 12px; }
+
+/* ---------- Шапка ---------- */
+/* Без backdrop-filter: иначе нижнее меню (position: fixed внутри шапки) прилипает к шапке, а не к экрану */
+.header { position: sticky; top: 0; z-index: 10; background: rgba(17, 19, 22, 0.96); box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35); }
+.header .container { display: flex; gap: 16px; align-items: center; justify-content: space-between; height: 64px; }
+.logo { display: flex; gap: 8px; align-items: center; }
+.logo__icon { display: grid; place-items: center; width: 40px; height: 40px; border-radius: 12px; background: rgba(245, 166, 35, 0.2); }
+.logo__text { font-size: 16px; font-weight: 600; letter-spacing: -0.02em; }
+.logo__text small { display: flex; gap: 4px; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.header__tools { display: flex; gap: 4px; align-items: center; }
+.round-button { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; background: var(--chip); border: 0; border-radius: 50%; }
+.avatar { width: 32px; height: 32px; margin: 6px; overflow: hidden; border-radius: 50%; box-shadow: 0 0 0 2px rgba(245, 166, 35, 0.4); }
+/* Аватар — кусок широкой картинки, как в макете (сдвиг влево на 150%) */
+.avatar img { width: 400%; max-width: none; height: 100%; margin-left: -150%; }
+
+/* Меню: на телефоне — панель внизу экрана */
+.nav {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-around;
+  height: 64px;
+  padding: 0 4px;
+  background: rgba(17, 19, 22, 0.9);
+  box-shadow: 0 -4px 24px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(12px);
+}
+.nav__link { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-width: 56px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--muted); }
+.nav__link--active { color: var(--accent); }
+.going-count { position: absolute; top: 6px; right: 8px; min-width: 16px; padding: 0 4px; font-size: 10px; line-height: 16px; text-align: center; color: var(--accent-ink); background: var(--accent); border-radius: 999px; }
+
+/* ---------- Основное ---------- */
+.main { display: flex; flex-direction: column; gap: 16px; padding-top: 16px; padding-bottom: 96px; }
+.title-row { display: flex; align-items: center; justify-content: space-between; }
+h1 { font-size: 20px; line-height: 1.3; }
+.subtitle { font-size: 13px; font-weight: 700; color: var(--muted); }
+.subtitle b { font-size: 11px; letter-spacing: 0.03em; text-transform: uppercase; color: var(--accent); }
+.live { display: flex; gap: 4px; align-items: center; padding: 4px 10px; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; background: var(--chip); border-radius: 999px; }
+.live i { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); animation: blink 1.4s infinite; }
+@keyframes blink { 50% { opacity: 0.3; } }
+
+/* Фильтры — лента с прокруткой вбок (внутри своего блока, страница не прокручивается) */
+.filters { display: flex; gap: 8px; margin: 0 -16px; padding: 0 16px; overflow-x: auto; scrollbar-width: none; }
+.filters::-webkit-scrollbar { display: none; }
+.filter { flex: none; padding: 6px 14px; font-size: 13px; font-weight: 700; letter-spacing: 0.02em; color: var(--muted); background: var(--chip); border: 0; border-radius: 999px; transition: background 0.2s; }
+.filter:hover { background: var(--line); }
+.filter--active { color: var(--accent-ink); background: var(--accent); box-shadow: 0 1px 1px rgba(245, 166, 35, 0.2); }
+.filter--active:hover { background: var(--accent); }
+
+/* Подборка */
+.digest { position: relative; display: flex; flex-direction: column; gap: 12px; padding: 16px; overflow: hidden; background: var(--card); border-radius: 12px; }
+.digest::after { content: ''; position: absolute; right: -24px; bottom: -24px; width: 128px; height: 128px; border-radius: 50%; background: rgba(245, 166, 35, 0.1); filter: blur(12px); }
+.digest__top { display: flex; gap: 12px; justify-content: space-between; }
+.digest__label { display: flex; gap: 6px; align-items: center; font-size: 11px; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase; color: var(--accent); }
+.digest h2 { margin: 4px 0; font-size: 16px; font-weight: 600; }
+.digest .muted { font-size: 13px; }
+.digest__map { display: grid; flex: none; place-items: center; width: 48px; height: 48px; border-radius: 12px; background: var(--chip); }
+.digest__bottom { position: relative; z-index: 1; display: flex; align-items: center; justify-content: space-between; padding-top: 9px; font-size: 11px; font-weight: 700; color: var(--muted); border-top: 1px solid rgba(51, 53, 56, 0.4); }
+.digest__bottom a { display: flex; gap: 4px; align-items: center; font-size: 13px; color: var(--accent); }
+
+/* События */
+.events-head { display: flex; align-items: center; justify-content: space-between; padding-top: 4px; }
+.events-head h2 { display: flex; gap: 8px; align-items: center; font-size: 16px; font-weight: 600; }
+.found { font-size: 11px; font-weight: 700; color: var(--muted); }
+.events { display: grid; gap: 12px; }
+.event { display: flex; gap: 12px; padding: 14px; background: var(--card); border-radius: 12px; transition: transform 0.2s; }
+.event:hover { transform: translateY(-2px); }
+.date { display: flex; flex: none; flex-direction: column; align-items: center; justify-content: center; width: 44px; height: 44px; font-size: 10px; font-weight: 600; line-height: 1; color: var(--muted); background: var(--line); border-radius: 8px; }
+.date b { margin-bottom: 2px; font-size: 16px; color: var(--accent); }
+.event__body { display: flex; flex: 1; flex-direction: column; gap: 4px; min-width: 0; }
+.event__tags { display: flex; gap: 8px; align-items: center; }
+.tag { padding: 2px 8px; font-size: 11px; font-weight: 700; letter-spacing: 0.04em; color: var(--accent); background: rgba(245, 166, 35, 0.2); border-radius: 999px; }
+.tag--pink { color: #ffb2bf; background: rgba(148, 1, 60, 0.4); }
+.tag--blue { color: #b8d4ff; background: rgba(133, 185, 255, 0.3); }
+.tag--wine { color: #ffb2bf; background: #94013c; }
+.price { font-size: 13px; font-weight: 700; }
+.price--free { color: var(--accent); }
+.price small { font-size: 11px; color: var(--muted); }
+.event h3 { font-size: 16px; font-weight: 600; line-height: 1.4; }
+.event__meta { display: flex; flex-wrap: wrap; gap: 4px 12px; font-size: 13px; }
+.event__meta span { display: flex; gap: 4px; align-items: center; }
+.event__foot { display: flex; align-items: center; justify-content: space-between; padding-top: 8px; }
+.event__buttons { display: flex; gap: 6px; }
+.share { display: grid; place-items: center; width: 32px; height: 32px; padding: 0; background: var(--line); border: 0; border-radius: 50%; }
+.going { padding: 6px 16px; font-size: 13px; font-weight: 700; color: var(--text); background: var(--line); border: 0; border-radius: 999px; transition: background 0.2s; }
+.going[aria-pressed='true'] { color: var(--accent-ink); background: var(--accent); }
+.empty { padding: 24px; text-align: center; color: var(--muted); background: var(--card); border-radius: 12px; }
+
+/* Предложить событие */
+.suggest { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; padding: 16px; background: var(--card-2); border-radius: 12px; }
+.suggest__head { display: flex; align-items: center; justify-content: space-between; }
+.suggest h2 { font-size: 16px; font-weight: 600; }
+.suggest .muted { font-size: 13px; }
+.button { padding: 10px 20px; font-size: 13px; font-weight: 700; color: var(--text); background: var(--chip); border: 0; border-radius: 12px; }
+.button--accent { color: var(--accent-ink); background: var(--accent); }
+.suggest .button { margin-top: 4px; }
+
+/* Окно и уведомление */
+.modal { width: min(400px, 92vw); padding: 24px; color: var(--text); background: var(--card); border: 0; border-radius: 16px; }
+.modal::backdrop { background: rgba(0, 0, 0, 0.6); }
+.modal__form { display: flex; flex-direction: column; gap: 14px; }
+.modal h2 { font-size: 20px; }
+.modal label { display: flex; flex-direction: column; gap: 6px; font-size: 13px; font-weight: 700; color: var(--muted); }
+.modal input { padding: 10px 12px; color: var(--text); background: var(--chip); border: 1px solid var(--line); border-radius: 10px; color-scheme: dark; }
+.modal__error { font-size: 13px; color: #ffb2bf; }
+.modal__buttons { display: flex; gap: 8px; }
+.toast { position: fixed; bottom: 80px; left: 50%; z-index: 20; padding: 10px 18px; font-size: 13px; font-weight: 700; color: var(--accent-ink); background: var(--accent); border-radius: 999px; transform: translateX(-50%); }
+
+/* ---------- Компьютер: меню наверх, события в две колонки ---------- */
+@media (min-width: 769px) {
+  .container { padding: 0 32px; }
+  .header .container { height: 72px; }
+  .nav { position: static; height: auto; padding: 0; background: none; box-shadow: none; backdrop-filter: none; gap: 8px; }
+  .nav__link { flex-direction: row; gap: 6px; padding: 8px 14px; font-size: 13px; border-radius: 999px; }
+  .nav__link:hover { background: var(--chip); }
+  .nav__link--active { background: rgba(245, 166, 35, 0.15); }
+  .going-count { position: static; }
+  .main { gap: 20px; padding-top: 32px; padding-bottom: 64px; }
+  h1 { font-size: 32px; }
+  .filters { margin: 0; padding: 0; flex-wrap: wrap; overflow: visible; }
+  .digest { padding: 24px; }
+  .digest h2 { font-size: 22px; }
+  .events { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .suggest { flex-direction: row; flex-wrap: wrap; align-items: center; justify-content: space-between; padding: 24px; }
+  .suggest__head { gap: 12px; }
+  .suggest .muted { flex: 1; min-width: 260px; }
+}

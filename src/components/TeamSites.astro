@@ -1,0 +1,265 @@
+---
+// Готовые сайты команд для модератора: превью, код и скачивание папкой (.zip).
+// Код сайтов — src/moderator-sites/<кейс>/ (index.html, style.css, script.js),
+// картинки — public/mod-sites/<кейс>/img/. Страница с этим компонентом лежит внутри <ModSecret>,
+// поэтому код попадает на сайт только в зашифрованном виде.
+import { Code } from '@astrojs/starlight/components';
+import { readdirSync, existsSync } from 'node:fs';
+import { url } from '~/lib/route';
+
+const files = import.meta.glob('/src/moderator-sites/*/*.{html,css,js}', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
+
+// Порядок и подписи сайтов. figma — ссылка на макет команды (если есть)
+const SITES = [
+	{ id: 'watch', title: 'ЧТО_ПОСМОТРИМ', name: 'Киносфера', note: 'Макет «What to watch». Тёмная тема, две колонки: каталог и комнаты.', figma: 'https://www.figma.com/design/T3EPcU8y2EpvK9NJEo397Z/What-to-watch?node-id=1-2' },
+	{ id: 'split', title: 'СКИНЕМСЯ', name: 'Сплит', note: 'Макет команды «пшпшп» (файл «Геймдев»). Светлая тема, баланс, группы, сплит чека.', figma: 'https://www.figma.com/design/sxrufy1CygzJ3myGWPywoL/?node-id=209-214' },
+	{ id: 'where', title: 'КУДА_СХОДИТЬ', name: 'Афиша Омска', note: 'Макет «Гейм дизайн» — только для телефона (390 px). Компьютерная версия сделана по его мотивам.', figma: 'https://www.figma.com/design/KrNw2O1NuAChZfjzC59kaU/?node-id=1175-543' },
+	{ id: 'teammate', title: 'ТИММЕЙТ', name: 'Проектная школа', note: 'Макет «Проектная школа» пока недоступен: нужен доступ к файлу в Figma. Сайт появится здесь, как только откроют.', figma: 'https://www.figma.com/design/PhxBkGXPbRf1OsJHuZCYCw/' },
+	{ id: 'tail', title: 'ХВОСТ_ДОМОЙ', name: 'Заглушка', note: 'Макета у команды нет. Страница собрана из готовых блоков навигатора — пример «быстрого пути».' },
+];
+
+const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
+const sites = SITES.map((s) => {
+	const get = (f: string) => files[`/src/moderator-sites/${s.id}/${f}`];
+	const dir = `public/mod-sites/${s.id}/img`;
+	const images = existsSync(dir) ? readdirSync(dir) : [];
+	return { ...s, html: get('index.html'), css: get('style.css'), js: get('script.js'), images, assets: `${base}mod-sites/${s.id}/` };
+});
+---
+
+<div class="sites not-content">
+	{
+		sites.map((s) => (
+			<section class="site" id={`site-${s.id}`}>
+				<div class="site__head">
+					<div>
+						<p class="site__case">{s.title}</p>
+						<h2>{s.name}</h2>
+						<p class="site__note">{s.note}</p>
+					</div>
+					{s.figma && (
+						<a class="a-btn" href={s.figma} target="_blank" rel="noopener">
+							Макет в Figma
+						</a>
+					)}
+				</div>
+				{s.html ? (
+					<nav-site
+						data-id={s.id}
+						data-html={s.html}
+						data-css={s.css ?? ''}
+						data-js={s.js ?? ''}
+						data-assets={s.assets}
+						data-images={JSON.stringify(s.images)}
+					>
+						<div class="site__tools">
+							<div class="site__sizes" role="group" aria-label="Ширина превью">
+								<button type="button" data-width="100%" aria-pressed="true">Компьютер</button>
+								<button type="button" data-width="390px" aria-pressed="false">Телефон</button>
+							</div>
+							<button type="button" class="a-btn--sky" data-open>Открыть в новой вкладке</button>
+							<button type="button" class="a-btn--go" data-zip>Скачать сайт (.zip)</button>
+						</div>
+						<div class="site__frame">
+							<iframe title={`Готовый сайт: ${s.title}`} loading="lazy" />
+						</div>
+						<p class="site__status" aria-live="polite" />
+						<details class="site__code">
+							<summary>Код: index.html</summary>
+							<Code code={s.html} lang="html" />
+						</details>
+						{s.css && (
+							<details class="site__code">
+								<summary>Код: style.css</summary>
+								<Code code={s.css} lang="css" />
+							</details>
+						)}
+						{s.js && (
+							<details class="site__code">
+								<summary>Код: script.js</summary>
+								<Code code={s.js} lang="js" />
+							</details>
+						)}
+					</nav-site>
+				) : (
+					<p class="site__empty">Сайт ещё не свёрстан.</p>
+				)}
+			</section>
+		))
+	}
+	<p class="sites__url" hidden data-base={url('')} />
+</div>
+
+<script>
+	import { zip, type ZipFile } from '~/lib/zip';
+
+	// Документ сайта для превью: CSS и JS вставляем прямо в страницу, картинки берём по адресу base
+	function page(el: HTMLElement) {
+		const { html = '', css = '', js = '', assets = '' } = el.dataset;
+		const abs = new URL(assets, location.href).href;
+		return html
+			.replace('<head>', `<head><base href="${abs}">`)
+			.replace(/<link rel="stylesheet" href="style\.css">/, () => `<style>${css}</style>`)
+			.replace(/<script src="script\.js"><\/script>/, () => `<script>${js}<\/script>`);
+	}
+
+	class Site extends HTMLElement {
+		connectedCallback() {
+			const frame = this.querySelector('iframe')!;
+			const status = this.querySelector<HTMLElement>('.site__status')!;
+			const doc = page(this);
+			frame.srcdoc = doc;
+
+			// Компьютер / телефон — меняем ширину превью
+			const sizes = [...this.querySelectorAll<HTMLButtonElement>('[data-width]')];
+			sizes.forEach((b) =>
+				b.addEventListener('click', () => {
+					frame.style.width = b.dataset.width!;
+					sizes.forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+				})
+			);
+
+			// Открыть в новой вкладке — как обычную страницу
+			this.querySelector('[data-open]')!.addEventListener('click', () => {
+				const blob = new Blob([doc], { type: 'text/html' });
+				window.open(URL.createObjectURL(blob), '_blank');
+			});
+
+			// Скачать папкой: код + картинки (картинки скачиваем с сайта)
+			this.querySelector('[data-zip]')!.addEventListener('click', async () => {
+				const { id = 'site', html = '', css = '', js = '', assets = '' } = this.dataset;
+				const images: string[] = JSON.parse(this.dataset.images || '[]');
+				status.textContent = 'Собираю архив…';
+				try {
+					const list: ZipFile[] = [
+						{ name: `${id}/index.html`, data: html },
+						{ name: `${id}/style.css`, data: css },
+					];
+					if (js) list.push({ name: `${id}/script.js`, data: js });
+					for (const img of images) {
+						const res = await fetch(new URL(`${assets}img/${img}`, location.href));
+						list.push({ name: `${id}/img/${img}`, data: new Uint8Array(await res.arrayBuffer()) });
+					}
+					const a = document.createElement('a');
+					a.href = URL.createObjectURL(zip(list));
+					a.download = `${id}.zip`;
+					a.click();
+					status.textContent = `Готово: ${id}.zip — распакуй и открой index.html`;
+				} catch {
+					status.textContent = 'Не получилось собрать архив — проверь интернет и попробуй ещё раз';
+				}
+			});
+		}
+	}
+	customElements.define('nav-site', Site);
+</script>
+
+<style>
+	.sites {
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
+	}
+	.site {
+		display: flex;
+		flex-direction: column;
+		gap: 1rem;
+		padding: 1.5rem;
+		background: var(--a-surface);
+		border-radius: var(--a-r-card);
+		box-shadow:
+			inset 0 0 0 2px var(--a-line),
+			0 6px 0 var(--a-edge);
+	}
+	.site__head {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 1rem;
+		align-items: flex-start;
+		justify-content: space-between;
+	}
+	.site__case {
+		margin: 0;
+		font: 700 0.8rem var(--a-font);
+		color: var(--a-coin);
+	}
+	.site h2 {
+		margin: 0.2rem 0 0.4rem;
+		font: 800 1.5rem var(--a-font);
+		color: var(--a-text);
+	}
+	.site__note,
+	.site__empty {
+		margin: 0;
+		max-width: 40rem;
+		color: var(--a-muted);
+	}
+	nav-site {
+		display: flex;
+		flex-direction: column;
+		gap: 0.75rem;
+	}
+	.site__tools {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.6rem;
+		align-items: center;
+	}
+	.site__sizes {
+		display: flex;
+		gap: 0.25rem;
+		padding: 0.25rem;
+		margin-right: auto;
+		background: var(--a-surface-2);
+		border-radius: 999px;
+	}
+	.site .site__sizes button {
+		margin: 0;
+		padding: 0.4rem 0.9rem;
+		font-size: 0.75rem;
+		background: none;
+		box-shadow: none;
+	}
+	.site .site__sizes button[aria-pressed='true'] {
+		color: var(--a-ink);
+		background: var(--a-coin);
+	}
+	.site__frame {
+		display: flex;
+		justify-content: center;
+		padding: 0.75rem;
+		overflow-x: auto;
+		background: var(--a-bg);
+		border-radius: 16px;
+	}
+	.site__frame iframe {
+		width: 100%;
+		height: 640px;
+		background: #fff;
+		border: 0;
+		border-radius: 10px;
+		transition: width 0.3s;
+	}
+	.site__status {
+		min-height: 1.4em;
+		margin: 0;
+		font-size: var(--sl-text-sm);
+		color: var(--a-go);
+	}
+	.site__code summary {
+		width: fit-content;
+		padding: 0.4rem 0.9rem;
+		font: 700 0.8rem var(--a-font);
+		color: var(--a-text);
+		background: var(--a-surface-2);
+		border-radius: 999px;
+		cursor: pointer;
+	}
+	.site__code[open] summary {
+		margin-bottom: 0.6rem;
+	}
+	.site__code :global(.expressive-code) {
+		max-height: 32rem;
+		overflow: auto;
+	}
+</style>
