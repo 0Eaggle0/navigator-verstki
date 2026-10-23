@@ -50,7 +50,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 	import { burst } from '~/lib/fx';
 
 	type Mark = 'y' | 'n';
-	type Data = { members: { id: string; name: string }[]; marks: Record<string, Record<string, Mark>> };
+	type Data = { members: { id: string; name: string }[]; marks: Record<string, Record<string, Mark>>; seen?: string[] };
 	const KEY = 'nav-attendance';
 	const LABEL = { '': 'нет отметки', y: 'был', n: 'не был' };
 	const NEXT: Record<string, Mark | ''> = { '': 'y', y: 'n', n: '' };
@@ -89,6 +89,18 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 				th.classList.toggle('is-today', th.dataset.date === this.today);
 				th.classList.toggle('is-future', th.dataset.date! > this.today);
 			});
+			// Имена команды из кода модератора (ModSecret кладёт их при вводе кода). Добавляем только новые:
+			// кого уже добавляли из кода (seen), повторно не возвращаем — вдруг модератор убрал его сам
+			try {
+				const team: string[] = JSON.parse(localStorage.getItem('nav-team') || '[]');
+				localStorage.removeItem('nav-team');
+				const seen = new Set((this.data.seen ?? []).concat(this.data.members.map((m) => m.name)).map((n) => n.toLowerCase()));
+				team.filter((n) => !seen.has(n.toLowerCase())).forEach((name, i) => this.data.members.push({ id: Date.now().toString(36) + i, name }));
+				this.data.seen = [...new Set([...(this.data.seen ?? []), ...team])];
+				if (team.length) write(this.data);
+			} catch {
+				// нет хранилища — имён из кода не будет
+			}
 			this.data.members.forEach((m) => this.body.append(this.row(m.id, m.name)));
 			this.querySelector('form')!.addEventListener('submit', (e) => {
 				e.preventDefault();
