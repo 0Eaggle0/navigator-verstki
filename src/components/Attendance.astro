@@ -8,9 +8,11 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 	const d = new Date(LAST - (COUNT - 1 - i) * 7 * 864e5);
 	return { iso: d.toISOString().slice(0, 10), day: d.getUTCDate(), month: MONTHS[d.getUTCMonth()] };
 });
+// Адрес веб-приложения Apps Script (tools/attendance-sheet.gs). Пусто — журнал никуда не отправляется
+const SHEET_URL = '';
 ---
 
-<nav-attendance class="att not-content" data-dates={JSON.stringify(dates)}>
+<nav-attendance class="att not-content" data-dates={JSON.stringify(dates)} data-sheet={SHEET_URL}>
 	<div class="att__top">
 		<p class="att__today" aria-live="polite"></p>
 		<form class="att__add">
@@ -44,13 +46,17 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 	<p class="att__legend">
 		<span class="att__dot att__dot--y"></span> был <span class="att__dot att__dot--n"></span> не был · нажатие меняет отметку
 	</p>
+	<div class="att__sync" hidden>
+		<span class="att__sync-text" aria-live="polite"></span>
+		<button type="button" class="att__send">Отправить сейчас</button>
+	</div>
 </nav-attendance>
 
 <script>
 	import { burst } from '~/lib/fx';
 
 	type Mark = 'y' | 'n';
-	type Data = { members: { id: string; name: string }[]; marks: Record<string, Record<string, Mark>>; seen?: string[] };
+	type Data = { members: { id: string; name: string }[]; marks: Record<string, Record<string, Mark>>; seen?: string[]; unsent?: boolean };
 	const KEY = 'nav-attendance';
 	const LABEL = { '': 'нет отметки', y: 'был', n: 'не был' };
 	const NEXT: Record<string, Mark | ''> = { '': 'y', y: 'n', n: '' };
@@ -80,10 +86,13 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 		dates: { iso: string; day: number; month: string }[] = [];
 		today = localIso();
 		body!: HTMLTableSectionElement;
+		sheet = '';
+		timer = 0;
 
 		connectedCallback() {
 			this.dates = JSON.parse(this.dataset.dates!);
 			this.body = this.querySelector('tbody')!;
+			this.sheet = this.dataset.sheet ?? '';
 			// Сегодняшнее занятие подсвечено, будущие — бледнее
 			this.querySelectorAll<HTMLElement>('th[data-date]').forEach((th) => {
 				th.classList.toggle('is-today', th.dataset.date === this.today);
@@ -97,7 +106,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 				const seen = new Set((this.data.seen ?? []).concat(this.data.members.map((m) => m.name)).map((n) => n.toLowerCase()));
 				team.filter((n) => !seen.has(n.toLowerCase())).forEach((name, i) => this.data.members.push({ id: Date.now().toString(36) + i, name }));
 				this.data.seen = [...new Set([...(this.data.seen ?? []), ...team])];
-				if (team.length) write(this.data);
+				if (team.length) this.save();
 			} catch {
 				// нет хранилища — имён из кода не будет
 			}
@@ -109,7 +118,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 				if (!name) return;
 				const id = Date.now().toString(36);
 				this.data.members.push({ id, name });
-				write(this.data);
+				this.save();
 				const tr = this.row(id, name);
 				tr.classList.add('is-new');
 				this.body.append(tr);
@@ -123,6 +132,81 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 			const target = this.querySelector<HTMLElement>('th.is-today') ?? this.querySelector<HTMLElement>('th.is-future');
 			const name = this.querySelector<HTMLElement>('thead .att__name')!;
 			if (target && scroll.scrollWidth > scroll.clientWidth) scroll.scrollLeft = target.offsetLeft - name.offsetWidth - 8;
+
+			// Отправка в Google Таблицу — только если задан адрес
+			if (this.sheet) {
+				this.querySelector<HTMLElement>('.att__sync')!.hidden = false;
+				const btn = this.querySelector<HTMLButtonElement>('.att__send')!;
+				if (!this.code()) {
+					// Раздел открыт сохранённым ключом, а код браузер не помнит — просим ввести код ещё раз
+					btn.textContent = 'Ввести код';
+					btn.addEventListener('click', () => {
+						try {
+							localStorage.removeItem('nav-mod-key');
+						} catch {}
+						location.reload();
+					});
+					return this.status('Чтобы отметки уходили в таблицу, введи код раздела ещё раз', 'bad');
+				}
+				btn.addEventListener('click', () => this.send());
+				this.status(this.data.unsent ? 'Есть неотправленные отметки' : 'Отметки уходят в таблицу сами');
+				if (this.data.unsent) this.send();
+			}
+		}
+
+		// Сохранить в браузере и через 1,5 с отправить в таблицу (пачкой, если отмечают подряд)
+		save() {
+			if (this.sheet) this.data.unsent = true;
+			write(this.data);
+			if (!this.sheet) return;
+			this.status('Отправлю в таблицу…');
+			clearTimeout(this.timer);
+			this.timer = window.setTimeout(() => this.send(), 1500);
+		}
+
+		status(text: string, kind = '') {
+			const el = this.querySelector<HTMLElement>('.att__sync-text')!;
+			el.textContent = text;
+			el.dataset.kind = kind;
+		}
+
+		// Код модератора кладёт ModSecret при вводе — по нему таблица понимает, чья это команда
+		code() {
+			try {
+				return localStorage.getItem('nav-mod-code') || '';
+			} catch {
+				return '';
+			}
+		}
+
+		async send() {
+			clearTimeout(this.timer);
+			const code = this.code();
+			if (!code) return this.status('Чтобы отметки уходили в таблицу, введи код раздела ещё раз', 'bad');
+			let moderator = '';
+			try {
+				moderator = JSON.parse(localStorage.getItem('nav-v1') || '{}').profile?.name || '';
+			} catch {
+				// имени модератора не будет
+			}
+			const body = {
+				code,
+				moderator,
+				dates: this.dates.map((d) => ({ iso: d.iso, label: `${d.day} ${d.month}` })),
+				members: this.data.members.map((m) => ({ name: m.name, marks: this.data.marks[m.id] ?? {} })),
+			};
+			this.status('Отправляю…');
+			try {
+				// text/plain — без предварительного запроса CORS, так Apps Script принимает POST с другого сайта
+				const res = await fetch(this.sheet, { method: 'POST', body: JSON.stringify(body), headers: { 'Content-Type': 'text/plain;charset=utf-8' } });
+				const out = await res.json();
+				if (!out.ok) return this.status(out.error === 'code' ? 'Таблица не приняла код — напиши Владиславу' : 'Таблица ответила ошибкой, попробуй ещё раз', 'bad');
+				this.data.unsent = false;
+				write(this.data);
+				this.status(`В таблице ✓ ${new Date().toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}`, 'ok');
+			} catch {
+				this.status('Не отправилось — нет интернета? Отправлю при следующей отметке', 'bad');
+			}
 		}
 
 		row(id: string, name: string) {
@@ -154,7 +238,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 				clearTimeout(timer);
 				this.data.members = this.data.members.filter((m) => m.id !== id);
 				delete this.data.marks[id];
-				write(this.data);
+				this.save();
 				tr.classList.add('is-leaving');
 				const gone = () => {
 					tr.remove();
@@ -183,7 +267,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 					const marks = (this.data.marks[id] ??= {});
 					if (s) marks[d.iso] = s;
 					else delete marks[d.iso];
-					write(this.data);
+					this.save();
 					set(s);
 					b.classList.remove('is-pop');
 					void b.offsetWidth; // перезапуск анимации
@@ -556,5 +640,36 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 	.att__dot--n {
 		margin-left: 0.4rem;
 		background: var(--a-brick);
+	}
+
+	/* Отправка в Google Таблицу */
+	.att__sync {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem 0.75rem;
+		align-items: center;
+		justify-content: space-between;
+		margin-top: 0.9rem;
+		padding-top: 0.9rem;
+		border-top: 2px dashed var(--a-line);
+	}
+	.att__sync[hidden] {
+		display: none;
+	}
+	.att__sync-text {
+		font-size: var(--sl-text-sm);
+		color: var(--a-muted);
+		transition: color 0.3s;
+	}
+	.att__sync-text[data-kind='ok'] {
+		color: var(--a-go);
+	}
+	.att__sync-text[data-kind='bad'] {
+		color: var(--a-brick);
+	}
+	.att .att__send {
+		margin: 0;
+		padding: 0.45rem 0.9rem;
+		font-size: 0.75rem;
 	}
 </style>
