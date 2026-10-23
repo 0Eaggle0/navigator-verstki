@@ -9,7 +9,7 @@ const dates = Array.from({ length: COUNT }, (_, i) => {
 	return { iso: d.toISOString().slice(0, 10), day: d.getUTCDate(), month: MONTHS[d.getUTCMonth()] };
 });
 // Адрес веб-приложения Apps Script (tools/attendance-sheet.gs). Пусто — журнал никуда не отправляется
-const SHEET_URL = 'https://script.google.com/macros/s/AKfycbxdUyeomencgq8a4gV1edv0iql_IA3ln4IKCzxQQOxVkaRsgNONyscYLMyoPkfgSY34/exec';
+const SHEET_URL = 'https://script.google.com/macros/s/AKfycbznOf2Mp2M2jmUx1IOPKEQjRaN-0B_YloK1iQg7xYzosROrGBsdJYHfPh2Jz0T9DN-I/exec';
 ---
 
 <nav-attendance class="att not-content" data-dates={JSON.stringify(dates)} data-sheet={SHEET_URL}>
