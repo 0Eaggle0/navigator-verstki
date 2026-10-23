@@ -19,7 +19,8 @@ function doPost(e) {
   try {
     const data = JSON.parse(e.postData.contents);
     const code = String(data.code || '').trim();
-    if (!codes().includes(code)) return reply({ ok: false, error: 'code' });
+    // known — сколько кодов таблица нашла в CODES (без самих кодов): помогает понять, что свойство заполнено не так
+    if (!codes().includes(code)) return reply({ ok: false, error: 'code', known: codes().length });
 
     const book = SpreadsheetApp.getActiveSpreadsheet();
     const sheet = book.getSheetByName(code) || book.insertSheet(code);
@@ -44,11 +45,12 @@ function doPost(e) {
   }
 }
 
-// Коды из свойства CODES: «код: имена» по строкам или «код, код» — как в MODERATOR_CODES
+// Коды из свойства CODES: «код: имена» или «код, код» — как в MODERATOR_CODES.
+// Поле свойства однострочное и склеивает переносы, поэтому код ищем как «латиница/цифры перед двоеточием»
 function codes() {
   const raw = PropertiesService.getScriptProperties().getProperty('CODES') || '';
-  if (raw.indexOf(':') < 0) return raw.split(/[,\n]/).map((c) => c.trim()).filter(Boolean);
-  return raw.split(/[;\n]/).map((line) => line.split(':')[0].trim()).filter(Boolean);
+  if (raw.indexOf(':') < 0) return raw.split(/[,;\s]+/).filter(Boolean);
+  return raw.match(/[^\s:,;А-Яа-яЁё]+(?=\s*:)/g) || [];
 }
 
 // Текст, начинающийся с = + - @, таблица посчитала бы формулой
