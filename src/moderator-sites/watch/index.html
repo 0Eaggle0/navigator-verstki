@@ -12,7 +12,7 @@
   <!-- Шапка: логотип, меню, поиск, кнопка, профиль -->
   <header class="header">
     <div class="container">
-      <a class="logo" href="#">
+      <a class="logo" href="#home">
         <span class="logo__icon"><img src="img/logo.svg" alt="" width="24" height="24"></span>
         <span class="logo__text">Киносфера <small>онлайн-зал</small></span>
       </a>
@@ -21,36 +21,34 @@
 
       <nav class="nav">
         <ul class="menu">
-          <li><a href="#" class="menu__active">Главная</a></li>
+          <li><a href="#home" class="menu__active" aria-current="page">Главная</a></li>
           <li><a href="#new">Подборки</a></li>
-          <li><a href="#rooms">Комнаты с друзьями <span class="live">LIVE</span></a></li>
-          <li><a href="#">Профиль</a></li>
+          <li><a href="#rooms">Комнаты</a></li>
+          <li><a href="#profile">Профиль</a></li>
         </ul>
       </nav>
 
       <div class="header__tools">
-        <label class="search">
-          <img src="img/search.svg" alt="" width="14" height="14">
-          <input type="search" placeholder="Фильмы, сериалы, персоны..." aria-label="Поиск">
-        </label>
+        <form class="search" role="search">
+          <input name="query" type="search" maxlength="80" placeholder="Фильмы, жанры, актёры" aria-label="Поиск по каталогу" required>
+          <button type="submit" aria-label="Найти"><img src="img/search.svg" alt="" width="14" height="14"></button>
+        </form>
         <button class="button button--gradient" type="button" data-open-room>
-          <img src="img/group.svg" alt="" width="16" height="12"> Смотреть вместе
+          <img src="img/group.svg" alt="" width="16" height="12"> Создать комнату
         </button>
-        <button class="icon-button" type="button" aria-label="Уведомления">
-          <img src="img/bell.svg" alt="" width="16" height="20">
-        </button>
-        <img class="avatar" src="img/avatar.jpg" alt="Ваш профиль" width="36" height="36">
+        <a href="#profile" aria-label="Ваш профиль"><img class="avatar" src="img/avatar.jpg" alt="" width="36" height="36"></a>
       </div>
     </div>
   </header>
 
-  <main class="container main">
+  <main class="container main" id="home">
+    <p class="catalog-status" role="status" hidden></p>
+    <div data-home>
     <!-- Первый экран: фильм недели -->
-    <section class="hero">
+    <section class="hero" data-film="dune" data-moods="adventure space group">
       <img class="hero__bg" src="img/hero-dune.jpg" alt="">
       <div class="hero__tags-top">
-        <span class="chip chip--teal"><i class="dot"></i> 4K ULTRA HD • DOLBY ATMOS</span>
-        <button class="round-button" type="button" aria-label="Звук"><img src="img/sound.svg" alt="" width="14" height="13"></button>
+        <span class="chip chip--teal">Учебный каталог</span>
       </div>
 
       <div class="hero__content">
@@ -65,10 +63,9 @@
         <p class="hero__text">Герцог Пол Атрейдес объединяется с фременами, чтобы отомстить заговорщикам, уничтожившим его семью. Оказавшись перед выбором между любовью всей жизни и судьбой вселенной, он пытается предотвратить…</p>
         <p class="hero__cast">В главных ролях: <span>Тимоти Шаламе</span> • <span>Зендея</span> • <span>Ребекка Фергюсон</span> • <span>Хавьер Бардем</span></p>
         <div class="hero__buttons">
-          <a class="button button--teal" href="#"><img src="img/play.svg" alt="" width="11" height="14"> Смотреть фильм</a>
-          <button class="button button--ghost" type="button" data-open-room><img src="img/room.svg" alt="" width="15" height="15"> Создать комнату с друзьями</button>
-          <button class="round-button bookmark" type="button" aria-label="В мой список" aria-pressed="false"><img src="img/bookmark.svg" alt="" width="12" height="15"></button>
-          <button class="round-button" type="button" aria-label="Трейлер"><img src="img/trailer.svg" alt="" width="17" height="13"></button>
+          <a class="button button--teal" href="#film-dune">О фильме</a>
+          <button class="button button--ghost" type="button" data-open-room="dune"><img src="img/room.svg" alt="" width="15" height="15"> Создать комнату</button>
+          <button class="round-button bookmark" type="button" data-save="dune" aria-label="В мой список" aria-pressed="false"><img src="img/bookmark.svg" alt="" width="12" height="15"></button>
         </div>
       </div>
     </section>
@@ -81,17 +78,18 @@
         <div>
           <span class="chip chip--teal chip--small"><img src="img/sparkle.svg" alt="" width="11" height="11"> КИНОМЫШЬ БЭТТИ РЕКОМЕНДУЕТ</span>
           <h2>Не знаешь, что посмотреть сегодня вечером?</h2>
-          <p>Маскот Киносферы подберет идеальный фильм под ваше настроение за 3 простых клика.</p>
+          <p>Выбери одно или несколько настроений, чтобы найти фильм в каталоге.</p>
         </div>
       </div>
       <div class="mascot__moods">
         <div class="moods" role="group" aria-label="Настроение">
-          <button class="mood" type="button">🍿 На одном дыхании</button>
-          <button class="mood" type="button">🕯️ Мрачный триллер</button>
-          <button class="mood" type="button">🚀 Космическая сага</button>
-          <button class="mood" type="button">🍕 Для шумной компании</button>
+          <button class="mood" type="button" data-mood="adventure" aria-pressed="false">🍿 На одном дыхании</button>
+          <button class="mood" type="button" data-mood="thriller" aria-pressed="false">🕯️ Мрачный триллер</button>
+          <button class="mood" type="button" data-mood="space" aria-pressed="false">🚀 Космическая сага</button>
+          <button class="mood" type="button" data-mood="group" aria-pressed="false">🍕 Для шумной компании</button>
         </div>
-        <button class="button button--teal button--square" type="button">Подобрать <img src="img/arrow-right.svg" alt="" width="9" height="9"></button>
+        <button class="button button--teal button--square" type="button" data-recommend>Подобрать <img src="img/arrow-right.svg" alt="" width="9" height="9"></button>
+        <p class="mood-hint" role="status" hidden></p>
       </div>
     </section>
 
@@ -101,13 +99,9 @@
         <section id="new">
           <div class="section-head">
             <h2 class="title title--teal">Новинки и Горячие премьеры</h2>
-            <div class="arrows">
-              <button class="round-button round-button--small" type="button" data-scroll="-1" aria-label="Назад"><img src="img/arrow-prev.svg" alt="" width="7" height="12"></button>
-              <button class="round-button round-button--small" type="button" data-scroll="1" aria-label="Вперёд"><img src="img/arrow-next.svg" alt="" width="7" height="12"></button>
-            </div>
           </div>
           <div class="cards">
-            <article class="card">
+            <article class="card" data-film="creator" data-moods="adventure group">
               <div class="card__poster">
                 <img src="img/poster-creator.jpg" alt="Постер фильма «Создатель»">
                 <span class="rating"><img src="img/star.svg" alt="" width="10" height="10"> 8.1</span>
@@ -116,10 +110,10 @@
                 <p class="card__meta"><span>2024 • Фантастика</span><span>2 ч 13 мин</span></p>
                 <h3>Создатель</h3>
                 <p class="card__cast">Джон Дэвид Вашингтон, Джемма Чан</p>
-                <p class="card__foot"><span class="rooms"><i class="dot dot--pink"></i> 12 комнат активно</span><a href="#">Смотреть <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
+                <p class="card__foot"><a href="#film-creator">О фильме <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
               </div>
             </article>
-            <article class="card">
+            <article class="card" data-film="flower-moon" data-moods="thriller">
               <div class="card__poster">
                 <img src="img/poster-flower-moon.jpg" alt="Постер фильма «Убийцы цветочной луны»">
                 <span class="rating"><img src="img/star.svg" alt="" width="10" height="10"> 8.6</span>
@@ -128,10 +122,10 @@
                 <p class="card__meta"><span>2024 • Триллер / Детектив</span><span>1 ч 58 мин</span></p>
                 <h3>Убийцы цветочной луны</h3>
                 <p class="card__cast">Леонардо ДиКаприо, Роберт Де Ниро</p>
-                <p class="card__foot"><span class="rooms"><i class="dot dot--pink"></i> 8 комнат активно</span><a href="#">Смотреть <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
+                <p class="card__foot"><a href="#film-flower-moon">О фильме <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
               </div>
             </article>
-            <article class="card">
+            <article class="card" data-film="napoleon" data-moods="adventure">
               <div class="card__poster">
                 <img src="img/poster-napoleon.jpg" alt="Постер фильма «Наполеон»">
                 <span class="rating"><img src="img/star.svg" alt="" width="10" height="10"> 7.8</span>
@@ -140,37 +134,36 @@
                 <p class="card__meta"><span>2024 • Биография / Драма</span><span>2 ч 38 мин</span></p>
                 <h3>Наполеон: Режиссерская версия</h3>
                 <p class="card__cast">Хоакин Феникс, Ванесса Кирби</p>
-                <p class="card__foot"><span class="rooms"><i class="dot dot--pink"></i> 19 комнат активно</span><a href="#">Смотреть <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
+                <p class="card__foot"><a href="#film-napoleon">О фильме <img src="img/arrow-small.svg" alt="" width="8" height="8"></a></p>
               </div>
             </article>
           </div>
         </section>
 
-        <section>
+        <section id="collections">
           <div class="section-head">
             <h2 class="title title--pink">Культовые франшизы</h2>
-            <a class="link" href="#">Все коллекции <img src="img/arrow-long.svg" alt="" width="12" height="8"></a>
           </div>
           <div class="franchises">
-            <a class="franchise" href="#">
+            <a class="franchise" href="#collection-potter" data-collection="potter">
               <img src="img/franchise-potter.jpg" alt="">
               <span class="chip chip--purple chip--small">8 фильмов в 4K</span>
               <h3>Гарри Поттер &amp; Волшебный мир</h3>
               <p><img src="img/icon-magic.svg" alt="" width="13" height="13"> Марафон выходного дня • Спецэффекты</p>
             </a>
-            <a class="franchise" href="#">
+            <a class="franchise" href="#collection-lotr" data-collection="lotr">
               <img src="img/franchise-lotr.jpg" alt="">
               <span class="chip chip--teal chip--small">Расширенные версии</span>
               <h3>Властелин колец: Трилогия</h3>
               <p><img src="img/icon-award.svg" alt="" width="6" height="12"> 17 премий Оскар • Ремастеринг</p>
             </a>
-            <a class="franchise" href="#">
+            <a class="franchise" href="#collection-marvel" data-collection="marvel">
               <img src="img/franchise-marvel.jpg" alt="">
-              <span class="chip chip--purple chip--small">33 фильма</span>
+              <span class="chip chip--purple chip--small">4 фильма о Мстителях</span>
               <h3>Сага Бесконечности: Marvel</h3>
-              <p><img src="img/icon-clock.svg" alt="" width="9" height="12"> Хронологический порядок просмотра</p>
+              <p><img src="img/icon-clock.svg" alt="" width="9" height="12"> Порядок выхода фильмов</p>
             </a>
-            <a class="franchise" href="#">
+            <a class="franchise" href="#collection-wick" data-collection="wick">
               <img src="img/franchise-wick.jpg" alt="">
               <span class="chip chip--blue chip--small">Все 4 главы</span>
               <h3>Вселенная Джона Уика</h3>
@@ -185,109 +178,129 @@
         <div class="rooms-panel__head">
           <span class="rooms-panel__mascot"><img src="img/mascot-small.svg" alt="" width="24" height="24"></span>
           <div>
-            <h3>Комнаты &amp; Друзья</h3>
-            <p><i class="dot dot--green"></i> 3 комнаты активны</p>
+            <h3>Кинокомнаты</h3>
+            <p>Хранятся в этом браузере</p>
           </div>
-          <button class="icon-button icon-button--square" type="button" aria-label="Настройки"><img src="img/settings.svg" alt="" width="14" height="14"></button>
         </div>
-        <div class="tabs">
-          <button class="tab tab--active" type="button"><img src="img/tab-rooms.svg" alt="" width="12" height="12"> Кинорумы</button>
-          <button class="tab" type="button"><img src="img/tab-friends.svg" alt="" width="16" height="8"> Друзья онлайн</button>
+        <div class="tabs" role="group" aria-label="Панель комнат">
+          <button class="tab tab--active" type="button" data-room-tab="room-list" aria-pressed="true" aria-controls="room-list"><img src="img/tab-rooms.svg" alt="" width="12" height="12"> Комнаты</button>
+          <button class="tab" type="button" data-room-tab="room-members" aria-pressed="false" aria-controls="room-members"><img src="img/tab-friends.svg" alt="" width="16" height="8"> Участники</button>
         </div>
 
-        <article class="room">
+        <div class="room-list" id="room-list">
+        <div class="room-list" data-local-rooms></div>
+        <article class="room" data-film="interstellar" data-moods="space group">
           <div class="room__head">
             <img class="room__avatar" src="img/room-interstellar.jpg" alt="Постер «Интерстеллар»">
             <div>
               <h4>Интерстеллар</h4>
-              <p>Хост: <b>Артём</b> (+3 друга)</p>
+              <p>Ведущий: <b>Артём</b></p>
             </div>
-            <span class="timer">01:24:18</span>
           </div>
-          <p class="room__chat"><span>💬 «Этот саундтрек Циммера пробирает до мурашек...»</span> <b>🔥 8</b></p>
           <div class="room__foot">
-            <span class="faces"><i style="background:#5a3f64">М</i><i style="background:#7892ba">К</i><i>+2</i></span>
-            <button class="button button--teal button--small" type="button"><img src="img/play-small.svg" alt="" width="6" height="7"> Присоединиться</button>
+            <span class="room__note">Пример комнаты</span>
+            <a class="button button--teal button--small" href="#room-interstellar">Открыть</a>
           </div>
         </article>
 
-        <article class="room">
+        <article class="room" data-film="bladerunner" data-moods="thriller space">
           <div class="room__head">
             <img class="room__avatar" src="img/room-bladerunner.jpg" alt="Постер «Бегущий по лезвию 2049»">
             <div>
               <h4>Бегущий по лезвию 2049</h4>
-              <p>Хост: <b>София</b> (+1)</p>
+              <p>Ведущая: <b>София</b></p>
             </div>
-            <span class="timer timer--pink">00:45:12</span>
           </div>
           <div class="room__foot">
-            <span class="room__note"><img src="img/lock.svg" alt="" width="8" height="10"> Доступно для друзей</span>
-            <button class="button button--outline button--small" type="button"><img src="img/enter.svg" alt="" width="9" height="9"> Войти в зал</button>
+            <span class="room__note">Пример комнаты</span>
+            <a class="button button--outline button--small" href="#room-bladerunner">Открыть</a>
           </div>
         </article>
+        </div>
+        <ul class="room-list" id="room-members" hidden></ul>
 
         <button class="button button--gradient button--wide" type="button" data-open-room><img src="img/plus-circle.svg" alt="" width="15" height="15"> Создать комнату</button>
         <p class="rooms-panel__links">
-          <a href="#"><img src="img/bookmark-small.svg" alt="" width="8" height="10"> Мой список (<span class="my-list-count">14</span>)</a>
-          <a href="#"><img src="img/history.svg" alt="" width="10" height="10"> История просмотра</a>
+          <a href="#saved"><img src="img/bookmark-small.svg" alt="" width="8" height="10"> Мой список (<span class="my-list-count">0</span>)</a>
+          <a href="#history"><img src="img/history.svg" alt="" width="10" height="10"> История просмотра</a>
         </p>
       </aside>
     </div>
 
     <!-- Отзывы -->
-    <section class="reviews">
+    <section class="reviews" id="reviews">
       <div class="section-head">
         <div>
           <h2 class="title title--blue">Свежие отзывы и рецензии</h2>
-          <p class="section-head__sub">Впечатления киноманов после совместных показов</p>
+          <p class="section-head__sub">Примеры отзывов и твои заметки в этом браузере</p>
         </div>
-        <button class="button button--dark button--small" type="button"><img src="img/pencil.svg" alt="" width="12" height="12"> Написать рецензию</button>
+        <button class="button button--dark button--small" type="button" data-open-review><img src="img/pencil.svg" alt="" width="12" height="12"> Написать рецензию</button>
       </div>
       <div class="reviews__grid">
         <article class="review">
           <p class="review__top"><span class="chip chip--small">Дюна: Часть вторая</span><span class="stars">★★★★★ <b>10/10</b></span></p>
-          <p class="review__text">«Смотрели вчера в Киноруме впятером. Синхронный плеер отработал безупречно! Визуальный размах Вильнёва просто потрясает, а звук через систему наушников создал эффект настоящего IMAX в комнате».</p>
+          <p class="review__text">«Визуальный размах Вильнёва впечатляет. Кадры пустыни и музыка отлично дополняют друг друга».</p>
           <p class="review__author"><img src="img/review-1.jpg" alt="" width="28" height="28"><span><b>Михаил Белов</b> Кинокритик • 142 просмотра</span><time>2 часа назад</time></p>
         </article>
         <article class="review">
           <p class="review__top"><span class="chip chip--small">Бедные-несчастные</span><span class="stars">★★★★☆ <b>9/10</b></span></p>
-          <p class="review__text">«Эмма Стоун выдала невероятный перформанс. Костюмы, юмор, декорации в стиле викторианского ретрофутуризма. Отдельное спасибо маскоту Бэтти за то, что подкинул фильм в рекомендациях!»</p>
+          <p class="review__text">«Эмма Стоун выдала невероятный перформанс. Костюмы, юмор, декорации в стиле викторианского ретрофутуризма».</p>
           <p class="review__author"><img src="img/review-2.jpg" alt="" width="28" height="28"><span><b>Екатерина Волкова</b> Премиум-зритель</span><time>5 часов назад</time></p>
         </article>
         <article class="review">
           <p class="review__top"><span class="chip chip--small">Анатомия падения</span><span class="stars">★★★★☆ <b>8.8/10</b></span></p>
-          <p class="review__text">«Тончайшая судебная драма, которая держит в напряжении до последнего кадра. Обсуждали в голосовом чате еще час после титров. „Киносфера“ полностью заменила нам походы в кинотеатр».</p>
+          <p class="review__text">«Тончайшая судебная драма, которая держит в напряжении до последнего кадра. После титров ещё долго обсуждали финал».</p>
           <p class="review__author"><img src="img/review-3.jpg" alt="" width="28" height="28"><span><b>Даниил Романов</b> Киноклуб «Полуночники»</span><time>Вчера</time></p>
         </article>
       </div>
     </section>
+    </div>
+
+    <section class="detail" data-detail hidden aria-labelledby="detail-title">
+      <a class="link" data-back href="#home">← На главную</a>
+      <h1 class="title" id="detail-title" tabindex="-1"></h1>
+      <div class="detail__body"></div>
+    </section>
   </main>
 
-  <footer class="footer">
+  <footer class="footer" id="about">
     <div class="container footer__inner">
       <div>
-        <a class="logo logo--small" href="#"><img src="img/logo-footer.svg" alt="" width="20" height="20"> Киносфера</a>
-        <p>© 2025 Киносфера. 18+ Все права защищены. Атмосферный онлайн-кинотеатр для совместного просмотра.</p>
+        <a class="logo logo--small" href="#home"><img src="img/logo-footer.svg" alt="" width="20" height="20"> Киносфера</a>
+        <p>Учебный каталог фильмов. Комнаты, список и рецензии доступны в этом браузере. Воспроизведение и синхронизация между устройствами не подключены.</p>
       </div>
       <ul class="footer__links">
-        <li><a href="#">О проекте</a></li>
-        <li><a href="#">Пользовательское соглашение</a></li>
-        <li><a href="#">Конфиденциальность</a></li>
-        <li><a href="#">Поддержка</a></li>
-        <li><a href="#">Для правообладателей</a></li>
+        <li><a href="#new">Каталог</a></li>
+        <li><a href="#collections">Коллекции</a></li>
+        <li><a href="#rooms">Кинокомнаты</a></li>
       </ul>
     </div>
   </footer>
 
   <!-- Окно «Создать комнату» -->
-  <dialog class="modal">
+  <dialog class="modal" id="create-room" aria-labelledby="create-room-title">
     <form class="modal__form" method="dialog" novalidate>
-      <h2>Создать комнату</h2>
-      <label>Название комнаты <input name="room" placeholder="Киновечер у Ани"></label>
-      <label>Твоё имя <input name="name" placeholder="Аня"></label>
-      <p class="modal__error" hidden>Заполни название комнаты и своё имя</p>
+      <h2 id="create-room-title">Создать комнату</h2>
+      <label>Название комнаты <input name="room" maxlength="60" placeholder="Киновечер у Ани"></label>
+      <label>Твоё имя <input name="name" maxlength="40" placeholder="Аня"></label>
+      <label>Фильм <select name="film"></select></label>
+      <p class="section-head__sub">Комната сохранится в этом браузере.</p>
+      <p class="modal__error" role="alert" hidden></p>
       <div class="modal__buttons">
         <button class="button button--teal" type="submit">Создать</button>
+        <button class="button button--ghost" type="button" data-close>Отмена</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog class="modal" id="create-review" aria-labelledby="create-review-title">
+    <form class="modal__form" method="dialog">
+      <h2 id="create-review-title">Написать рецензию</h2>
+      <label>Фильм <select name="film"></select></label>
+      <label>Рецензия <textarea name="review" maxlength="400" rows="4" required></textarea></label>
+      <p class="modal__error" role="alert" hidden></p>
+      <div class="modal__buttons">
+        <button class="button button--teal" type="submit">Сохранить рецензию</button>
         <button class="button button--ghost" type="button" data-close>Отмена</button>
       </div>
     </form>
