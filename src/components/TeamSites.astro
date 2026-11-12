@@ -1,11 +1,10 @@
 ---
 // Готовые сайты команд для модератора: превью, код и скачивание папкой (.zip).
-// Код сайтов — src/moderator-sites/<кейс>/ (index.html, style.css, script.js),
+// Код сайтов — src/moderator-sites/<кейс>/, точка входа — index.html,
 // картинки — public/mod-sites/<кейс>/img/. Страница с этим компонентом лежит внутри <ModSecret>,
 // поэтому код попадает на сайт только в зашифрованном виде.
 import { Code } from '@astrojs/starlight/components';
-import { readdirSync, existsSync } from 'node:fs';
-import { url } from '~/lib/route';
+import { existsSync, readdirSync } from 'node:fs';
 
 const files = import.meta.glob('/src/moderator-sites/*/*.{html,css,js}', { query: '?raw', import: 'default', eager: true }) as Record<string, string>;
 
@@ -20,10 +19,17 @@ const SITES = [
 
 const base = import.meta.env.BASE_URL.replace(/\/?$/, '/');
 const sites = SITES.map((s) => {
-	const get = (f: string) => files[`/src/moderator-sites/${s.id}/${f}`];
+	const prefix = `/src/moderator-sites/${s.id}/`;
+	const sources = Object.fromEntries(
+		Object.entries(files)
+			.filter(([path]) => path.startsWith(prefix))
+			.map(([path, source]) => [path.slice(prefix.length), source])
+	);
 	const dir = `public/mod-sites/${s.id}/img`;
-	const images = existsSync(dir) ? readdirSync(dir) : [];
-	return { ...s, html: get('index.html'), css: get('style.css'), js: get('script.js'), images, assets: `${base}mod-sites/${s.id}/` };
+	const images = existsSync(dir)
+		? readdirSync(dir, { withFileTypes: true }).filter((entry) => entry.isFile()).map((entry) => entry.name)
+		: [];
+	return { ...s, sources, images, assets: `${base}mod-sites/${s.id}/img/` };
 });
 ---
 
@@ -43,12 +49,10 @@ const sites = SITES.map((s) => {
 						</a>
 					)}
 				</div>
-				{s.html ? (
+				{s.sources['index.html'] ? (
 					<nav-site
 						data-id={s.id}
-						data-html={s.html}
-						data-css={s.css ?? ''}
-						data-js={s.js ?? ''}
+						data-sources={JSON.stringify(s.sources)}
 						data-assets={s.assets}
 						data-images={JSON.stringify(s.images)}
 					>
@@ -57,29 +61,19 @@ const sites = SITES.map((s) => {
 								<button type="button" data-width="100%" aria-pressed="true">Компьютер</button>
 								<button type="button" data-width="390px" aria-pressed="false">Телефон</button>
 							</div>
-							<button type="button" class="a-btn--sky" data-open>Открыть в новой вкладке</button>
+							<a class="a-btn a-btn--sky" target="_blank" rel="noopener" data-open>Открыть в новой вкладке</a>
 							<button type="button" class="a-btn--go" data-zip>Скачать сайт (.zip)</button>
 						</div>
 						<div class="site__frame">
 							<iframe title={`Готовый сайт: ${s.title}`} loading="lazy" />
 						</div>
 						<p class="site__status" aria-live="polite" />
-						<details class="site__code">
-							<summary>Код: index.html</summary>
-							<Code code={s.html} lang="html" />
-						</details>
-						{s.css && (
+						{Object.entries(s.sources).sort(([a], [b]) => a === 'index.html' ? -1 : b === 'index.html' ? 1 : a.localeCompare(b)).map(([name, source]) => (
 							<details class="site__code">
-								<summary>Код: style.css</summary>
-								<Code code={s.css} lang="css" />
+								<summary>Код: {name}</summary>
+								<Code code={source} lang={name.split('.').at(-1)} />
 							</details>
-						)}
-						{s.js && (
-							<details class="site__code">
-								<summary>Код: script.js</summary>
-								<Code code={s.js} lang="js" />
-							</details>
-						)}
+						))}
 					</nav-site>
 				) : (
 					<p class="site__empty">Сайт ещё не свёрстан.</p>
@@ -87,28 +81,46 @@ const sites = SITES.map((s) => {
 			</section>
 		))
 	}
-	<p class="sites__url" hidden data-base={url('')} />
 </div>
 
 <script>
 	import { zip, type ZipFile } from '~/lib/zip';
 
-	// Документ сайта для превью: CSS и JS вставляем прямо в страницу, картинки берём по адресу base
-	function page(el: HTMLElement) {
-		const { html = '', css = '', js = '', assets = '' } = el.dataset;
-		const abs = new URL(assets, location.href).href;
-		return html
-			.replace('<head>', `<head><base href="${abs}">`)
-			.replace(/<link rel="stylesheet" href="style\.css">/, () => `<style>${css}</style>`)
-			.replace(/<script src="script\.js"><\/script>/, () => `<script>${js}<\/script>`);
+	// shortcut: превью открывает index.html и его якоря, для отдельных HTML-страниц нужен загрузчик страниц.
+	function preview(sources: Record<string, string>, assets: URL) {
+		const doc = new DOMParser().parseFromString(sources['index.html'], 'text/html');
+		const imageUrl = (path: string) => new URL(path, assets).href;
+		for (const image of doc.querySelectorAll('img[src^="img/"], img[src^="./img/"]')) {
+			image.setAttribute('src', imageUrl(image.getAttribute('src')!.replace(/^(?:\.\/)?img\//, '')));
+		}
+		const urls = new Map<string, string>();
+		for (const [name, source] of Object.entries(sources)) {
+			if (name.endsWith('.css')) {
+				const css = source.replace(/url\(\s*(['"]?)(?:\.\/)?img\/([^)'"]+)\1\s*\)/g,
+					(_match, _quote, path) => `url("${imageUrl(path.trim())}")`);
+				urls.set(name, URL.createObjectURL(new Blob([css], { type: 'text/css' })));
+			} else if (name.endsWith('.js')) {
+				urls.set(name, URL.createObjectURL(new Blob([source], { type: 'text/javascript' })));
+			}
+		}
+		for (const tag of doc.querySelectorAll('link[rel="stylesheet"][href], script[src]')) {
+			const attr = tag.tagName === 'LINK' ? 'href' : 'src';
+			const url = urls.get(tag.getAttribute(attr)!.replace(/^\.\//, ''));
+			if (url) tag.setAttribute(attr, url);
+		}
+		return URL.createObjectURL(new Blob(['<!doctype html>\n', doc.documentElement.outerHTML], { type: 'text/html;charset=utf-8' }));
 	}
 
 	class Site extends HTMLElement {
 		connectedCallback() {
 			const frame = this.querySelector('iframe')!;
 			const status = this.querySelector<HTMLElement>('.site__status')!;
-			const doc = page(this);
-			frame.srcdoc = doc;
+			const { id, sources: rawSources, assets: assetPath, images: rawImages } = this.dataset;
+			const sources: Record<string, string> = JSON.parse(rawSources!);
+			const images: string[] = JSON.parse(rawImages!);
+			const assets = new URL(assetPath!, location.href);
+			frame.src = preview(sources, assets);
+			this.querySelector<HTMLAnchorElement>('[data-open]')!.href = frame.src;
 
 			// Компьютер / телефон — меняем ширину превью
 			const sizes = [...this.querySelectorAll<HTMLButtonElement>('[data-width]')];
@@ -119,34 +131,29 @@ const sites = SITES.map((s) => {
 				})
 			);
 
-			// Открыть в новой вкладке — как обычную страницу
-			this.querySelector('[data-open]')!.addEventListener('click', () => {
-				const blob = new Blob([doc], { type: 'text/html' });
-				window.open(URL.createObjectURL(blob), '_blank');
-			});
-
 			// Скачать папкой: код + картинки (картинки скачиваем с сайта)
-			this.querySelector('[data-zip]')!.addEventListener('click', async () => {
-				const { id = 'site', html = '', css = '', js = '', assets = '' } = this.dataset;
-				const images: string[] = JSON.parse(this.dataset.images || '[]');
+			const download = this.querySelector<HTMLButtonElement>('[data-zip]')!;
+			download.addEventListener('click', async () => {
+				download.disabled = true;
 				status.textContent = 'Собираю архив…';
 				try {
-					const list: ZipFile[] = [
-						{ name: `${id}/index.html`, data: html },
-						{ name: `${id}/style.css`, data: css },
-					];
-					if (js) list.push({ name: `${id}/script.js`, data: js });
+					const list: ZipFile[] = Object.entries(sources).map(([name, data]) => ({ name: `${id}/${name}`, data }));
 					for (const img of images) {
-						const res = await fetch(new URL(`${assets}img/${img}`, location.href));
+						const res = await fetch(new URL(encodeURIComponent(img), assets));
+						if (!res.ok) throw new Error(`Не удалось загрузить ${img}`);
 						list.push({ name: `${id}/img/${img}`, data: new Uint8Array(await res.arrayBuffer()) });
 					}
 					const a = document.createElement('a');
-					a.href = URL.createObjectURL(zip(list));
+					const archive = URL.createObjectURL(zip(list));
+					a.href = archive;
 					a.download = `${id}.zip`;
 					a.click();
+					setTimeout(() => URL.revokeObjectURL(archive), 60000);
 					status.textContent = `Готово: ${id}.zip — распакуй и открой index.html`;
 				} catch {
 					status.textContent = 'Не получилось собрать архив — проверь интернет и попробуй ещё раз';
+				} finally {
+					download.disabled = false;
 				}
 			});
 		}
