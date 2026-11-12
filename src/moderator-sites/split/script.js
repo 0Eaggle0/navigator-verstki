@@ -454,8 +454,8 @@ function showScreen() {
   const collections = hash === '#collections';
   const settlements = hash === '#settlements';
   $('[data-home]').hidden = collections || settlements;
-  $('#collections').hidden = !collections;
-  $('#settlements').hidden = !settlements;
+  $('#collections').hidden = !(collections || settlements);
+  $('#settlements').hidden = !(collections || settlements);
   const active = ['#groups', '#collections', '#settlements'].includes(hash) ? hash : '#home';
   for (const link of menu.querySelectorAll('a')) {
     const current = link.getAttribute('href') === active;
@@ -463,7 +463,7 @@ function showScreen() {
     if (current) link.setAttribute('aria-current', 'page');
     else link.removeAttribute('aria-current');
   }
-  if (hash === '#groups' || hash === '#activity') document.getElementById(hash.slice(1)).scrollIntoView();
+  if (['#groups', '#activity', '#collections', '#settlements'].includes(hash)) document.getElementById(hash.slice(1)).scrollIntoView();
   else window.scrollTo(0, 0);
 }
 
