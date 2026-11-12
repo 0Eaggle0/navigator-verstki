@@ -12,7 +12,7 @@
   <!-- Шапка -->
   <header class="header">
     <div class="container">
-      <a class="logo" href="#">
+      <a class="logo" href="#afisha">
         <span class="logo__icon"><img src="img/logo.svg" alt="" width="20" height="16"></span>
         <span class="logo__text">КУДА_СХОДИТЬ
           <small><img src="img/pin-small.svg" alt="" width="9" height="12"> Омск <img src="img/chevron-down.svg" alt="" width="7" height="4"></small>
@@ -20,15 +20,15 @@
       </a>
       <!-- На компьютере меню — в шапке, на телефоне — снизу экрана -->
       <nav class="nav" aria-label="Разделы">
-        <a class="nav__link nav__link--active" href="#"><img src="img/nav-afisha.svg" alt="" width="17" height="18"> Афиша</a>
-        <a class="nav__link" href="#"><img src="img/nav-near.svg" alt="" width="17" height="17"> Рядом</a>
-        <a class="nav__link" href="#"><img src="img/nav-collections.svg" alt="" width="17" height="18"> Подборки</a>
+        <a class="nav__link nav__link--active" href="#afisha"><img src="img/nav-afisha.svg" alt="" width="17" height="18"> Афиша</a>
+        <a class="nav__link" href="#near"><img src="img/nav-near.svg" alt="" width="17" height="17"> Рядом</a>
+        <a class="nav__link" href="#collections"><img src="img/nav-collections.svg" alt="" width="17" height="18"> Подборки</a>
         <a class="nav__link" href="#going"><img src="img/nav-heart.svg" alt="" width="18" height="17"> Иду <b class="going-count" hidden>0</b></a>
-        <a class="nav__link" href="#"><img src="img/nav-profile.svg" alt="" width="15" height="15"> Профиль</a>
+        <a class="nav__link" href="#profile"><img src="img/nav-profile.svg" alt="" width="15" height="15"> Профиль</a>
       </nav>
       <div class="header__tools">
         <button class="round-button" type="button" aria-label="Быстрый поиск"><img src="img/search.svg" alt="" width="17" height="17"></button>
-        <span class="avatar"><img src="img/avatar.png" alt="Профиль"></span>
+        <a class="avatar" href="#profile" aria-label="Мой профиль"><img src="img/avatar.png" alt=""></a>
       </div>
     </div>
   </header>
@@ -36,44 +36,47 @@
   <main class="container main">
     <div class="title-row">
       <div>
-        <h1>Куда сходить</h1>
-        <p class="subtitle"><b>Омск</b> · эти выходные</p>
+        <h1 tabindex="-1">Куда сходить</h1>
+        <p class="subtitle"><b>Омск</b> · учебная афиша</p>
       </div>
-      <span class="live"><i></i> LIVE</span>
+      <span class="live">ДЕМО</span>
     </div>
 
+    <p class="demo-note">Учебный деморежим: события и цены приведены для примера. Данные сохраняются только в этом браузере. «Рядом» — подборка центра Омска, без геолокации.</p>
+    <label class="search-field" data-list>Поиск по названию и месту <input id="event-search" type="search" placeholder="Кино, Любинский, квиз…"></label>
+    <section id="screen" class="screen" aria-label="Содержимое раздела" hidden></section>
     <!-- Фильтры -->
-    <div class="filters" role="group" aria-label="Фильтр событий">
+    <div class="filters" data-list role="group" aria-label="Фильтр событий">
       <button class="filter" type="button" data-filter="all">Все</button>
       <button class="filter filter--active" type="button" data-filter="free">Бесплатно · 0 ₽</button>
       <button class="filter" type="button" data-filter="near">Рядом</button>
       <button class="filter" type="button" data-filter="cinema">Кино</button>
       <button class="filter" type="button" data-filter="quiz">Квизы</button>
       <button class="filter" type="button" data-filter="music">Концерты</button>
-      <button class="filter" type="button" data-filter="art">Выставки</button>
+      <button class="filter" type="button" data-filter="walk">Прогулки</button>
       <button class="filter" type="button" data-filter="sport">Спорт</button>
     </div>
 
     <!-- Подборка -->
-    <section class="digest">
+    <section class="digest" id="weekend-digest">
       <div class="digest__top">
         <div>
           <p class="digest__label"><img src="img/badge.svg" alt="" width="17" height="16"> Подборка выходных</p>
-          <h2>12 локаций без билетов в центре</h2>
-          <p class="muted">Любинский проспект, набережная Тухачевского и скейт-парк на Зеленом…</p>
+          <h2>Прогулка по центру без билетов</h2>
+          <p class="muted">Любинский проспект, старые дома на улице Ленина и набережная Тухачевского.</p>
         </div>
         <span class="digest__map"><img src="img/map.svg" alt="" width="20" height="20"></span>
       </div>
-      <p class="digest__bottom"><span>Обновлено сегодня, 14:20</span><a href="#">Смотреть гид <img src="img/chevron-right.svg" alt="" width="5" height="8"></a></p>
+      <p class="digest__bottom"><span>Учебный маршрут · 3 остановки</span><a href="#guide">Смотреть гид <img src="img/chevron-right.svg" alt="" width="5" height="8"></a></p>
     </section>
 
-    <div class="events-head">
+    <div class="events-head" data-list>
       <h2><img src="img/fire.svg" alt="" width="13" height="16"> Главные события</h2>
-      <p class="found"><span class="found__count">5</span> найдено</p>
+      <p class="found" role="status"><span class="found__count">5</span> найдено</p>
     </div>
 
     <!-- События. data-cat — тип, data-price — цена (0 = бесплатно), data-near — рядом -->
-    <div class="events">
+    <div class="events" data-list>
       <article class="event" data-id="cinema-square" data-cat="cinema" data-price="0" data-near="yes">
         <p class="date"><b>СБ</b> 24 мая</p>
         <div class="event__body">
@@ -139,7 +142,7 @@
         </div>
       </article>
 
-      <article class="event" data-id="lubinsky" data-cat="art" data-price="0" data-near="yes">
+      <article class="event" data-id="lubinsky" data-cat="walk" data-price="0" data-near="yes">
         <p class="date"><b>СБ</b> 24 мая</p>
         <div class="event__body">
           <p class="event__tags"><span class="tag">Город</span><span class="price price--free">0 ₽ <small>free walk</small></span></p>
@@ -155,34 +158,41 @@
         </div>
       </article>
     </div>
-    <p class="empty" hidden>По этому фильтру пока ничего. Попробуй «Все».</p>
+    <p class="empty" data-list hidden>По этому фильтру пока ничего. Попробуй «Все».</p>
 
     <!-- Предложить событие -->
-    <section class="suggest">
+    <section class="suggest" data-list>
       <div class="suggest__head">
         <h2>Знаешь классное место?</h2>
         <img src="img/add-place.svg" alt="" width="19" height="22">
       </div>
-      <p class="muted">Добавь бесплатный квартирник, встречу или лекцию в Омске в ленту за 1 минуту.</p>
+      <p class="muted">Сохрани предложение в своём профиле. В деморежиме оно не отправляется организаторам.</p>
       <button class="button" type="button" data-open-suggest>Предложить событие</button>
     </section>
   </main>
 
   <!-- Окно «Предложить событие» -->
-  <dialog class="modal">
+  <dialog class="modal" aria-labelledby="suggest-title">
     <form class="modal__form" method="dialog" novalidate>
-      <h2>Предложить событие</h2>
-      <label>Название <input name="title" placeholder="Квартирник на Лермонтова"></label>
+      <h2 id="suggest-title">Предложить событие</h2><p class="muted">Локальный черновик — без отправки на модерацию.</p>
+      <label>Название <input name="title" maxlength="160" required placeholder="Квартирник на Лермонтова"></label>
       <label>Когда <input name="date" type="date"></label>
-      <label>Где <input name="place" placeholder="Адрес или место"></label>
-      <p class="modal__error" hidden>Заполни название, дату и место</p>
+      <label>Где <input name="place" maxlength="160" required placeholder="Адрес или место"></label>
+      <p class="modal__error" role="alert" hidden>Заполни название, дату и место</p>
       <div class="modal__buttons">
-        <button class="button button--accent" type="submit">Отправить</button>
+        <button class="button button--accent" type="submit">Сохранить черновик</button>
         <button class="button" type="button" data-close>Отмена</button>
       </div>
     </form>
   </dialog>
 
+  <dialog id="share-dialog" class="modal" aria-labelledby="share-title">
+    <form method="dialog" class="modal__form">
+      <h2 id="share-title">Поделиться событием</h2>
+      <label>Скопируй карточку вручную <textarea readonly rows="5"></textarea></label>
+      <button class="button">Закрыть</button>
+    </form>
+  </dialog>
   <p class="toast" role="status" hidden></p>
   <script src="script.js"></script>
 </body>
