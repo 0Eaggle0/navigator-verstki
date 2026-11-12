@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TeamPlay — найди своих тиммейтов</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="header">
+    <div class="container header__inner">
+      <a class="brand" href="#profile"><span aria-hidden="true">✦</span> TeamPlay</a>
+      <form class="site-search" role="search">
+        <input type="search" name="query" aria-label="Поиск дисциплины" placeholder="Поиск игры или дисциплины" maxlength="80" required>
+        <button type="submit" class="button button--quiet">Найти</button>
+      </form>
+      <nav class="nav" aria-label="Разделы">
+        <a href="#profile">Профиль</a>
+        <a href="#catalog">Дисциплины</a>
+        <a href="#requests">Заявки</a>
+        <a href="#reviews">Отзывы</a>
+      </nav>
+      <button class="button header__create" type="button" data-create-request>Создать заявку</button>
+    </div>
+  </header>
+
+  <main class="container main">
+    <p class="notice" role="status" hidden></p>
+
+    <section id="profile" class="screen profile" data-screen aria-labelledby="profile-heading">
+      <div class="intro">
+        <p class="eyebrow">Подбор команды</p>
+        <h1 id="profile-heading" tabindex="-1">Найди проверенных тиммейтов <span>для побед и проектов</span></h1>
+        <p class="lead">Выбери дисциплину, расскажи о своей роли и откликнись на заявку команды.</p>
+        <div class="actions">
+          <a class="button" href="#catalog">Выбрать дисциплину</a>
+          <a class="button button--quiet" href="#requests">Смотреть заявки</a>
+        </div>
+        <div class="intro__steps">
+          <article class="card"><span class="step-icon" aria-hidden="true">◎</span><h2>Заполни профиль</h2><p>Укажи ник, роль и свой уровень.</p></article>
+          <article class="card"><span class="step-icon" aria-hidden="true">✦</span><h2>Найди команду</h2><p>Отфильтруй заявки по любимой дисциплине.</p></article>
+          <article class="card"><span class="step-icon" aria-hidden="true">☆</span><h2>Читай отзывы</h2><p>Узнай, как другие участники оценивают работу в команде.</p></article>
+        </div>
+      </div>
+      <form class="card stack" id="profile-form">
+        <div class="section-head"><div><h2>Анкета игрока</h2><p class="muted">Хранится в этом браузере.</p></div><span class="avatar" data-avatar aria-hidden="true">?</span></div>
+        <label>Никнейм <input name="nickname" placeholder="Например, PixelFox" maxlength="32" autocomplete="nickname" required></label>
+        <label>Основная дисциплина <select name="game" data-game-select required></select></label>
+        <div class="fields">
+          <label>Роль <input name="role" placeholder="Капитан, дизайнер…" maxlength="40" required></label>
+          <label>Уровень <select name="level"><option>Новичок</option><option>Любитель</option><option>Опытный</option></select></label>
+        </div>
+        <label>Когда удобно играть <input name="schedule" placeholder="Вечера по будням" maxlength="60"></label>
+        <button class="button" type="submit">Сохранить профиль</button>
+        <p class="form-status" role="status" hidden></p>
+      </form>
+    </section>
+
+    <section id="catalog" class="screen stack" data-screen aria-labelledby="catalog-heading" hidden>
+      <div class="page-head"><div><h1 id="catalog-heading" tabindex="-1">Игры, хакатоны и дисциплины</h1><p class="lead">Выбери направление и посмотри, какие команды ищут участников.</p></div></div>
+      <div class="filters" role="group" aria-label="Категория дисциплины">
+        <button class="chip" type="button" data-category="all" aria-pressed="true">Все</button>
+        <button class="chip" type="button" data-category="fps" aria-pressed="false">FPS</button>
+        <button class="chip" type="button" data-category="moba" aria-pressed="false">MOBA</button>
+        <button class="chip" type="button" data-category="coop" aria-pressed="false">Кооператив</button>
+        <button class="chip" type="button" data-category="dev" aria-pressed="false">Разработка</button>
+      </div>
+      <p class="empty" data-catalog-empty hidden>Дисциплина не найдена. Попробуй другой запрос или выбери «Все».</p>
+      <!-- Обложки игр: Steam (CS2, Dota 2, Cyberpunk 2077) и playvalorant.com/en-us/maps/ (Ascent). -->
+      <div class="catalog-grid">
+        <article class="card discipline" data-game="cs2" data-type="fps">
+          <img class="cover" src="img/cs2.jpg" alt="" width="460" height="215">
+          <div class="discipline__body"><span class="tag">FPS · 5×5</span><h2>Counter-Strike 2</h2><p>Командные матчи, тренировки и разбор раундов.</p><a class="button" href="#requests?game=cs2">Смотреть заявки</a></div>
+        </article>
+        <article class="card discipline" data-game="dota" data-type="moba">
+          <img class="cover" src="img/dota.jpg" alt="" width="460" height="215">
+          <div class="discipline__body"><span class="tag">MOBA · 5×5</span><h2>Dota 2</h2><p>Сыгранная пятёрка для рейтинга и командных лобби.</p><a class="button" href="#requests?game=dota">Смотреть заявки</a></div>
+        </article>
+        <article class="card discipline" data-game="valorant" data-type="fps">
+          <img class="cover" src="img/valorant.jpg" alt="" width="460" height="215">
+          <div class="discipline__body"><span class="tag">FPS · 5×5</span><h2>Valorant</h2><p>Поиск игроков по роли агента и времени тренировок.</p><a class="button" href="#requests?game=valorant">Смотреть заявки</a></div>
+        </article>
+        <article class="card discipline" data-game="ai-battle" data-type="dev">
+          <div class="cover cover--ai" aria-hidden="true"><span>AI BATTLE</span></div>
+          <div class="discipline__body"><span class="tag">Хакатон</span><h2>Хакатон AI Battle</h2><p>Команды для прототипов, моделей и презентаций.</p><a class="button" href="#requests?game=ai-battle">Смотреть заявки</a></div>
+        </article>
+        <article class="card discipline" data-game="cyberpunk" data-type="coop">
+          <img class="cover" src="img/cyberpunk.jpg" alt="" width="460" height="215">
+          <div class="discipline__body"><span class="tag">RPG · сообщество</span><h2>Cyberpunk &amp; RPG Co-op</h2><p>Клуб для обсуждения RPG и поиска компании для кооперативных игр.</p><a class="button" href="#requests?game=cyberpunk">Смотреть заявки</a></div>
+        </article>
+        <article class="card discipline" data-game="gamejam" data-type="dev">
+          <div class="cover cover--jam" aria-hidden="true"><span>GAMEJAM</span></div>
+          <div class="discipline__body"><span class="tag">Геймдев</span><h2>GameJam Indie</h2><p>Собери команду и сделай небольшую игру за джем.</p><a class="button" href="#requests?game=gamejam">Смотреть заявки</a></div>
+        </article>
+      </div>
+    </section>
+
+    <section id="requests" class="screen stack" data-screen aria-labelledby="requests-heading" hidden>
+      <div class="page-head">
+        <div><h1 id="requests-heading" tabindex="-1">Заявки на подбор команды</h1><p class="lead">Найди подходящую роль или создай собственную заявку.</p></div>
+        <button class="button" type="button" data-create-request>Создать заявку</button>
+      </div>
+      <div class="board">
+        <aside class="card stack">
+          <h2>Фильтры</h2>
+          <label>Дисциплина <select id="request-game" data-game-select data-all></select></label>
+          <label>Поиск по заявкам <input id="request-query" type="search" placeholder="Роль, команда или ник" maxlength="80"></label>
+          <label class="check"><input id="request-mine" type="checkbox"> Мои заявки и отклики</label>
+          <p class="muted" data-request-count role="status"></p>
+        </aside>
+        <div class="stack" data-requests></div>
+      </div>
+    </section>
+
+    <section id="reviews" class="screen stack" data-screen aria-labelledby="reviews-heading" hidden>
+      <div class="page-head">
+        <div><h1 id="reviews-heading" tabindex="-1">Отзывы и репутация</h1><p class="lead">Оценки помогают выбрать людей для игры и проектов.</p></div>
+        <button class="button" type="button" data-create-review>Оставить отзыв</button>
+      </div>
+      <div class="stats">
+        <article class="card"><p>Средняя оценка</p><strong data-average>—</strong></article>
+        <article class="card"><p>Всего отзывов</p><strong data-review-count>0</strong></article>
+        <article class="card"><p>Положительные · 4–5</p><strong data-positive>—</strong></article>
+      </div>
+      <div class="board">
+        <aside class="card stack">
+          <h2>Фильтры</h2>
+          <label>Дисциплина <select id="review-game" data-game-select data-all></select></label>
+          <label>Оценка <select id="review-rating"><option value="">Любая</option><option value="5">5</option><option value="4">4</option><option value="3">3</option><option value="2">2</option><option value="1">1</option></select></label>
+        </aside>
+        <div class="stack" data-reviews></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <a class="brand" href="#profile"><span aria-hidden="true">✦</span> TeamPlay</a>
+      <p>Учебная версия. Заявки, отклики и отзывы доступны в этом браузере.</p>
+    </div>
+  </footer>
+
+  <dialog id="request-dialog" class="dialog" aria-labelledby="request-title">
+    <form class="stack">
+      <h2 id="request-title">Создать заявку</h2>
+      <label>Название команды или заявки <input name="title" required maxlength="70"></label>
+      <label>Дисциплина <select name="game" data-game-select required></select></label>
+      <label>Кого ищешь <input name="role" required maxlength="40" placeholder="Например, саппорта"></label>
+      <label>О команде и расписании <textarea name="description" rows="3" required maxlength="320"></textarea></label>
+      <p class="form-status" role="alert" hidden></p>
+      <div class="actions"><button class="button" type="submit">Сохранить заявку</button><button class="button button--quiet" type="button" data-close>Отмена</button></div>
+    </form>
+  </dialog>
+
+  <dialog id="review-dialog" class="dialog" aria-labelledby="review-title">
+    <form class="stack">
+      <h2 id="review-title">Оставить отзыв</h2>
+      <label>Ник тиммейта <input name="player" required maxlength="32"></label>
+      <div class="fields">
+        <label>Дисциплина <select name="game" data-game-select required></select></label>
+        <label>Оценка <select name="rating"><option>5</option><option>4</option><option>3</option><option>2</option><option>1</option></select></label>
+      </div>
+      <label>Отзыв <textarea name="description" rows="3" required maxlength="320"></textarea></label>
+      <p class="form-status" role="alert" hidden></p>
+      <div class="actions"><button class="button" type="submit">Сохранить отзыв</button><button class="button button--quiet" type="button" data-close>Отмена</button></div>
+    </form>
+  </dialog>
+
+  <script src="script.js"></script>
+</body>
+</html>
