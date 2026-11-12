@@ -11,20 +11,21 @@
        (шапка с бургером, первый экран, карточки, форма, подвал) — как пример «быстрого пути». -->
 <!-- ШАПКА С БУРГЕР-МЕНЮ. Это та же шапка, что в блоке «Шапка с меню», плюс кнопка ☰.
      Своя шапка уже есть? Добавь в неё только строку с кнопкой .burger — классы совпадают -->
-<header class="header">
+<header class="header" id="home">
   <div class="container">
     <!-- что менять: название или логотип -->
-    <a class="logo" href="#">ХВОСТ_ДОМОЙ</a>
+    <a class="logo" href="#home">ХВОСТ_ДОМОЙ</a>
 
     <!-- Кнопка видна только на телефоне. aria-label — подпись для программ экранного доступа -->
-    <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+    <button class="burger" type="button" aria-controls="main-menu" aria-expanded="false" aria-label="Открыть меню">☰</button>
 
     <nav aria-label="Главное меню">
-      <ul class="menu">
+      <ul class="menu" id="main-menu">
         <!-- что менять: пункты меню -->
-        <li><a href="#collections">Мои сборы</a></li>
-        <li><a href="#how">Как это работает</a></li>
-        <li><a href="#login">Войти</a></li>
+        <li><a href="#pets">Питомцы</a></li>
+        <li><a href="#test">Подбор</a></li>
+        <li><a href="#volunteer">Волонтёрство</a></li>
+        <li><a href="#requests">Заявки</a></li>
       </ul>
     </nav>
   </div>
@@ -56,29 +57,56 @@
 
     <div class="cards">
       <!-- Одна карточка = один <article>. Нужно больше — скопируй article целиком -->
-      <article class="card">
+      <article class="card" id="barsik">
         <!-- что менять: путь к картинке и описание в alt -->
         <img src="img/barsik.svg" alt="Рыжий кот Барсик">
         <!-- что менять: заголовок и текст карточки -->
         <h3>Барсик</h3>
         <p>2 года, любит спать на коленях</p>
-        <a class="button" href="#">Познакомиться</a>
+        <button class="button" type="button" data-pet="barsik">Познакомиться</button>
       </article>
 
-      <article class="card">
+      <article class="card" id="sharik">
         <img src="img/sharik.svg" alt="Пёс Шарик с висячими ушами">
         <h3>Шарик</h3>
         <p>4 года, обожает долгие прогулки</p>
-        <a class="button" href="#">Познакомиться</a>
+        <button class="button" type="button" data-pet="sharik">Познакомиться</button>
       </article>
 
-      <article class="card">
+      <article class="card" id="murka">
         <img src="img/murka.svg" alt="Серая кошка Мурка">
         <h3>Мурка</h3>
         <p>1 год, спокойная и ласковая</p>
-        <a class="button" href="#">Познакомиться</a>
+        <button class="button" type="button" data-pet="murka">Познакомиться</button>
       </article>
     </div>
+  </div>
+</section>
+
+<section class="volunteer" id="test">
+  <div class="container">
+    <h2>Какой питомец тебе подойдёт?</h2>
+    <p>Ответь на пять вопросов. Результат подскажет, с кого начать знакомство.</p>
+    <form class="form" id="quiz">
+      <label class="form__field">Кого хочешь взять?
+        <select name="species"><option value="any">Пока не решил</option><option value="cat">Кошку</option><option value="dog">Собаку</option></select>
+      </label>
+      <label class="form__field">Готов гулять с питомцем каждый день?
+        <select name="walk"><option value="no">Нет</option><option value="yes">Да</option></select>
+      </label>
+      <label class="form__field">Какой ритм тебе ближе?
+        <select name="pace"><option value="calm">Спокойный</option><option value="active">Активный</option></select>
+      </label>
+      <label class="form__field">Был ли у тебя питомец?
+        <select name="experience"><option value="no">Нет</option><option value="yes">Да</option></select>
+      </label>
+      <label class="form__field">Как любишь проводить время дома?
+        <select name="home"><option value="lap">Отдыхать вместе</option><option value="play">Играть и учить новому</option></select>
+      </label>
+      <button class="form__button" type="submit">Подобрать питомца</button>
+      <p id="quiz-result" role="status" hidden></p>
+      <button class="form__button" id="quiz-pet" type="button" data-pet hidden>Открыть карточку питомца</button>
+    </form>
   </div>
 </section>
 
@@ -87,20 +115,13 @@
   <div class="container">
     <!-- что менять: заголовок и пояснение -->
     <h2>Стать волонтёром</h2>
-    <p>Оставь контакты — мы позвоним и расскажем, чем можно помочь.</p>
+    <p>Выбери, чем хочешь помочь, и сохрани учебную заявку в этом браузере.</p>
 
-    <!-- action="#" — пока форма никуда не отправляется.
-         novalidate — браузер не проверяет поля сам: проверку делает script.js (занятие 7) -->
-    <form class="form" action="#" novalidate>
+    <form class="form" id="volunteer-form">
       <!-- У каждого поля есть подпись label: по клику на неё курсор встаёт в поле -->
       <label class="form__field">
-        Имя
-        <input type="text" name="name" placeholder="Аня">
-      </label>
-
-      <label class="form__field">
-        Телефон
-        <input type="tel" name="phone" placeholder="+7 900 000-00-00">
+        Имя или псевдоним
+        <input type="text" name="name" placeholder="Аня" maxlength="60" required>
       </label>
 
       <label class="form__field">
@@ -113,17 +134,20 @@
         </select>
       </label>
 
-      <label class="form__check">
-        <input type="checkbox" name="agree">
-        Согласен на обработку данных
-      </label>
-
       <!-- Сюда script.js пишет текст ошибки -->
       <p class="error" aria-live="polite"></p>
 
       <!-- что менять: текст кнопки -->
-      <button class="form__button" type="submit">Отправить</button>
+      <button class="form__button" type="submit">Сохранить заявку</button>
     </form>
+  </div>
+</section>
+
+<section class="pets" id="requests">
+  <div class="container">
+    <h2>Мои заявки</h2>
+    <p>Учебные заявки доступны в этом браузере. Приют их не получает.</p>
+    <ul id="request-list"></ul>
   </div>
 </section>
 
@@ -134,7 +158,7 @@
     <div>
       <!-- что менять: название и описание проекта -->
       <p class="footer__logo">ХВОСТ_ДОМОЙ</p>
-      <p>Помогаем животным из приютов Омска найти дом.</p>
+      <p>Учебный проект о помощи питомцам приюта.</p>
     </div>
 
     <nav aria-label="Разделы сайта">
@@ -144,20 +168,28 @@
         <li><a href="#pets">Питомцы</a></li>
         <li><a href="#test">Тест</a></li>
         <li><a href="#volunteer">Волонтёрство</a></li>
+        <li><a href="#requests">Мои заявки</a></li>
       </ul>
     </nav>
 
-    <div>
-      <p class="footer__title">Контакты</p>
-      <!-- что менять: почта, телефон, соцсети -->
-      <p><a href="mailto:hello@example.ru">hello@example.ru</a></p>
-      <p><a href="#">Сообщество ВКонтакте</a></p>
-    </div>
   </div>
 
   <!-- что менять: год и название команды -->
   <p class="footer__copy">© 2026 Команда проекта, Проектная школа ОмГТУ</p>
 </footer>
+
+  <dialog class="pet-dialog" aria-labelledby="pet-name">
+    <form class="form" id="pet-form">
+      <img class="pet-dialog__image" alt="">
+      <h2 id="pet-name"></h2>
+      <p id="pet-description"></p>
+      <p>Заявка на знакомство сохранится в этом браузере.</p>
+      <label class="form__field">Имя или псевдоним <input name="name" maxlength="60" required></label>
+      <p class="error" role="status"></p>
+      <button class="form__button" type="submit">Сохранить заявку</button>
+      <button class="form__button" type="button" data-close>Закрыть</button>
+    </form>
+  </dialog>
 
   <script src="script.js"></script>
 </body>

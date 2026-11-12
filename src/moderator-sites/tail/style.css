@@ -236,6 +236,7 @@ body {
   margin-top: auto;            /* кнопка прижата к низу карточки */
   align-self: flex-start;
   padding: 8px 16px;
+  border: 0;
   border-radius: 8px;
   background: #e8741a;         /* что менять: цвет кнопки */
   color: #ffffff;
@@ -280,12 +281,6 @@ body {
   border-color: #FF6B35;
 }
 
-.form__check {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
 .error {
   margin: 0;
   color: #C62828;              /* что менять: цвет текста ошибки */
@@ -311,6 +306,13 @@ body {
 .form__button:focus-visible {
   background: #E85A24;
 }
+
+#test, #requests, #pets, #volunteer { scroll-margin-top: 84px; }
+#request-list { padding-inline-start: 22px; overflow-wrap: anywhere; }
+#request-list li + li { margin-top: 8px; }
+.pet-dialog { width: min(420px, calc(100% - 32px)); max-height: 90vh; padding: 24px; border: 0; border-radius: 16px; }
+.pet-dialog::backdrop { background: #18140eb8; }
+.pet-dialog__image { width: 112px; height: 112px; object-fit: contain; }
 
 /* ПОДВАЛ. Вставь в конец style.css */
 .footer {
