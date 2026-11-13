@@ -1,0 +1,19 @@
+/* Цвета и шрифты темы «Своя тема». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #f7f8f1;
+  --kit-surface: #ffffff;
+  --kit-text: #1c281f;
+  --kit-muted: #485b4d;
+  --kit-accent: #265846;
+  --kit-on-accent: #ffffff;
+  --kit-accent-text: #265846;
+  --kit-line: #9daea0;
+  --kit-hero-bg: #e2ebdf;
+  --kit-radius: 10px;
+  --kit-display: system-ui, sans-serif;
+  --kit-hero-columns: 1.2fr 1fr;
+  --kit-image-ratio: 16 / 10;
+  --kit-card-ratio: 16 / 10;
+  --kit-font: system-ui, sans-serif;
+  color-scheme: light;
+}

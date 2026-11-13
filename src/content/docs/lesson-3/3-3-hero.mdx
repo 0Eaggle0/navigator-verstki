@@ -90,8 +90,8 @@ warmup:
     - selector: ".hero"
       style: { column-gap: "32px" }
       fail: "Между колонками нет промежутка gap: 32px"
-    - js: "const t = getComputedStyle(doc.querySelector('.hero__text')), i = getComputedStyle(doc.querySelector('.hero__img')); return t.flexGrow === '1' && i.flexGrow === '1'"
-      fail: "Колонкам .hero__text и .hero__img нужно одинаково flex: 1;"
+    - js: "const a = doc.querySelector('.hero__text'), b = doc.querySelector('.hero__img'); return [a, b].every(el => el.checkVisibility({ visibilityProperty: true, opacityProperty: true })) && Math.abs(a.getBoundingClientRect().width - b.getBoundingClientRect().width) < 2"
+      fail: "Обе колонки должны быть видны и иметь одинаковую ширину."
 team:
   - task: "Помоги участнику 2: проверь, что в шапке ничего не съехало после flex."
     hint: "Если шапка «развалилась» — проверь, что flex стоит на .container, а не на header."
@@ -115,7 +115,7 @@ mistakes:
     a: В HTML поменяй порядок блоков — справа окажется тот, что идёт вторым.
 blocks: [hero]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -156,6 +156,21 @@ h1 { margin-top: 0; font-size: 28px; }`}
 
 <Warmup />
 
+<Hint title="Подсказка 1">
+Если секция внутри себя имеет `.container`, флекс ставится контейнеру: `.hero .container { display: flex; }`. Ставить его самой секции бесполезно — у неё один ребёнок.
+</Hint>
+
+<Hint title="Подсказка 2">
+Колонка с текстом не сжимается и ломает ряд? Добавьте колонкам `min-width: 0` — это разрешает им становиться уже своего содержимого.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+~~~css
+.hero { display: flex; align-items: center; gap: 32px; }
+.hero__text, .hero__img { flex: 1; min-width: 0; }
+~~~
+</Hint>
+
 ## Делаем свой сайт
 
 <ForCase>
@@ -187,19 +202,11 @@ h1 { margin-top: 0; font-size: 28px; }`}
 3. Задайте колонкам ширину через `flex`, чтобы пропорции совпали с макетом.
 4. Оформите заголовок, текст и кнопку по паспорту стиля: размеры, цвета, отступы.
 
-<TeamTasks />
+
 
 <BlockLinks />
 
-<Hint title="Подсказка 1">
-Если секция внутри себя имеет `.container`, флекс ставится контейнеру: `.hero .container { display: flex; }`. Ставить его самой секции бесполезно — у неё один ребёнок.
-</Hint>
-
-<Hint title="Подсказка 2">
-Колонка с текстом не сжимается и ломает ряд? Добавьте колонкам `min-width: 0` — это разрешает им становиться уже своего содержимого.
-</Hint>
-
-<Hint title="Решение">
+<Hint title="Пример для проекта" afterPractice>
 ```css
 .hero .container {
   display: flex;

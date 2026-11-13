@@ -20,8 +20,8 @@ warmup:
   checks:
     - js: "return getComputedStyle(doc.documentElement).getPropertyValue('--accent').trim().toLowerCase() === '#16a34a'"
       fail: "В :root нет переменной --accent: #16A34A"
-    - js: "return [...doc.querySelectorAll('style')].pop().textContent.includes('var(--accent)')"
-      fail: "Фон должен задаваться через var(--accent)"
+    - js: "const badge = doc.querySelector('.badge'), root = doc.documentElement; const before = getComputedStyle(badge).backgroundColor; root.style.setProperty('--accent', '#123456', 'important'); const after = getComputedStyle(badge).backgroundColor; root.style.removeProperty('--accent'); return before !== after && after === 'rgb(18, 52, 86)'"
+      fail: "Фон бейджа должен меняться при изменении переменной акцента."
     - selector: ".badge"
       style: { background-color: "rgb(22, 163, 74)", color: "rgb(255, 255, 255)" }
       fail: "У .badge нужен фон --accent и белый текст"
@@ -45,7 +45,7 @@ import { Warmup, Hint } from '~/components';
 Переменная объявляется с двумя дефисами: `--accent: #16A34A;`, используется так: `var(--accent)`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 :root {
   --accent: #16A34A;

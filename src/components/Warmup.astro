@@ -1,14 +1,21 @@
 ---
 // Песочница-разминка. Задача, стартовый код и автопроверки берутся из поля warmup во frontmatter.
 // Черновик сохраняется в браузере, «Сбросить» возвращает стартовый код.
-const { entry } = Astro.locals.starlightRoute;
+import type { CollectionEntry } from 'astro:content';
+import { url } from '~/lib/route';
+import practices from '~/data/block-practices.json';
+interface Props { practice?: CollectionEntry<'docs'> }
+const { practice } = Astro.props;
+const entry = practice ?? Astro.locals.starlightRoute.entry;
+const returns = Object.fromEntries(Object.entries(practices).filter(([, id]) => id === entry.id).map(([block]) => [block, url('blocks/' + block + '/')]));
 const w = entry.data.warmup;
 const hasJs = w?.js !== undefined; // есть поле js — разминка на JavaScript
+const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 ---
 
 {
 	w && (
-		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined}>
+		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined} data-manual={manual ? '' : undefined} data-width={w.width} data-check-storage={JSON.stringify(w.checkStorage ?? {})} data-return-blocks={practice ? undefined : JSON.stringify(returns)}>
 			<p class="sandbox__task">
 				<strong>Задача:</strong> {w.task}
 			</p>
@@ -44,12 +51,13 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 							<span>+1 звезда</span>
 						</div>
 						{/* Для JS-разминок проверки идут в скрытой копии: они нажимают кнопки и не должны менять то, что видит ученик */}
-						{hasJs && (
+						{(hasJs || manual) && (
 							<iframe
 								class="sandbox__checker"
 								title="Проверка"
 								aria-hidden="true"
 								tabindex="-1"
+								sandbox={manual ? 'allow-scripts' : undefined}
 								style={w.width ? `width:${w.width}px` : undefined}
 							/>
 						)}
@@ -61,6 +69,8 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 						</div>
 					)}
 					<div class="sandbox__checks" aria-live="polite" />
+					{manual && w.checks.length > 0 && <button type="button" class="sandbox__check a-btn--go" disabled>Проверить</button>}
+					<a class="sandbox__return a-btn--go" hidden>К блоку</a>
 					<button type="button" class="sandbox__reset">Сбросить к началу</button>
 				</div>
 			</div>
@@ -69,9 +79,10 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 }
 
 <script>
-	import { load, update } from '~/lib/storage';
+	import { load, update, PRACTICE_VERSION } from '~/lib/storage';
 	import { runChecks, unclosedTag, type Check } from '~/lib/checks';
 	import { srcdoc } from '~/lib/srcdoc';
+	import { checkFrame } from '~/lib/check-frame';
 
 	// Частые ошибки JavaScript — переводим на понятный язык
 	const explain = (text: string) =>
@@ -87,6 +98,7 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		connectedCallback() {
 			const { id = '', html = '', css = '', js } = this.dataset;
 			const hasJs = js !== undefined;
+			const manual = this.hasAttribute('data-manual');
 			const checks: Check[] = JSON.parse(this.dataset.checks || '[]');
 			const fields = [...this.querySelectorAll('textarea')];
 			const [htmlBox, cssBox, jsBox] = fields;
@@ -96,6 +108,16 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 			const out = this.querySelector<HTMLElement>('.sandbox__checks')!;
 			const logList = this.querySelector('.sandbox__console ol');
 			const clear = this.querySelector<HTMLElement>('.sandbox__clear')!;
+			const button = this.querySelector<HTMLButtonElement>('.sandbox__check');
+			const returnLink = this.querySelector<HTMLAnchorElement>('.sandbox__return')!;
+			const returnBlock = new URLSearchParams(location.search).get('block') ?? '';
+			const returnBlocks = JSON.parse(this.dataset.returnBlocks || '{}');
+			if (Object.hasOwn(returnBlocks, returnBlock)) returnLink.href = returnBlocks[returnBlock];
+			const showReturn = () => {
+				returnLink.hidden = !returnLink.hasAttribute('href') || load().practicePass?.[id] !== PRACTICE_VERSION;
+			};
+			showReturn();
+			let pending: AbortController | undefined;
 
 			const draft = load().drafts[id];
 			htmlBox.value = draft?.html ?? html;
@@ -106,15 +128,14 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 			window.addEventListener('message', (e) => {
 				if (!logList || e.source !== frame.contentWindow || !e.data?.sandbox) return;
 				const { kind, text, line } = e.data;
+				if (!['log', 'info', 'warn', 'error'].includes(kind) || typeof text !== 'string') return;
 				const li = document.createElement('li');
 				li.className = 'is-' + kind;
 				li.textContent = kind === 'error' ? `Ошибка${line > 0 ? ` в строке ${line}` : ''}: ${explain(text)}` : text;
 				logList.append(li);
 			});
 
-			checker.addEventListener('load', () => {
-				if (!checks.length || !checker.contentDocument) return;
-				const results = runChecks(checker.contentDocument, checks);
+			const showResults = (results: ReturnType<typeof runChecks>) => {
 				// Незакрытый тег — первой строкой: из-за него остальные проверки врут
 				const open = unclosedTag(htmlBox.value);
 				if (open) results.unshift({ ok: false, message: `Похоже, не закрыт тег <${open}> — найди, где он должен закончиться, и поставь </${open}>` });
@@ -134,21 +155,81 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 					out.append(ul);
 				}
 				// Первое решение: записываем и показываем «Разминка пройдена»
-				if (!failed.length && !load().solved.includes(id)) {
-					update((p) => p.solved.push(id));
-					clear.hidden = false;
-					setTimeout(() => (clear.hidden = true), 2600);
+				if (!failed.length) {
+					const progress = load();
+					const first = !progress.solved.includes(id);
+					if (first || (manual && progress.practicePass?.[id] !== PRACTICE_VERSION)) {
+						update(p => {
+							if (first) p.solved.push(id);
+							if (manual) (p.practicePass ??= {})[id] = PRACTICE_VERSION;
+						});
+					}
+					if (manual) this.dispatchEvent(new CustomEvent('practice-passed', { bubbles: true, detail: id }));
+					showReturn();
+					if (first) {
+						clear.hidden = false;
+						setTimeout(() => (clear.hidden = true), 2600);
+					}
 				}
-			});
+			};
 
+			const markup = () => srcdoc(htmlBox.value, cssBox.value, jsBox?.value);
 			const render = () => {
 				if (logList) logList.innerHTML = '';
-				const doc = srcdoc(htmlBox.value, cssBox.value, hasJs ? jsBox.value : undefined);
+				const doc = markup();
 				frame.srcdoc = doc;
-				if (checker !== frame) checker.srcdoc = doc;
+				if (!manual && checker !== frame) checker.srcdoc = doc;
 			};
+			if (!manual) {
+				checker.addEventListener('load', () => {
+					if (checks.length && checker.contentDocument) showResults(runChecks(checker.contentDocument, checks));
+				});
+			}
+
+			const invalidate = () => {
+				if (!button) return;
+				if (pending) {
+					pending.abort();
+				}
+				pending = undefined;
+				out.classList.remove('is-ok', 'is-wip');
+				out.textContent = '';
+				button.disabled = false;
+			};
+
+			if (button) {
+				button.disabled = false;
+				button.addEventListener('click', async () => {
+					const request = new AbortController();
+					pending = request;
+					button.disabled = true;
+					out.classList.remove('is-ok', 'is-wip');
+					out.textContent = 'Проверяем…';
+					const doc = markup();
+					const width = Number(this.dataset.width) || 768;
+					const storage = JSON.parse(this.dataset.checkStorage || '{}');
+					const widths = new Set(checks.flatMap(check => check.widths ?? [width]));
+					try {
+						const results = [];
+						for (const size of widths) {
+							const rules = checks.filter(check => (check.widths ?? [width]).includes(size));
+							results.push(...await checkFrame(checker, doc, rules, size, storage, request.signal));
+						}
+						if (!request.signal.aborted) showResults(results);
+					} catch (error) {
+						if (!request.signal.aborted) showResults([{ ok: false, message: (error as Error).message }]);
+					} finally {
+						if (pending === request) {
+							pending = undefined;
+							button.disabled = false;
+						}
+					}
+				});
+			}
+
 			let timer: number;
 			const onInput = () => {
+				invalidate();
 				clearTimeout(timer);
 				timer = window.setTimeout(
 					() => {
@@ -172,6 +253,8 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 			}
 
 			this.querySelector('.sandbox__reset')!.addEventListener('click', () => {
+				clearTimeout(timer);
+				invalidate();
 				htmlBox.value = html;
 				cssBox.value = css;
 				if (jsBox) jsBox.value = js ?? '';
@@ -249,10 +332,12 @@ const hasJs = w?.js !== undefined; // есть поле js — разминка 
 		background: #fff;
 		resize: vertical;
 	}
-	.sandbox__checker {
+	.sandbox iframe.sandbox__checker {
 		position: absolute;
 		top: 0;
 		left: 0;
+		border: 0;
+		max-width: none;
 		visibility: hidden;
 		height: 16rem;
 		pointer-events: none;

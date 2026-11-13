@@ -1,0 +1,19 @@
+/* Цвета и шрифты темы «Тиммейт». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #111116;
+  --kit-surface: #1c1b23;
+  --kit-text: #f4eef9;
+  --kit-muted: #bcb2c9;
+  --kit-accent: #f7ca60;
+  --kit-on-accent: #241a06;
+  --kit-accent-text: #f7ca60;
+  --kit-line: #625970;
+  --kit-hero-bg: #231a32;
+  --kit-radius: 20px;
+  --kit-display: system-ui, sans-serif;
+  --kit-hero-columns: 1.35fr 1fr;
+  --kit-image-ratio: 16 / 9;
+  --kit-card-ratio: 16 / 9;
+  --kit-font: system-ui, sans-serif;
+  color-scheme: dark;
+}

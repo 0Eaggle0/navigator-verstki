@@ -1,0 +1,53 @@
+---
+title: Базовые стили страницы
+tableOfContents: false
+topic: css
+sidebar:
+  order: 5
+warmup:
+  task: "Объяви переменную --accent со значением #265846 и используй её для цвета заголовка. Задай странице шрифт system-ui с запасным sans-serif. Ограничь ширину контейнера 600 px и выровняй его по центру автоматическими боковыми отступами."
+  html: |
+    <main class="container">
+      <h1>Клуб настольных игр</h1>
+      <p>Встречаемся по выходным.</p>
+    </main>
+  checks:
+    - js: |
+        const root = doc.documentElement;
+        const title = doc.querySelector('h1');
+        if (getComputedStyle(title).color !== 'rgb(38, 88, 70)') return false;
+        root.style.setProperty('--accent', '#123456', 'important');
+        return getComputedStyle(title).color === 'rgb(18, 52, 86)';
+      fail: "Цвет заголовка должен меняться вместе с переменной акцента."
+    - js: "return getComputedStyle(doc.body).fontFamily.split(',').map(value => value.trim()).join(',') === 'system-ui,sans-serif'"
+      fail: "Задай системный шрифт с запасным sans-serif."
+    - js: |
+        const box = doc.querySelector('.container').getBoundingClientRect();
+        const body = doc.body.getBoundingClientRect();
+        return Math.abs(box.width - Math.min(600, body.width)) < 2 &&
+          Math.abs((box.left + box.right - body.left - body.right) / 2) < 2;
+      widths: [375, 768]
+      fail: "На широком экране контейнер должен быть по центру, а на узком помещаться целиком."
+---
+import { Warmup, Hint } from '~/components';
+
+Общие стили задают цвет, шрифт и ширину содержимого. Максимальная ширина позволяет блоку сжиматься на телефоне.
+
+<Warmup />
+
+<Hint title="Подсказка 1">
+Переменную удобно объявить в `:root`. Для обращения к ней используется `var()`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Автоматические боковые отступы делят свободное место поровну.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+```css
+:root { --accent: #265846; }
+body { font-family: system-ui, sans-serif; }
+h1 { color: var(--accent); }
+.container { max-width: 600px; margin-inline: auto; }
+```
+</Hint>

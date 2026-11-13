@@ -2,7 +2,6 @@
 // Профиль — офлайн-регистрация. Кнопка с именем в шапке и окно «Создай профиль».
 // При первом заходе окно открывается само. Всё хранится в браузере (src/lib/storage.ts → profile).
 import cases from '~/data/cases.json';
-import { parts } from '~/data/parts.json';
 import { svg } from '~/lib/sprites';
 ---
 
@@ -52,14 +51,6 @@ import { svg } from '~/lib/sprites';
 				<input name="caseTitle" maxlength="40" placeholder="Например, «Клуб настолок»" />
 			</label>
 
-			<label class="profile__part">
-				Моя часть сайта
-				<select name="part">
-					{parts.map((p) => <option value={p.n}>{p.n}. {p.title}</option>)}
-				</select>
-				<span class="profile__hint">Части закреплены по номерам участников, но можно договориться иначе и поменять.</span>
-			</label>
-
 			<p class="profile__error" role="alert" hidden>Напиши имя или ник — так модератор поймёт, чей это компьютер.</p>
 
 			<div class="profile__btns">
@@ -80,7 +71,6 @@ import { svg } from '~/lib/sprites';
 			const form = $<HTMLFormElement>('form');
 			const f = (name: string) => form.elements.namedItem(name) as HTMLInputElement & HTMLSelectElement;
 			const own = $<HTMLElement>('.profile__own');
-			const part = $<HTMLElement>('.profile__part');
 			const error = $<HTMLElement>('.profile__error');
 
 			// Шапка: имя и первая буква в кружке; роль — на <html> для CSS
@@ -93,7 +83,6 @@ import { svg } from '~/lib/sprites';
 			};
 			const sync = () => {
 				own.hidden = f('case').value !== 'own';
-				part.hidden = (form.querySelector<HTMLInputElement>('input[name=role]:checked')?.value ?? 'student') !== 'student';
 			};
 			const fill = () => {
 				const p = load();
@@ -102,7 +91,6 @@ import { svg } from '~/lib/sprites';
 				f('team').value = pr?.team ?? '';
 				f('case').value = p.case ?? '';
 				f('caseTitle').value = p.caseTitle ?? '';
-				f('part').value = String(pr?.part ?? 1);
 				form.querySelector<HTMLInputElement>(`input[name=role][value=${pr?.role ?? 'student'}]`)!.checked = true;
 				error.hidden = true;
 				$('#profile-title').textContent = pr ? 'Твой профиль' : 'Создай профиль';
@@ -123,7 +111,7 @@ import { svg } from '~/lib/sprites';
 				}
 				const role = (form.querySelector<HTMLInputElement>('input[name=role]:checked')?.value ?? 'student') as Profile['role'];
 				update((p) => {
-					p.profile = { name, team: f('team').value.trim(), role, part: role === 'student' ? +f('part').value : undefined };
+					p.profile = { ...p.profile, name, team: f('team').value.trim(), role };
 					p.case = f('case').value || undefined;
 					p.caseTitle = p.case === 'own' ? f('caseTitle').value.trim() : undefined;
 				});

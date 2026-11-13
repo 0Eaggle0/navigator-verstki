@@ -16,13 +16,8 @@ warmup:
   checks:
     - exists: "nav ul"
       fail: "Внутри nav нет списка ul"
-    - count: { selector: "nav ul > li", min: 3 }
-      fail: "В списке нужно 3 пункта li"
-    - js: "return [...doc.querySelectorAll('nav li')].every((li) => li.querySelector('a[href]'))"
-      fail: "В каждом li должна быть ссылка a с атрибутом href"
-    - selector: "nav"
-      text: "Контакты"
-      fail: "Нет пункта «Контакты»"
+    - js: "const links = [...doc.querySelectorAll('nav ul > li > a')]; const labels = ['Главная', 'Каталог', 'Контакты']; return links.length === labels.length && links.every((a, i) => a.textContent.trim() === labels[i] && a.getAttribute('href')?.trim())"
+      fail: "Сохрани три пункта в указанном порядке и добавь каждой ссылке адрес."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -38,7 +33,7 @@ import { Warmup, Hint } from '~/components';
 Пока страниц нет, пишите `href="#"`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```html
 <nav>
   <ul>

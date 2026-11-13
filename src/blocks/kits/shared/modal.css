@@ -1,0 +1,3 @@
+.kit-dialog { width: min(100% - 2rem, 30rem); max-height: calc(100% - 2rem); padding: 1.35rem; border: 1px solid var(--kit-line); border-radius: var(--kit-radius); color: var(--kit-text); background: var(--kit-surface); }
+.kit-dialog p { margin-block: .7rem 1rem; }
+.kit-dialog::backdrop { background: rgb(0 0 0 / 65%); }

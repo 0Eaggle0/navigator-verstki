@@ -1,0 +1,18 @@
+/* Цвета и шрифты темы «Киносфера». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #13121d;
+  --kit-surface: #201e2a;
+  --kit-text: #e5e0f1;
+  --kit-muted: #c0c8c7;
+  --kit-accent: #a0cfce;
+  --kit-on-accent: #003736;
+  --kit-accent-text: #a0cfce;
+  --kit-line: #4d465d;
+  --kit-hero-bg: #1c1a26;
+  --kit-radius: 12px;
+  --kit-display: Georgia, serif;
+  --kit-hero-columns: 1fr 1.2fr;
+  --kit-image-ratio: 16 / 10;
+  --kit-font: system-ui, sans-serif;
+  color-scheme: dark;
+}

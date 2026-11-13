@@ -1,0 +1,3383 @@
+{
+  "auditedCommit": "06db2a99bc293683984b81281657a73f1623546c",
+  "practice": {
+    "date": "2026-11-12T17:08:45.279Z",
+    "browser": "157.0.8103.51",
+    "base": "http://localhost:4322",
+    "phase": "practice",
+    "results": [
+      {
+        "id": "lesson-3/3-1-flexbox",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .row пока нет display: flexКружки не разнесены по краям. Нужно: justify-content: space-between;Кружки не по центру по вертикали. Нужно: align-items: center;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .row пока нет display: flexКружки не разнесены по краям. Нужно: justify-content: space-between;Кружки не по центру по вертикали. Нужно: align-items: center;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .row пока нет display: flexКружки не разнесены по краям. Нужно: justify-content: space-between;Кружки не по центру по вертикали. Нужно: align-items: center;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-3/3-2-menu",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:У .header пока нет display: flexЛоготип и кнопка не разнесены по краям: justify-content: space-between;Элементы шапки не выровнены по вертикали: align-items: center;Пункты меню не в строке с промежутком: у .menu нужны display: flex и gap: 24pxУ списка остались точки. Нужно: list-style: none;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:У .header пока нет display: flexЛоготип и кнопка не разнесены по краям: justify-content: space-between;Элементы шапки не выровнены по вертикали: align-items: center;Пункты меню не в строке с промежутком: у .menu нужны display: flex и gap: 24pxУ списка остались точки. Нужно: list-style: none;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 5. Осталось:У .header пока нет display: flexЛоготип и кнопка не разнесены по краям: justify-content: space-between;Элементы шапки не выровнены по вертикали: align-items: center;",
+          "recorded": false
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:У .header пока нет display: flexЛоготип и кнопка не разнесены по краям: justify-content: space-between;Элементы шапки не выровнены по вертикали: align-items: center;Пункты меню не в строке с промежутком: у .menu нужны display: flex и gap: 24pxУ списка остались точки. Нужно: list-style: none;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-3/3-3-hero",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .hero пока нет display: flexКолонки не выровнены по центру по вертикали: align-items: center;Между колонками нет промежутка gap: 32pxКолонкам .hero__text и .hero__img нужно одинаково flex: 1;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .hero пока нет display: flexКолонки не выровнены по центру по вертикали: align-items: center;Между колонками нет промежутка gap: 32pxКолонкам .hero__text и .hero__img нужно одинаково flex: 1;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:У .hero пока нет display: flexКолонки не выровнены по центру по вертикали: align-items: center;Между колонками нет промежутка gap: 32px",
+          "recorded": false
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .hero пока нет display: flexКолонки не выровнены по центру по вертикали: align-items: center;Между колонками нет промежутка gap: 32pxКолонкам .hero__text и .hero__img нужно одинаково flex: 1;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-3/3-4-rows",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .features нужны display: flex и flex-wrap: wrapМежду преимуществами нет промежутка gap: 16pxКаждый .feature должен быть столбиком: display: flex; flex-direction: column;Иконка и текст не по центру: align-items: center;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .features нужны display: flex и flex-wrap: wrapМежду преимуществами нет промежутка gap: 16pxКаждый .feature должен быть столбиком: display: flex; flex-direction: column;Иконка и текст не по центру: align-items: center;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .features нужны display: flex и flex-wrap: wrapМежду преимуществами нет промежутка gap: 16pxКаждый .feature должен быть столбиком: display: flex; flex-direction: column;Иконка и текст не по центру: align-items: center;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-4/4-1-grid",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .grid пока нет display: gridВ сетке пока не три колонки. Нужно: grid-template-columns: repeat(3, 1fr);Колонки разной ширины — используй 1fr для каждойМежду плитками нет промежутка gap: 12px",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .grid пока нет display: gridВ сетке пока не три колонки. Нужно: grid-template-columns: repeat(3, 1fr);Колонки разной ширины — используй 1fr для каждойМежду плитками нет промежутка gap: 12px",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .grid пока нет display: gridВ сетке пока не три колонки. Нужно: grid-template-columns: repeat(3, 1fr);Колонки разной ширины — используй 1fr для каждойМежду плитками нет промежутка gap: 12px",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-4/4-2-grid-cards",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .cards пока нет display: gridКолонки задаются через repeat(auto-fill, minmax(140px, 1fr))Между карточками нет промежутка gap: 16pxКартинки сплющены. Нужно: object-fit: cover;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .cards пока нет display: gridКолонки задаются через repeat(auto-fill, minmax(140px, 1fr))Между карточками нет промежутка gap: 16pxКартинки сплющены. Нужно: object-fit: cover;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:Колонки задаются через repeat(auto-fill, minmax(140px, 1fr))Между карточками нет промежутка gap: 16px",
+          "recorded": false
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:У .cards пока нет display: gridКолонки задаются через repeat(auto-fill, minmax(140px, 1fr))Между карточками нет промежутка gap: 16pxКартинки сплющены. Нужно: object-fit: cover;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-4/4-3-sections-footer",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 6. Осталось:У подвала нет тёмного фона (background)Текст в подвале тёмный — на тёмном фоне его не видно. Сделай color светлым, например #FFFFFFУ подвала нет внутреннего отступа хотя бы 24pxУ .footer__cols пока нет display: gridНужно три колонки: grid-template-columns: repeat(3, 1fr);Между колонками нет промежутка gap: 24px",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 6. Осталось:У подвала нет тёмного фона (background)Текст в подвале тёмный — на тёмном фоне его не видно. Сделай color светлым, например #FFFFFFУ подвала нет внутреннего отступа хотя бы 24pxУ .footer__cols пока нет display: gridНужно три колонки: grid-template-columns: repeat(3, 1fr);Между колонками нет промежутка gap: 24px",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 6. Осталось:У подвала нет тёмного фона (background)Текст в подвале тёмный — на тёмном фоне его не видно. Сделай color светлым, например #FFFFFFУ подвала нет внутреннего отступа хотя бы 24pxУ .footer__cols пока нет display: gridНужно три колонки: grid-template-columns: repeat(3, 1fr);Между колонками нет промежутка gap: 24px",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-5/5-1-media",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }На телефоне заголовок должен быть 24px — задай это внутри медиазапросаНа телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }На телефоне заголовок должен быть 24px — задай это внутри медиазапросаНа телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }На телефоне заголовок должен быть 24px — задай это внутри медиазапросаНа телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-5/5-2-mobile-375",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }Шапка на телефоне должна быть столбиком: flex-direction: column;Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;Есть горизонтальная прокрутка — что-то шире экрана. Проверь меню и сетку",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }Шапка на телефоне должна быть столбиком: flex-direction: column;Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": false,
+          "feedback": "Проверка: 3 из 4. Осталось:Шапка на телефоне должна быть столбиком: flex-direction: column;",
+          "recorded": false
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:В CSS пока нет медиазапроса @media (max-width: 768px) { … }Шапка на телефоне должна быть столбиком: flex-direction: column;Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;Есть горизонтальная прокрутка — что-то шире экрана. Проверь меню и сетку",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-5/5-3-hover-check",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет правила .button:hover { … } — стилей при наведенииПравило .button:hover пустое — поменяй в нём, например, backgroundСмена цвета резкая. Добавь .button плавный переход: transition: 0.2s;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет правила .button:hover { … } — стилей при наведенииПравило .button:hover пустое — поменяй в нём, например, backgroundСмена цвета резкая. Добавь .button плавный переход: transition: 0.2s;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет правила .button:hover { … } — стилей при наведенииПравило .button:hover пустое — поменяй в нём, например, backgroundСмена цвета резкая. Добавь .button плавный переход: transition: 0.2s;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-6/6-1-script",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет функции greet. Нужно: function greet(n) { … }greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знакВ заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет функции greet. Нужно: function greet(n) { … }greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знакВ заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Нет функции greet. Нужно: function greet(n) { … }greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знакВ заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-6/6-2-dom",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-6/6-3-burger",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:После клика по .burger у .menu нет класса openКогда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:Меню должно быть скрыто, пока не нажали на бургерПосле клика по .burger у .menu нет класса openКогда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)Второй клик должен закрыть меню и вернуть aria-expanded=\"false\"",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:После клика по .burger у .menu нет класса openКогда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-6/6-4-modal",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:После клика по .open-modal окно не открылось. Нужно: modal.showModal()",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:Окно открыто сразу. Оно должно открываться только по кнопкеПосле клика по .open-modal окно не открылось. Нужно: modal.showModal()Кнопка .close-modal не закрывает окно. Нужно: modal.close()",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:После клика по .open-modal окно не открылось. Нужно: modal.showModal()",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-7/7-1-filter-form",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:После клика «Кошки» должны остаться только карточки с data-type=\"cat\" (остальным hidden = true)После клика «Собаки» должны остаться только собаки — не забудь показывать карточки обратно (hidden = false)",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:После клика «Кошки» должны остаться только карточки с data-type=\"cat\" (остальным hidden = true)После клика «Собаки» должны остаться только собаки — не забудь показывать карточки обратно (hidden = false)Кнопка «Все» должна показывать все карточки",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:После клика «Кошки» должны остаться только карточки с data-type=\"cat\" (остальным hidden = true)После клика «Собаки» должны остаться только собаки — не забудь показывать карточки обратно (hidden = false)",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-7/7-2-localstorage",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 3. Осталось:После клика по ♥ у Барсика в localStorage.favorites нет \"barsik\". Нужно: localStorage.setItem('favorites', JSON.stringify(list))После клика у кнопки ♥ нет класса active",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:После клика по ♥ у Барсика в localStorage.favorites нет \"barsik\". Нужно: localStorage.setItem('favorites', JSON.stringify(list))После клика у кнопки ♥ нет класса activeВторой клик должен убрать \"barsik\" из списка favorites",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 3. Осталось:После клика по ♥ у Барсика в localStorage.favorites нет \"barsik\". Нужно: localStorage.setItem('favorites', JSON.stringify(list))После клика у кнопки ♥ нет класса active",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-7/7-3-github-pages",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У картинок остались пути с диском (C:\\…), обратными слешами или слешем в начале. Нужно: src=\"img/barsik.svg\"Какая-то картинка не загрузилась — проверь имя файла: img/barsik.svg и img/sharik.svgСсылка должна быть относительной: href=\"about.html\"",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:Ссылка должна быть относительной: href=\"about.html\"",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 3. Осталось:Ссылка должна быть относительной: href=\"about.html\"",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "lesson-7/7-4-checklist",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 4. Осталось:Шапка сделана через div. Нужен семантический тег <header>На странице должен быть ровно один <h1>У картинки нет alt — опиши, что на нейУ ссылки нет href — без него это не ссылка",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:Шапка сделана через div. Нужен семантический тег <header>На странице должен быть ровно один <h1>",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 2 из 4. Осталось:Шапка сделана через div. Нужен семантический тег <header>На странице должен быть ровно один <h1>",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/adaptive-hide",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:На телефоне .desktop-only должен быть скрыт: display: none; в медиазапросеНа телефоне карточки должны быть в одну колонкуПравила нужно писать внутри @media (max-width: 768px) { … }",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:На телефоне .desktop-only должен быть скрыт: display: none; в медиазапросеНа телефоне карточки должны быть в одну колонкуПравила нужно писать внутри @media (max-width: 768px) { … }",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:На телефоне .desktop-only должен быть скрыт: display: none; в медиазапросеНа телефоне карточки должны быть в одну колонкуПравила нужно писать внутри @media (max-width: 768px) { … }",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/adaptive-image",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 2. Осталось:Есть горизонтальная прокрутка — картинка шире экрана. Нужно: max-width: 100%",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 2. Осталось:Картинка сплющилась — добавь height: auto",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 2. Осталось:Есть горизонтальная прокрутка — картинка шире экрана. Нужно: max-width: 100%",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/css-badge",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:В :root нет переменной --accent: #16A34AФон должен задаваться через var(--accent)У .badge нужен фон --accent и белый текстНужны padding: 4px 12px и font-size: 14pxНужно border-radius: 999px — «таблетка»",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:В :root нет переменной --accent: #16A34AФон должен задаваться через var(--accent)У .badge нужен фон --accent и белый текстНужны padding: 4px 12px и font-size: 14pxНужно border-radius: 999px — «таблетка»",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:В :root нет переменной --accent: #16A34AФон должен задаваться через var(--accent)У .badge нужен фон --accent и белый текстНужны padding: 4px 12px и font-size: 14pxНужно border-radius: 999px — «таблетка»",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/css-button",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Нужно display: inline-blockНужен padding: 12px 24pxНужен фон #4F46E5 и белый текстУбери подчёркивание: text-decoration: noneНужно скругление border-radius: 8px",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Нужно display: inline-blockНужен padding: 12px 24pxНужен фон #4F46E5 и белый текстУбери подчёркивание: text-decoration: noneНужно скругление border-radius: 8px",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Нужно display: inline-blockНужен padding: 12px 24pxНужен фон #4F46E5 и белый текстУбери подчёркивание: text-decoration: noneНужно скругление border-radius: 8px",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/flex-center",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .box нет display: flexКружок пока не в центре. Нужны justify-content: center и align-items: center",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .box нет display: flexКружок пока не в центре. Нужны justify-content: center и align-items: center",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .box нет display: flexКружок пока не в центре. Нужны justify-content: center и align-items: center",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/flex-footer-row",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .bottom нужны display: flex, justify-content: space-between и align-items: centerРазреши перенос: flex-wrap: wrapУ .socials нужны display: flex и gap: 12px",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .bottom нужны display: flex, justify-content: space-between и align-items: centerРазреши перенос: flex-wrap: wrapУ .socials нужны display: flex и gap: 12px",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 3. Осталось:У .bottom нужны display: flex, justify-content: space-between и align-items: centerРазреши перенос: flex-wrap: wrapУ .socials нужны display: flex и gap: 12px",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/grid-layout",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .layout нужны display: grid и gap: 16pxКолонки должны быть в пропорции 2 к 1: grid-template-columns: 2fr 1fr;",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .layout нужны display: grid и gap: 16pxКолонки должны быть в пропорции 2 к 1: grid-template-columns: 2fr 1fr;",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:У .layout нужны display: grid и gap: 16pxКолонки должны быть в пропорции 2 к 1: grid-template-columns: 2fr 1fr;",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/grid-span",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:Первая карточка пока шириной в одну колонку. Нужно: .card--big { grid-column: span 2; }",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:Первая карточка пока шириной в одну колонку. Нужно: .card--big { grid-column: span 2; }",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:Первая карточка пока шириной в одну колонку. Нужно: .card--big { grid-column: span 2; }",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/html-card",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Карточка должна быть тегом article с классом cardКличка должна быть в заголовке h3Описание должно быть абзацем pУ картинки нет alt«Подробнее» должно быть ссылкой a с href",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Карточка должна быть тегом article с классом cardКличка должна быть в заголовке h3Описание должно быть абзацем pУ картинки нет alt«Подробнее» должно быть ссылкой a с href",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 5. Осталось:Карточка должна быть тегом article с классом cardКличка должна быть в заголовке h3Описание должно быть абзацем pУ картинки нет alt«Подробнее» должно быть ссылкой a с href",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/html-menu",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:Внутри nav нет списка ulВ списке нужно 3 пункта liНет пункта «Контакты»",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:Внутри nav нет списка ulВ списке нужно 3 пункта liНет пункта «Контакты»",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 1 из 4. Осталось:Внутри nav нет списка ulВ списке нужно 3 пункта liНет пункта «Контакты»",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/js-counter",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:После трёх кликов в .count должно быть 3",
+          "recorded": false
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:После трёх кликов в .count должно быть 3",
+          "recorded": false
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 1. Осталось:После трёх кликов в .count должно быть 3",
+          "recorded": true
+        },
+        "pageErrors": []
+      },
+      {
+        "id": "tasks/js-form",
+        "initial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)С заполненным именем форма должна показать «Спасибо!»",
+          "recorded": false,
+          "checkerUrl": "about:srcdoc?name=%D0%90%D0%BD%D1%8F"
+        },
+        "empty": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)С заполненным именем форма должна показать «Спасибо!»",
+          "recorded": false,
+          "checkerUrl": "about:srcdoc"
+        },
+        "published": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true,
+          "checkerUrl": "about:srcdoc"
+        },
+        "correct": {
+          "accepted": true,
+          "feedback": "Всё верно! Разминка пройдена.",
+          "recorded": true,
+          "checkerUrl": "about:srcdoc"
+        },
+        "partial": {
+          "accepted": false,
+          "feedback": "Проверка: 0 из 2. Осталось:С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)С заполненным именем форма должна показать «Спасибо!»",
+          "recorded": true,
+          "checkerUrl": "about:srcdoc?name=%D0%90%D0%BD%D1%8F"
+        },
+        "pageErrors": []
+      }
+    ]
+  },
+  "games": {
+    "date": "2026-11-12T17:02:06.597Z",
+    "browser": "157.0.8103.51",
+    "base": "http://localhost:4322",
+    "phase": "games",
+    "results": [
+      {
+        "id": "lesson-3/3-1-flexbox",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Лягушки стоят столбиком. Поставь их в ряд: display: flex.",
+            "initial": "На месте: 1 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Отправь лягушек вправо по главной оси: justify-content: flex-end.",
+            "initial": "На месте: 0 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Теперь — в центр по горизонтали.",
+            "initial": "На месте: 0 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Разнеси лягушек по краям, свободное место — между ними.",
+            "initial": "На месте: 1 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Опусти их вниз по поперечной оси: align-items: flex-end.",
+            "initial": "На месте: 0 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          },
+          {
+            "n": 6,
+            "task": "Финал: ровно в центр поля — и по горизонтали, и по вертикали.",
+            "initial": "На месте: 0 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              },
+              {
+                "width": 52,
+                "height": 52
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-3/3-2-menu",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Логотип, меню и кнопка лежат столбиком. Поставь их в строку.",
+            "initial": "На месте: 1 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 94,
+                "height": 48
+              },
+              {
+                "width": 140,
+                "height": 40
+              },
+              {
+                "width": 84,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Разнеси по краям: логотип слева, кнопка справа, меню посередине.",
+            "initial": "На месте: 1 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 94,
+                "height": 48
+              },
+              {
+                "width": 140,
+                "height": 40
+              },
+              {
+                "width": 84,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Они разной высоты. Выровняй по вертикали по центру.",
+            "initial": "На месте: 0 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 94,
+                "height": 48
+              },
+              {
+                "width": 140,
+                "height": 40
+              },
+              {
+                "width": 84,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Отодвинь всё от краёв шапки: padding: 0 24px.",
+            "initial": "На месте: 1 из 3",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 94,
+                "height": 48
+              },
+              {
+                "width": 140,
+                "height": 40
+              },
+              {
+                "width": 84,
+                "height": 44
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-3/3-3-hero",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Текст и картинка стоят друг под другом. Поставь их в ряд.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 68,
+                "height": 108
+              },
+              {
+                "width": 44,
+                "height": 134
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Теперь у детей: пусть делят ширину поровну — flex: 1.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 243,
+                "height": 108
+              },
+              {
+                "width": 219,
+                "height": 134
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Текст важнее: дай ему две доли — flex: 2. Картинке останется одна.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 314.671875,
+                "height": 108
+              },
+              {
+                "width": 147.328125,
+                "height": 134
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Добавь промежуток 32px между колонками.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 293.328125,
+                "height": 108
+              },
+              {
+                "width": 136.671875,
+                "height": 134
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Выровняй колонки по вертикали по центру.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 293.328125,
+                "height": 108
+              },
+              {
+                "width": 136.671875,
+                "height": 134
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-3/3-4-rows",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Поставь значки в ряд с промежутком 16px.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 63.671875,
+                "height": 48
+              },
+              {
+                "width": 63.65625,
+                "height": 48
+              },
+              {
+                "width": 63.671875,
+                "height": 48
+              },
+              {
+                "width": 63.65625,
+                "height": 48
+              },
+              {
+                "width": 63.671875,
+                "height": 48
+              },
+              {
+                "width": 63.671875,
+                "height": 48
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Им тесно — они сжались. Разреши перенос на новую строку.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Поставь ряды по центру по горизонтали.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "И по центру поля по вертикали: для нескольких рядов это align-content: center.",
+            "initial": "На месте: 3 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              },
+              {
+                "width": 104,
+                "height": 48
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-4/4-1-grid",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Сетка уже включена. Сделай три колонки одинаковой ширины: 1fr 1fr 1fr.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Первая колонка — вдвое шире остальных.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 231,
+                "height": 44
+              },
+              {
+                "width": 115.5,
+                "height": 44
+              },
+              {
+                "width": 115.5,
+                "height": 44
+              },
+              {
+                "width": 231,
+                "height": 44
+              },
+              {
+                "width": 115.5,
+                "height": 44
+              },
+              {
+                "width": 115.5,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Три колонки ровно по 80px. Используй repeat.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 80,
+                "height": 44
+              },
+              {
+                "width": 80,
+                "height": 44
+              },
+              {
+                "width": 80,
+                "height": 44
+              },
+              {
+                "width": 80,
+                "height": 44
+              },
+              {
+                "width": 80,
+                "height": 44
+              },
+              {
+                "width": 80,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Снова три равные колонки через repeat — и промежуток 12px.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Последняя грядка — на всю ширину: от первой линии до последней.",
+            "initial": "На месте: 3 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 146,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-4/4-2-grid-cards",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Питомцы толпятся в одну строку. Включи сетку — у .board нужен display: grid. Каждый встанет на свою строку.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 462,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              },
+              {
+                "width": 462,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Сделай три колонки одинаковой ширины. Колонки задаёт grid-template-columns, а три равные доли — repeat(3, 1fr).",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              },
+              {
+                "width": 154,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Питомцам тесно. Добавь промежуток 16px между клетками.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 143.328125,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Пусть сетка сама решает, сколько колонок влезет: каждая не уже 60px. Замени repeat(3, 1fr) на repeat(auto-fill, minmax(60px, 1fr)).",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 63.65625,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.65625,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Первый кот — король, ему нужна клетка на две колонки. Здесь ты пишешь CSS для первого питомца: grid-column: span 2.",
+            "initial": "На месте: 0 из 6",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 143.328125,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.65625,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.671875,
+                "height": 44
+              },
+              {
+                "width": 63.65625,
+                "height": 44
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-4/4-3-sections-footer",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Разложи подвал на 3 равные колонки.",
+            "initial": "На месте: 0 из 4",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 154,
+                "height": 80
+              },
+              {
+                "width": 154,
+                "height": 80
+              },
+              {
+                "width": 154,
+                "height": 80
+              },
+              {
+                "width": 154,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Добавь промежуток 24px.",
+            "initial": "На месте: 0 из 4",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 138,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Нижняя строка «© 2026» — на все колонки.",
+            "initial": "На месте: 3 из 4",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 138,
+                "height": 80
+              },
+              {
+                "width": 462,
+                "height": 44
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Первая колонка с логотипом — вдвое шире.",
+            "initial": "На месте: 1 из 4",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 207,
+                "height": 80
+              },
+              {
+                "width": 103.5,
+                "height": 80
+              },
+              {
+                "width": 103.5,
+                "height": 80
+              },
+              {
+                "width": 462,
+                "height": 44
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-5/5-1-media",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Ширина окна 1280 px. Какого размера будет h1?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Тот, что задан вне медиазапроса",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "А на телефоне шириной 375 px?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "24px",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Медиазапрос не работает. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "@media max-width: 768px {",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Как включить режим телефона в DevTools?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Ctrl+P",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "F12 → значок телефона (Ctrl+Shift+M)",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Зачем в head строка <meta name=\"viewport\" …>?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Чтобы подключить CSS",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Чтобы ускорить загрузку",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Чтобы телефон не притворялся широким экраном",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-5/5-2-mobile-375",
+        "type": "ghost",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Поле шириной 300 px — как телефон. Текст и картинка сжались. Поставь их столбиком: flex-direction: column.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 204,
+                "height": 84
+              },
+              {
+                "width": 184,
+                "height": 84
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Пусть оба блока займут всю ширину экрана.",
+            "initial": "На месте: 0 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 300,
+                "height": 84
+              },
+              {
+                "width": 280,
+                "height": 84
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Уменьши промежуток до 8px — на телефоне место дорого.",
+            "initial": "На месте: 1 из 2",
+            "solved": "Все на месте!",
+            "accepted": true,
+            "geometry": [
+              {
+                "width": 300,
+                "height": 84
+              },
+              {
+                "width": 280,
+                "height": 84
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-5/5-3-hover-check",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Какой селектор срабатывает при наведении мыши?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": ".button:mouse",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".button:active",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".button:hover",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Чтобы цвет менялся плавно, что добавить обычному правилу кнопки?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "transition: 0.2s;",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Как дать тот же стиль тем, кто ходит по сайту клавишей Tab?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": ".button:tab { … }",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Никак",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".button:hover, .button:focus-visible { … }",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Наведение не работает. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": ".button {",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "  background: #FF6B35;",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "  transition: 0.2s;",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "}",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".button: hover {",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-6/6-1-script",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Что появится в консоли?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "5",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "А здесь?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "23",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Что выведет этот код?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "2",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Что напишет функция?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "greet('Аня')",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "undefined",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Привет, Аня!",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Код падает с ошибкой. Кликни на строку с ней.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const name = 'Аня';",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "name = 'Боря';",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-6/6-2-dom",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Как найти на странице кнопку с классом btn?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "document.find('btn')",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "document.querySelector('.btn')",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Что делает эта строка?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Открывает новую страницу",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Всегда добавляет класс open",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Удаляет меню",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Добавляет класс open, если его нет, и убирает, если есть",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Клик не работает. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const btn = document.querySelector('.btn');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "btn.addEventListener('click' function () {",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Консоль: «Cannot read properties of null». Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const card = document.querySelector('card');",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-6/6-3-burger",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "На телефоне меню спрятано. Какое правило показывает его после клика?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": ".open { display: none; }",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".menu { display: none; }",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".menu.open { display: flex; }",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Меню только что открылось. Что окажется в isOpen?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "true",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Что сообщает атрибут aria-expanded?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Цвет кнопки",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Ширину меню",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Открыто меню или нет — для программ чтения экрана",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Меню не открывается. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const burger = document.querySelector('.burger');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "const menu = document.querySelector('.menu');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "burger.addEventListener('click', function () {",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "  menu.classList.toggle('.open');",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-6/6-4-modal",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Какой тег — готовое модальное окно?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "<dialog>",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Как открыть его поверх страницы с затемнением?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "modal.showModal()",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Как задать цвет затемнения под окном?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": ".modal:dark { … }",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "body { opacity: 0.5; }",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": ".modal::backdrop { background: rgba(0, 0, 0, 0.5); }",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Окно не открывается. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const modal = document.querySelector('.modal');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "const open = document.querySelector('.open');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "open.addEventListener('click', function () {",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "  modal.close();",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-7/7-1-filter-form",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Как прочитать type в JavaScript?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "card.dataset.type",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Что станет с карточкой, у которой data-type=\"dog\"?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Будет ошибка",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Станет кошкой",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Спрячется",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Что делает event.preventDefault() в обработчике submit?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Очищает форму",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Не даёт странице перезагрузиться",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Код с ошибкой. Кликни на строку с ней.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const cards = document.querySelectorAll('.card');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "cards.forEach(function (card) {",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "  card.hidden = card.dataset.type !== filter;",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "};",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-7/7-2-localstorage",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Как сохранить тему 'dark' под ключом 'theme'?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "localStorage.theme('dark')",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "localStorage.setItem('theme', 'dark')",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Что вернёт строка, если ключа city ещё нет?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "null",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Как сохранить список ['a', 'b']?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Списки сохранить нельзя",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "localStorage.setItem('list', list)",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "localStorage.setItem('list', JSON.stringify(list))",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Зачем оборачивать localStorage в try/catch?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Так требует GitHub",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "В приватном режиме он бросает ошибку — сайт не должен ломаться",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 5,
+            "task": "Избранное не читается. Кликни на строку с ошибкой.",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "const saved = localStorage.getItem('likes');",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "const likes = JSON.stringify(saved) || [];",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-7/7-3-github-pages",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Какой путь к картинке сработает на GitHub Pages?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "/Desktop/img/cat.jpg",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "img/cat.jpg",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Файл называется Cat.JPG, а в коде cat.jpg. Что будет на GitHub Pages?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Картинка не загрузится: GitHub различает регистр",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Как должен называться главный файл сайта?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "main.html",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "site.html",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "home.html",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "index.html",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Как обычно выглядит адрес сайта на GitHub Pages?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "https://github.com/сайт",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "C:/github/site",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "https://pages.ru/логин",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "https://логин.github.io/репозиторий/",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      },
+      {
+        "id": "lesson-7/7-4-checklist",
+        "type": "quiz",
+        "levels": [
+          {
+            "n": 1,
+            "task": "Чем проверить ошибки HTML: незакрытые теги, картинки без alt?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "W3C Validator",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 2,
+            "task": "Как проверить, что на телефоне нет прокрутки вбок?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "Никак",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Уменьшить шрифт",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "DevTools → режим телефона, ширина 375 px",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 3,
+            "task": "Что из этого НЕ входит в чек-лист сдачи?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "У картинок есть alt",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Сайт открывается по ссылке",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Семантические теги",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Анимация на каждой кнопке",
+                "status": "Верно!"
+              }
+            ]
+          },
+          {
+            "n": 4,
+            "task": "Где искать красные ошибки JavaScript и 404?",
+            "accepted": true,
+            "attempts": [
+              {
+                "answer": "В Figma",
+                "status": "Не то. Подумай ещё"
+              },
+              {
+                "answer": "Консоль (F12 → Console)",
+                "status": "Верно!"
+              }
+            ]
+          }
+        ],
+        "recorded": true
+      }
+    ]
+  },
+  "edges": {
+    "date": "2026-11-12T17:09:13.909Z",
+    "browser": "157.0.8103.51",
+    "base": "http://localhost:4322",
+    "phase": "edges",
+    "results": [
+      {
+        "id": "lesson-3/3-1-flexbox",
+        "name": "Нет третьего кружка",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"row\">\n  <div class=\"dot small\"></div>\n  <div class=\"dot\"></div>\n  <div class=\"dot small\"></div>\n</div>\n",
+          "css": ".row {\n  height: 120px;\n  background: #EEF2FF;\n  /* включи flex и выровняй */\n}\n\n.dot {\n  width: 60px;\n  height: 60px;\n  border-radius: 50%;\n  background: #4F46E5;\n}\n\n.small {\n  width: 30px;\n  height: 30px;\n}\n\n.row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n}\r\n\n.dot:last-child{display:none}"
+        }
+      },
+      {
+        "id": "lesson-3/3-2-menu",
+        "name": "Шапка скрыта",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<header class=\"header\">\n  <a class=\"logo\" href=\"#\">КУДА_СХОДИТЬ</a>\n  <nav>\n    <ul class=\"menu\">\n      <li><a href=\"#\">Афиша</a></li>\n      <li><a href=\"#\">Бесплатно</a></li>\n      <li><a href=\"#\">Избранное</a></li>\n    </ul>\n  </nav>\n  <a class=\"button\" href=\"#\">Войти</a>\n</header>\n",
+          "css": "body { margin: 0; }\n\n.header {\n  padding: 16px 24px;\n  background: #111827;\n  /* строка */\n}\n\n.menu {\n  margin: 0;\n  padding: 0;\n  /* строка и промежутки */\n}\n\n.header a {\n  color: #fff;\n  text-decoration: none;\n}\n\n.header{display:flex;justify-content:space-between;align-items:center}.menu{display:flex;gap:24px;list-style:none;margin:0;padding:0}\n.header{visibility:hidden}"
+        }
+      },
+      {
+        "id": "lesson-3/3-3-hero",
+        "name": "Разные ширины при одинаковом flex-grow",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<section class=\"hero\">\n  <div class=\"hero__text\">\n    <h1>Найди друга в приюте</h1>\n    <p>Пройди тест — подскажем, какой питомец тебе подходит.</p>\n    <a class=\"button\" href=\"#\">Пройти тест</a>\n  </div>\n  <img class=\"hero__img\" src=\"img/sharik.svg\" alt=\"Пёс Шарик\">\n</section>\n",
+          "css": ".hero {\n  padding: 16px;\n  background: #FFF8F0;\n  /* две колонки */\n}\n\n.hero__img {\n  max-width: 100%;\n}\n\n.button {\n  display: inline-block;\n  padding: 10px 20px;\n  background: #FF6B35;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 8px;\n}\n\n.hero{display:flex;align-items:center;gap:32px}.hero__text,.hero__img{flex:1;min-width:0}\n.hero__text{flex:1 1 300px}.hero__img{flex:1 1 50px}"
+        }
+      },
+      {
+        "id": "lesson-3/3-4-rows",
+        "name": "Все преимущества кроме первого не оформлены",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"features\">\n  <div class=\"feature\"><span class=\"icon\">🎬</span><p>Создай комнату</p></div>\n  <div class=\"feature\"><span class=\"icon\">👆</span><p>Свайпай фильмы</p></div>\n  <div class=\"feature\"><span class=\"icon\">🍿</span><p>Смотрите вместе</p></div>\n</div>\n",
+          "css": ".features {\n  /* ряд с переносом */\n}\n\n.feature {\n  width: 120px;\n  padding: 12px;\n  background: #F3E8FF;\n  border-radius: 12px;\n  /* столбик по центру */\n}\n\n.feature p {\n  margin: 8px 0 0;\n}\n\n.icon {\n  font-size: 32px;\n}\n\n.features {\r\n  display: flex;\r\n  flex-wrap: wrap;\r\n  gap: 16px;\r\n}\r\n\r\n.feature {\r\n  display: flex;\r\n  flex-direction: column;\r\n  align-items: center;\r\n  text-align: center;\r\n}\r\n\n.feature:not(:first-child){display:block;align-items:normal}"
+        }
+      },
+      {
+        "id": "lesson-4/4-1-grid",
+        "name": "Плитки скрыты",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"grid\">\n  <div class=\"tile\">1</div>\n  <div class=\"tile\">2</div>\n  <div class=\"tile\">3</div>\n  <div class=\"tile\">4</div>\n  <div class=\"tile\">5</div>\n  <div class=\"tile\">6</div>\n</div>\n",
+          "css": ".grid {\n  /* сетка */\n}\n\n.tile {\n  padding: 20px;\n  background: #DBEAFE;\n  border-radius: 8px;\n  text-align: center;\n}\n\n.grid {\r\n  display: grid;\r\n  grid-template-columns: repeat(3, 1fr);\r\n  gap: 12px;\r\n}\r\n\n.grid>*{visibility:hidden}"
+        }
+      },
+      {
+        "id": "lesson-4/4-2-grid-cards",
+        "name": "minmax только в комментарии, сетка в одну колонку",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"cards\">\n  <article class=\"card\">\n    <img src=\"img/barsik.svg\" alt=\"Рыжий кот Барсик\">\n    <h3>Барсик</h3>\n  </article>\n  <article class=\"card\">\n    <img src=\"img/sharik.svg\" alt=\"Пёс Шарик\">\n    <h3>Шарик</h3>\n  </article>\n  <article class=\"card\">\n    <img src=\"img/murka.svg\" alt=\"Серая кошка Мурка\">\n    <h3>Мурка</h3>\n  </article>\n</div>\n",
+          "css": ".cards {\n  /* сетка */\n}\n\n.card {\n  padding: 8px;\n  background: #FFF8F0;\n  border-radius: 12px;\n}\n\n.card img {\n  width: 100%;\n  height: 100px;\n  /* картинка без искажений */\n}\n\n.card h3 {\n  margin: 8px 0 0;\n}\n\n.cards{display:grid;gap:16px;grid-template-columns:1fr}.card img{object-fit:cover}/* minmax(140px,1fr) */"
+        }
+      },
+      {
+        "id": "lesson-4/4-3-sections-footer",
+        "name": "Белый текст на почти белом фоне, нет боковых отступов",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<footer class=\"footer\">\n  <div class=\"footer__cols\">\n    <div>\n      <b>СКИНЕМСЯ</b>\n      <p>Честно делим общие траты</p>\n    </div>\n    <div>\n      <b>Разделы</b>\n      <p>Сборы · Как это работает</p>\n    </div>\n    <div>\n      <b>Контакты</b>\n      <p>hello@skinemsya.ru</p>\n    </div>\n  </div>\n</footer>\n",
+          "css": "body { margin: 0; }\n\n.footer {\n  /* фон, цвет текста, отступы */\n}\n\n.footer__cols {\n  /* три колонки */\n}\n\n.footer p {\n  margin: 4px 0 0;\n}\n\n.footer {\r\n  padding: 48px 0 24px;\r\n  background: #1E1E1E;\r\n  color: #FFFFFF;\r\n}\r\n\r\n.footer__cols {\r\n  display: grid;\r\n  grid-template-columns: repeat(3, 1fr);\r\n  gap: 24px;\r\n}\r\n\r\n.footer__copy {\r\n  margin-top: 24px;\r\n  padding-top: 16px;\r\n  border-top: 1px solid rgba(255, 255, 255, 0.2);\r\n  color: rgba(255, 255, 255, 0.7);\r\n}\r\n\r\n/* «Как это работает»: три шага в ряд */\r\n.steps__list {\r\n  display: grid;\r\n  grid-template-columns: repeat(3, 1fr);\r\n  gap: 24px;\r\n}\r\n\n.footer{background:#fefefe;color:white;padding:24px 0 0}.footer__cols{grid-template-columns:3fr 1fr 1fr}"
+        }
+      },
+      {
+        "id": "lesson-5/5-1-media",
+        "name": "Мобильные стили применены ко всем экранам",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": {
+          "width": 1276,
+          "h1": "24px",
+          "row": "column"
+        },
+        "code": {
+          "html": "<h1>Куда сходить в Омске</h1>\n<div class=\"row\">\n  <a class=\"button\" href=\"#\">Афиша</a>\n  <a class=\"button\" href=\"#\">Бесплатно</a>\n</div>\n",
+          "css": "h1 {\n  font-size: 40px;\n}\n\n.row {\n  display: flex;\n  gap: 12px;\n}\n\n.button {\n  padding: 12px;\n  background: #111827;\n  color: #fff;\n  text-align: center;\n  text-decoration: none;\n  border-radius: 8px;\n}\n\n/* медиазапрос для телефона */\n\nh1{font-size:24px}.row{flex-direction:column}@media(max-width:1px){body{color:red}}"
+        }
+      },
+      {
+        "id": "lesson-5/5-2-mobile-375",
+        "name": "Одна колонка на всех экранах",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<header class=\"header\">\n  <a class=\"logo\" href=\"#\">ТИММЕЙТ</a>\n  <nav>\n    <ul class=\"menu\">\n      <li><a href=\"#\">Анкеты</a></li>\n      <li><a href=\"#\">Рейтинг</a></li>\n      <li><a href=\"#\">Отзывы</a></li>\n      <li><a href=\"#\">Войти</a></li>\n    </ul>\n  </nav>\n</header>\n<div class=\"cards\">\n  <div class=\"card\">Аня · дизайн</div>\n  <div class=\"card\">Петя · код</div>\n  <div class=\"card\">Оля · тексты</div>\n</div>\n",
+          "css": "body { margin: 0; }\n\n.header {\n  display: flex;\n  justify-content: space-between;\n  align-items: center;\n  gap: 12px;\n  padding: 12px;\n  background: #EEF2FF;\n}\n\n.menu {\n  display: flex;\n  gap: 32px;\n  margin: 0;\n  padding: 0;\n  list-style: none;\n}\n\n.cards {\n  display: grid;\n  grid-template-columns: repeat(3, 200px);\n  gap: 12px;\n  padding: 12px;\n}\n\n.card {\n  padding: 24px;\n  background: #DBEAFE;\n  border-radius: 8px;\n}\n\n/* медиазапрос для телефона */\n\n.header{flex-direction:column}.menu{flex-wrap:wrap;gap:12px}.cards{grid-template-columns:1fr}@media(max-width:1px){body{color:red}}"
+        }
+      },
+      {
+        "id": "lesson-5/5-3-hover-check",
+        "name": "Наведение не меняет фон",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<a class=\"button\" href=\"#\">Стать волонтёром</a>\n",
+          "css": ".button {\n  display: inline-block;\n  padding: 12px 24px;\n  background: #FF6B35;\n  color: #fff;\n  text-decoration: none;\n  border-radius: 8px;\n  /* плавный переход */\n}\n\n/* правило для наведения */\n\n.button{transition:0.2s}.button:hover{cursor:pointer}"
+        }
+      },
+      {
+        "id": "lesson-6/6-1-script",
+        "name": "Захардкожена Оля, нет name и console.log",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<h1>Здесь будет приветствие</h1>\n",
+          "css": "h1 { color: #4F46E5; }\n",
+          "js": "function greet(){return 'Привет, Оля!'};document.querySelector('h1').textContent='Привет, кто-то!';"
+        }
+      },
+      {
+        "id": "lesson-6/6-2-dom",
+        "name": "Переключение работает только два раза",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<h1>Тёмная тема</h1>\n<button class=\"theme-button\" type=\"button\">Переключить тему</button>\n",
+          "css": "body {\n  transition: 0.3s;\n}\n\nbody.dark {\n  background: #111827;\n  color: #F9FAFB;\n}\n",
+          "js": "let n=0;document.querySelector('.theme-button').onclick=()=>{if(++n<=2)document.body.classList.toggle('dark')};"
+        }
+      },
+      {
+        "id": "lesson-6/6-3-burger",
+        "name": "Меню не показывается даже после открытия",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<header class=\"header\">\n  <a class=\"logo\" href=\"#\">СКИНЕМСЯ</a>\n  <button class=\"burger\" type=\"button\" aria-expanded=\"false\" aria-label=\"Открыть меню\">☰</button>\n  <nav>\n    <ul class=\"menu\">\n      <li><a href=\"#\">Мои сборы</a></li>\n      <li><a href=\"#\">Как это работает</a></li>\n      <li><a href=\"#\">Войти</a></li>\n    </ul>\n  </nav>\n</header>\n",
+          "css": "body { margin: 0; }\n\n.header {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  align-items: center;\n  padding: 12px 16px;\n  background: #ECFDF5;\n}\n\n.burger {\n  font-size: 24px;\n  background: none;\n  border: 0;\n  cursor: pointer;\n}\n\nnav {\n  width: 100%;              /* меню — отдельной строкой под логотипом */\n}\n\n.menu {\n  display: none;            /* на телефоне меню спрятано */\n  flex-direction: column;\n  gap: 8px;\n  margin: 0;\n  padding: 12px 0 0;\n  list-style: none;\n}\n\n.menu.open {\n  display: flex;            /* класс open его показывает */\n}\n\n.burger {\r\n  display: none;\r\n}\r\n\r\n@media (max-width: 768px) {\r\n  /* логотип и ☰ в строку, меню переносится ниже */\r\n  .header .container {\r\n    flex-direction: row;\r\n    flex-wrap: wrap;\r\n  }\r\n\r\n  .burger {\r\n    display: block;\r\n  }\r\n\r\n  /* меню — отдельной строкой на всю ширину */\r\n  .header nav {\r\n    order: 1;\r\n    width: 100%;\r\n  }\r\n\r\n  .menu {\r\n    display: none;\r\n    flex-direction: column;\r\n  }\r\n\r\n  .menu.open {\r\n    display: flex;\r\n  }\r\n}\r\n\n.menu{display:none!important}",
+          "js": "const burger = document.querySelector('.burger');\r\nconst menu = document.querySelector('.menu');\r\n\r\nburger.addEventListener('click', function () {\r\n  const isOpen = menu.classList.toggle('open');\r\n  burger.setAttribute('aria-expanded', isOpen);\r\n});\r\n"
+        }
+      },
+      {
+        "id": "lesson-6/6-4-modal",
+        "name": "Немодальное окно вместо showModal",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<button class=\"open-modal\" type=\"button\">Создать сбор</button>\n\n<dialog class=\"modal\">\n  <h2>Новый сбор</h2>\n  <p>Название, сумма и срок — и можно звать друзей.</p>\n  <button class=\"close-modal\" type=\"button\">Закрыть</button>\n</dialog>\n",
+          "css": ".modal {\n  max-width: 320px;\n  padding: 24px;\n  border: 0;\n  border-radius: 16px;\n}\n\n.modal::backdrop {\n  background: rgba(0, 0, 0, 0.5);   /* затемнение под окном */\n}\n",
+          "js": "const d=document.querySelector('.modal');document.querySelector('.open-modal').onclick=()=>d.open=true;document.querySelector('.close-modal').onclick=()=>d.open=false;"
+        }
+      },
+      {
+        "id": "lesson-7/7-1-filter-form",
+        "name": "Удалены все карточки",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"filters\">\n  <button type=\"button\" data-filter=\"all\">Все</button>\n  <button type=\"button\" data-filter=\"cat\">Кошки</button>\n  <button type=\"button\" data-filter=\"dog\">Собаки</button>\n</div>\n\n<div class=\"cards\">\n  \n  \n  \n  \n</div>\n",
+          "css": ".filters {\n  display: flex;\n  gap: 8px;\n  margin-bottom: 12px;\n}\n\n.cards {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 8px;\n}\n\n.card {\n  padding: 16px;\n  background: #FFF8F0;\n  border-radius: 8px;\n}\n",
+          "js": "const buttons = document.querySelectorAll('[data-filter]');\r\nconst cards = document.querySelectorAll('.card');\r\n\r\nbuttons.forEach(function (button) {\r\n  button.addEventListener('click', function () {\r\n    const filter = button.dataset.filter;\r\n    cards.forEach(function (card) {\r\n      card.hidden = filter !== 'all' && card.dataset.type !== filter;\r\n    });\r\n    buttons.forEach((b) => b.classList.remove('active'));\r\n    button.classList.add('active');\r\n  });\r\n});\r\n"
+        }
+      },
+      {
+        "id": "lesson-7/7-2-localstorage",
+        "name": "Нет восстановления и работает только Барсик",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<article class=\"card\" data-id=\"barsik\">\n  Барсик <button class=\"fav\" type=\"button\" aria-label=\"В избранное\">♥</button>\n</article>\n<article class=\"card\" data-id=\"sharik\">\n  Шарик <button class=\"fav\" type=\"button\" aria-label=\"В избранное\">♥</button>\n</article>\n",
+          "css": ".card {\n  display: flex;\n  justify-content: space-between;\n  padding: 12px;\n  margin-bottom: 8px;\n  background: #FFF8F0;\n  border-radius: 8px;\n}\n\n.fav {\n  border: 0;\n  background: none;\n  font-size: 20px;\n  color: #D1D5DB;\n  cursor: pointer;\n}\n\n.fav.active {\n  color: #EF4444;\n}\n",
+          "js": "const b=document.querySelector('[data-id=barsik] .fav');b.onclick=()=>{const on=b.classList.toggle('active');localStorage.setItem('favorites',JSON.stringify(on?['barsik']:[]))};"
+        }
+      },
+      {
+        "id": "lesson-7/7-3-github-pages",
+        "name": "Удалены все изображения",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<p><a href=\"about.html\">О приюте</a></p>",
+          "css": "img { border-radius: 8px; }\n"
+        }
+      },
+      {
+        "id": "lesson-7/7-4-checklist",
+        "name": "Удалены картинки и ссылки",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<header><h1>Заголовок</h1></header>",
+          "css": ".header { padding: 8px; background: #EEF2FF; }\n"
+        }
+      },
+      {
+        "id": "tasks/adaptive-hide",
+        "name": "Контент скрыт также на компьютере",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<p class=\"desktop-only\">Самая большая афиша бесплатных событий Омска для подростков</p>\n<div class=\"cards\">\n  <div class=\"card\">Концерт</div>\n  <div class=\"card\">Квиз</div>\n</div>\n",
+          "css": ".cards {\n  display: grid;\n  grid-template-columns: repeat(2, 1fr);\n  gap: 8px;\n}\n\n.card {\n  padding: 16px;\n  background: #EDE9FE;\n  border-radius: 8px;\n}\n\n/* медиазапрос */\n\n.desktop-only{display:none}.cards{grid-template-columns:1fr}@media(max-width:1px){body{color:red}}"
+        }
+      },
+      {
+        "id": "tasks/adaptive-image",
+        "name": "Изображение скрыто",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<h1>Шарик ищет дом</h1>\n<img src=\"img/sharik.svg\" width=\"600\" height=\"400\" alt=\"Пёс Шарик\">\n",
+          "css": "body { margin: 16px; }\n\nimg {\n  \n}\n\nimg {\n  max-width: 100%;\n  height: auto;\n}\n\nimg{visibility:hidden}"
+        }
+      },
+      {
+        "id": "tasks/css-badge",
+        "name": "var только в комментарии, фон не связан с переменной",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<p>Концерт в парке <span class=\"badge\">Бесплатно</span></p>\n",
+          "css": ":root {\n  \n}\n\n.badge {\n  \n}\n\n:root {\n  --accent: #16A34A;\n}\n\n.badge {\n  padding: 4px 12px;\n  border-radius: 999px;\n  background: #16A34A; /* var(--accent) */\n  color: #FFFFFF;\n  font-size: 14px;\n}\n"
+        }
+      },
+      {
+        "id": "tasks/css-button",
+        "name": "Три угла и половина отступов не оформлены",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<a class=\"button\" href=\"#\">Найти команду</a>\n",
+          "css": ".button {\n  \n}\n\n.button {\n  display: inline-block;\n  padding: 12px 24px;\n  background: #4F46E5;\n  color: #FFFFFF;\n  text-decoration: none;\n  border-radius: 8px;\n}\n\n.button{border-radius:8px 0 0 0;padding:12px 0 0 24px}"
+        }
+      },
+      {
+        "id": "tasks/flex-center",
+        "name": "Кружок скрыт",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"box\">\n  <div class=\"dot\"></div>\n</div>\n",
+          "css": ".box {\n  height: 200px;\n  background: #EEF2FF;\n}\n\n.dot {\n  width: 60px;\n  height: 60px;\n  border-radius: 50%;\n  background: #4F46E5;\n}\n\n.box {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n}\n\n.dot{visibility:hidden}"
+        }
+      },
+      {
+        "id": "tasks/flex-footer-row",
+        "name": "Соцсети идут столбиком",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"bottom\">\n  <p>© 2026 ХВОСТ_ДОМОЙ</p>\n  <div class=\"socials\">\n    <a href=\"#\">ВК</a>\n    <a href=\"#\">Telegram</a>\n    <a href=\"#\">YouTube</a>\n  </div>\n</div>\n",
+          "css": ".bottom {\n  padding: 12px;\n  background: #1E1E1E;\n  color: #fff;\n}\n\n.bottom a { color: #fff; }\n\n.bottom {\n  display: flex;\n  flex-wrap: wrap;\n  justify-content: space-between;\n  align-items: center;\n}\n\n.socials {\n  display: flex;\n  gap: 12px;\n}\n\n.socials{flex-direction:column}"
+        }
+      },
+      {
+        "id": "tasks/grid-layout",
+        "name": "Пустой контент обеих колонок",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"layout\">\n  <div class=\"main\">Описание события</div>\n  <div class=\"side\">Купить билет</div>\n</div>\n",
+          "css": ".main, .side {\n  padding: 16px;\n  background: #DBEAFE;\n  border-radius: 8px;\n}\n\n.layout {\n  display: grid;\n  grid-template-columns: 2fr 1fr;\n  gap: 16px;\n}\n\n.layout>*{visibility:hidden}"
+        }
+      },
+      {
+        "id": "tasks/grid-span",
+        "name": "Растянута на три колонки вместо двух",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<div class=\"grid\">\n  <div class=\"card card--big\">Главное событие</div>\n  <div class=\"card\">2</div>\n  <div class=\"card\">3</div>\n  <div class=\"card\">4</div>\n  <div class=\"card\">5</div>\n</div>\n",
+          "css": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 8px;\n}\n\n.card {\n  padding: 16px;\n  background: #FEF3C7;\n  border-radius: 8px;\n}\n\n.card--big {\n  grid-column: span 2;\n}\n\n.card--big{grid-column:span 3}"
+        }
+      },
+      {
+        "id": "tasks/html-card",
+        "name": "Неправильный alt",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<article class=\"card\">\n  <img src=\"img/murka.svg\" width=\"200\" alt=\"неизвестно\">\n  <h3>Мурка</h3>\n  <p>1 год, спокойная</p>\n  <a href=\"#\">Подробнее</a>\n</article>\n",
+          "css": ".card { max-width: 220px; }\n"
+        }
+      },
+      {
+        "id": "tasks/html-menu",
+        "name": "Три одинаковых пункта, пустые href",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<nav><ul><li><a href=\"\">Контакты</a></li><li><a href=\"\">Контакты</a></li><li><a href=\"\">Контакты</a></li></ul></nav>",
+          "css": "a { color: #4F46E5; }\n"
+        }
+      },
+      {
+        "id": "tasks/js-counter",
+        "name": "Всегда выводит 3 вместо счётчика",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "observation": null,
+        "code": {
+          "html": "<p>Идут: <span class=\"count\">0</span></p>\n<button class=\"plus\" type=\"button\">Я тоже иду</button>\n",
+          "css": ".count { font-weight: 700; }\n",
+          "js": "document.querySelector('.plus').onclick=()=>document.querySelector('.count').textContent='3';"
+        }
+      },
+      {
+        "id": "tasks/js-form",
+        "name": "Ошибка бессмысленная, успех без замены формы",
+        "expected": "reject",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "checkerUrl": "about:srcdoc",
+        "observation": null,
+        "code": {
+          "html": "<form class=\"form\">\n  <label>Имя <input name=\"name\"></label>\n  <p class=\"error\"></p>\n  <button type=\"submit\">Отправить</button>\n</form>\n",
+          "css": ".error { color: #DC2626; min-height: 1em; }\n",
+          "js": "const f=document.querySelector('.form');f.onsubmit=e=>{e.preventDefault();if(!f.elements.name.value.trim())f.querySelector('.error').textContent='x';else f.insertAdjacentHTML('beforeend','<p>Спасибо!</p>')};"
+        }
+      },
+      {
+        "id": "lesson-6/6-1-script",
+        "name": "Корректная стрелочная greet",
+        "expected": "accept",
+        "accepted": false,
+        "feedback": "Проверка: 1 из 3. Осталось:Нет функции greet. Нужно: function greet(n) { … }greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знак",
+        "recorded": false,
+        "checkerUrl": "about:srcdoc",
+        "observation": null,
+        "code": {
+          "html": "<h1>Здесь будет приветствие</h1>\n",
+          "css": "h1 { color: #4F46E5; }\n",
+          "js": "const name='Аня';const greet=n=>'Привет, '+n+'!';console.log(greet(name));document.querySelector('h1').textContent=greet(name);"
+        }
+      },
+      {
+        "id": "lesson-3/3-1-flexbox",
+        "name": "Эквивалентное оформление через inline styles",
+        "expected": "accept",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "checkerUrl": "about:srcdoc",
+        "observation": null,
+        "code": {
+          "html": "<div class=\"row\" style=\"display:flex;justify-content:space-between;align-items:center\">\n  <div class=\"dot small\"></div>\n  <div class=\"dot\"></div>\n  <div class=\"dot small\"></div>\n</div>\n",
+          "css": ".row {\n  height: 120px;\n  background: #EEF2FF;\n  /* включи flex и выровняй */\n}\n\n.dot {\n  width: 60px;\n  height: 60px;\n  border-radius: 50%;\n  background: #4F46E5;\n}\n\n.small {\n  width: 30px;\n  height: 30px;\n}\n\n.row {\r\n  display: flex;\r\n  justify-content: space-between;\r\n  align-items: center;\r\n}\r\n"
+        }
+      },
+      {
+        "id": "tasks/grid-span",
+        "name": "Эквивалентное grid-column 1 / 3",
+        "expected": "accept",
+        "accepted": true,
+        "feedback": "Всё верно! Разминка пройдена.",
+        "recorded": true,
+        "checkerUrl": "about:srcdoc",
+        "observation": null,
+        "code": {
+          "html": "<div class=\"grid\">\n  <div class=\"card card--big\">Главное событие</div>\n  <div class=\"card\">2</div>\n  <div class=\"card\">3</div>\n  <div class=\"card\">4</div>\n  <div class=\"card\">5</div>\n</div>\n",
+          "css": ".grid {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 8px;\n}\n\n.card {\n  padding: 16px;\n  background: #FEF3C7;\n  border-radius: 8px;\n}\n\n.card--big {\n  grid-column: span 2;\n}\n\n.card--big{grid-column:1 / 3}"
+        }
+      }
+    ]
+  },
+  "behavior": {
+    "date": "2026-11-12T17:04:52.822Z",
+    "browser": "157.0.8103.51",
+    "base": "http://localhost:4322",
+    "phase": "behavior",
+    "results": [
+      {
+        "id": "lesson-3/3-1-flexbox",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 5,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 6,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-3/3-2-menu",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 3,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-3/3-3-hero",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 5,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-3/3-4-rows",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-4/4-1-grid",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 5,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-4/4-2-grid-cards",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          },
+          {
+            "n": 5,
+            "visible": 0,
+            "total": 6,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-4/4-3-sections-footer",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 4,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 4,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 4,
+            "accepted": true
+          },
+          {
+            "n": 4,
+            "visible": 0,
+            "total": 4,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-5/5-2-mobile-375",
+        "name": "Скрытие обеих досок через поле CSS",
+        "levels": [
+          {
+            "n": 1,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 2,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          },
+          {
+            "n": 3,
+            "visible": 0,
+            "total": 2,
+            "accepted": true
+          }
+        ]
+      },
+      {
+        "id": "lesson-7/7-2-localstorage",
+        "name": "Проверка стирает favorites",
+        "seed": "[\"sharik\"]",
+        "afterOpen": {
+          "favorites": null,
+          "unrelated": "keep"
+        },
+        "accepted": true,
+        "afterClick": "[\"sharik\"]",
+        "afterEdit": null
+      }
+    ]
+  },
+  "formNavigation": {
+    "date": "2026-11-12T17:07:01.678Z",
+    "browser": "157.0.8103.51",
+    "base": "http://localhost:4322",
+    "phase": "form-navigation",
+    "results": [
+      {
+        "id": "tasks/js-form",
+        "name": "Незавершённая форма отправляется проверкой",
+        "navigations": [
+          {
+            "url": "http://localhost:4322/tasks/js-form/",
+            "subframe": false
+          }
+        ],
+        "frames": [
+          "http://localhost:4322/tasks/js-form/",
+          "about:srcdoc",
+          "about:srcdoc?name=%D0%90%D0%BD%D1%8F"
+        ],
+        "feedback": "Проверка: 0 из 2. Осталось:С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)С заполненным именем форма должна показать «Спасибо!»"
+      }
+    ]
+  }
+}

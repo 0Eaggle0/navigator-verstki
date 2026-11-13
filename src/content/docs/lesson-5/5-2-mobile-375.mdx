@@ -102,15 +102,17 @@ warmup:
 
     /* медиазапрос для телефона */
   checks:
-    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
-      fail: "В CSS пока нет медиазапроса @media (max-width: 768px) { … }"
     - selector: ".header"
       style: { flex-direction: "column" }
       fail: "Шапка на телефоне должна быть столбиком: flex-direction: column;"
-    - js: "return getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 1"
-      fail: "Карточки на телефоне должны быть в одну колонку: grid-template-columns: 1fr;"
+    - js: "const s = getComputedStyle(doc.querySelector('.cards')); return s.display === 'grid' && s.gridTemplateColumns.split(' ').length === 1"
+      fail: "Карточки должны стоять в одной колонке на узком экране."
+      widths: [375,768]
     - js: "return doc.documentElement.scrollWidth <= doc.documentElement.clientWidth"
       fail: "Есть горизонтальная прокрутка — что-то шире экрана. Проверь меню и сетку"
+    - js: "return getComputedStyle(doc.querySelector('.header')).flexDirection === 'row' && getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 3"
+      fail: "На широком экране шапка и три карточки должны остаться в ряд."
+      widths: [769,1280]
 team:
   - task: "Шапка на телефоне: меню под логотипом или уменьшенное, подвал — колонки в столбик."
     hint: "grid-template-columns: 1fr для подвала. Бургер сделаем в 6.3."
@@ -134,7 +136,7 @@ mistakes:
     a: Медиазапрос должен стоять ниже обычных правил. Если он выше, обычные правила его перебивают.
 blocks: [header, cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -172,18 +174,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Откройте сайт в режиме устройства на 375 px.
-2. Идите по списку поломок из шага 5.1 сверху вниз. Для каждой секции решите: что встаёт столбиком, сколько колонок у сеток, что уменьшить.
-3. Всё пишите в один медиазапрос в конце `style.css`.
-4. Прокрутите страницу вбок — если она двигается, найдите виновника (подсказка в «Частые ошибки»).
-5. Проверьте ещё ширину 1024 px (планшет): там часто хорошо смотрятся две колонки.
-
-<TeamTasks />
-
-<BlockLinks />
-
 <Hint title="Подсказка 1">
 Делите работу: каждый участник проверяет на 375 px свою секцию и пишет для неё правила. Модератор собирает все в один медиазапрос.
 </Hint>
@@ -192,7 +182,29 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 Большие отступы секций (`padding: 80px 0`) на телефоне съедают полэкрана. В медиазапросе уменьшите их вдвое: `section { padding: 40px 0; }`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
+~~~css
+@media (max-width: 768px) {
+  .header { flex-direction: column; }
+  .menu { flex-wrap: wrap; gap: 12px; }
+  .cards { grid-template-columns: 1fr; }
+}
+~~~
+</Hint>
+
+## Делаем свой сайт
+
+1. Откройте сайт в режиме устройства на 375 px.
+2. Идите по списку поломок из шага 5.1 сверху вниз. Для каждой секции решите: что встаёт столбиком, сколько колонок у сеток, что уменьшить.
+3. Всё пишите в один медиазапрос в конце `style.css`.
+4. Прокрутите страницу вбок — если она двигается, найдите виновника (подсказка в «Частые ошибки»).
+5. Проверьте ещё ширину 1024 px (планшет): там часто хорошо смотрятся две колонки.
+
+
+
+<BlockLinks />
+
+<Hint title="Пример для проекта" afterPractice>
 ```css
 @media (max-width: 768px) {
   .header .container {

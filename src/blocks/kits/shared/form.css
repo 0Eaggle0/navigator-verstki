@@ -1,0 +1,6 @@
+.kit-form { display: grid; gap: .9rem; max-width: 34rem; margin-top: 1rem; }
+.kit-form label { display: grid; gap: .3rem; font-weight: 700; }
+.kit-form input { width: 100%; min-height: 44px; padding: .5rem .7rem; border: 1px solid var(--kit-line); border-radius: var(--kit-radius); color: var(--kit-text); background: var(--kit-surface); }
+.kit-form input[aria-invalid="true"] { border: 2px solid var(--kit-accent-text); }
+.kit-form .kit-button { justify-self: start; }
+.kit-form [role="status"] { min-height: 1.55em; }

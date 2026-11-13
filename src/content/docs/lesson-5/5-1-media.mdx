@@ -11,59 +11,6 @@ links:
     url: https://doka.guide/css/media/
   - title: "Дока: мета-тег viewport"
     url: https://doka.guide/html/meta/
-game:
-  type: "quiz"
-  title: "Узкий экран"
-  levels:
-    - task: "Ширина окна 1280 px. Какого размера будет h1?"
-      code: |
-        h1 { font-size: 40px; }
-        @media (max-width: 768px) {
-          h1 { font-size: 24px; }
-        }
-      options:
-        - "24px"
-        - "Тот, что задан вне медиазапроса"
-        - "Ноль"
-        - "Ошибка"
-      answer: 2
-      why: "Условие max-width: 768px не выполнено — правило внутри просто пропускается."
-    - task: "А на телефоне шириной 375 px?"
-      code: |
-        h1 { font-size: 40px; }
-        @media (max-width: 768px) {
-          h1 { font-size: 24px; }
-        }
-      options:
-        - "24px"
-        - "40px"
-        - "64px"
-        - "375px"
-      answer: 1
-      why: "375 меньше 768 — правило из медиазапроса срабатывает."
-    - task: "Медиазапрос не работает. Кликни на строку с ошибкой."
-      code: |
-        @media max-width: 768px {
-          .cards {
-            grid-template-columns: 1fr;
-          }
-        }
-      answer: 1
-      why: "Условие пишется в скобках: @media (max-width: 768px)."
-    - task: "Как включить режим телефона в DevTools?"
-      options:
-        - "F12 → значок телефона (Ctrl+Shift+M)"
-        - "Ctrl+P"
-        - "Правый клик → Сохранить как"
-        - "Никак, нужен настоящий телефон"
-      answer: 1
-    - task: "Зачем в head строка <meta name=\"viewport\" …>?"
-      options:
-        - "Чтобы телефон не притворялся широким экраном"
-        - "Чтобы подключить CSS"
-        - "Чтобы сайт нашёлся в поиске"
-        - "Чтобы ускорить загрузку"
-      answer: 1
 warmup:
   width: 375
   task: "Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 768px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column)."
@@ -94,14 +41,18 @@ warmup:
 
     /* медиазапрос для телефона */
   checks:
-    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
-      fail: "В CSS пока нет медиазапроса @media (max-width: 768px) { … }"
     - selector: "h1"
       style: { font-size: "24px" }
       fail: "На телефоне заголовок должен быть 24px — задай это внутри медиазапроса"
     - selector: ".row"
       style: { flex-direction: "column" }
       fail: "На телефоне кнопки должны встать столбиком: flex-direction: column; внутри медиазапроса"
+    - js: "const h = getComputedStyle(doc.querySelector('h1')), row = getComputedStyle(doc.querySelector('.row')); return h.fontSize === '24px' && row.display === 'flex' && row.flexDirection === 'column'"
+      fail: "На узком экране заголовок должен быть меньше, а кнопки стоять столбиком."
+      widths: [768]
+    - js: "const h = getComputedStyle(doc.querySelector('h1')), row = getComputedStyle(doc.querySelector('.row')); return h.fontSize === '40px' && row.display === 'flex' && row.flexDirection === 'row'"
+      fail: "На широком экране сохрани исходный заголовок и ряд кнопок."
+      widths: [769,1280]
 team:
   - task: "Включи режим телефона 375 px и запиши, что ломается в шапке и подвале."
     hint: "F12 → значок телефона (Ctrl+Shift+M). Чаще всего ломается меню."
@@ -125,7 +76,7 @@ mistakes:
     a: Ту, на которой вёрстка начинает ломаться. Сузь окно и найди этот момент. В этом курсе для телефона везде берём 768px — так медиазапросы из разных шагов совпадут.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -155,26 +106,17 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
   height={140}
 />
 
+Медиазапрос с `max-width` действует до указанной ширины включительно. Проверь 768 и 769 px в режиме Responsive: на соседних размерах будет видно, где меняется оформление. Условие медиазапроса пишется в скобках.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
-
-## Делаем свой сайт
-
-1. Проверьте, что в `<head>` вашего `index.html` есть meta viewport.
-2. Откройте сайт, включите режим устройства в DevTools и поставьте ширину 375 px.
-3. Пролистайте страницу сверху вниз и запишите, что сломалось: где горизонтальная прокрутка, что вылезает, что слишком мелко или крупно.
-4. Добавьте в конец `style.css` пустой медиазапрос `@media (max-width: 768px) { }` — в следующем шаге будем его наполнять.
-
-<TeamTasks />
 
 <Hint title="Подсказка 1">
 В режиме устройства удобно выбрать **Dimensions: Responsive** и тянуть край страницы мышкой — видно, на какой ширине вёрстка начинает ломаться.
@@ -184,7 +126,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 Горизонтальную прокрутку обычно дают: картинки без `max-width: 100%`, фиксированные `width` в px больше 375, сетки с тремя колонками по 300 px.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 @media (max-width: 768px) {
   h1 {
@@ -197,6 +139,15 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 }
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Проверьте, что в `<head>` вашего `index.html` есть meta viewport.
+2. Откройте сайт, включите режим устройства в DevTools и поставьте ширину 375 px.
+3. Пролистайте страницу сверху вниз и запишите, что сломалось: где горизонтальная прокрутка, что вылезает, что слишком мелко или крупно.
+4. Добавьте в конец `style.css` пустой медиазапрос `@media (max-width: 768px) { }` — в следующем шаге будем его наполнять.
+
+
 
 <Checklist />
 <Stuck />

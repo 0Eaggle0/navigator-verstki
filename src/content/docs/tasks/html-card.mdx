@@ -24,9 +24,8 @@ warmup:
       fail: "Кличка должна быть в заголовке h3"
     - exists: ".card p"
       fail: "Описание должно быть абзацем p"
-    - selector: ".card img"
-      attr: "alt"
-      fail: "У картинки нет alt"
+    - js: "return doc.querySelector('.card img')?.getAttribute('alt')?.trim() === 'Кошка Мурка'"
+      fail: "Описание картинки должно назвать Мурку."
     - selector: ".card a"
       attr: "href"
       fail: "«Подробнее» должно быть ссылкой a с href"
@@ -45,7 +44,7 @@ import { Warmup, Hint } from '~/components';
 Не забудьте поменять и закрывающие теги: `</div>` → `</article>`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```html
 <article class="card">
   <img src="img/murka.svg" width="200" alt="Кошка Мурка">

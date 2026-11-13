@@ -1,0 +1,6 @@
+.kit-menu-toggle { display: none; }
+@media (max-width: 768px) {
+  .kit-header .kit-menu { flex-basis: 100%; }
+  .kit-header[data-menu-ready] .kit-menu-toggle { display: inline-flex; }
+  .kit-header[data-menu-ready] .kit-menu:not(.kit-menu--open) { display: none; }
+}

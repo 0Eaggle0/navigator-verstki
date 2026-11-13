@@ -1,36 +1,38 @@
 ---
 // Страница «Все блоки»: набор блоков главной для выбранного кейса, все блоки карточками с превью и стартовый шаблон
-import cases from '~/data/cases.json';
+import kits from '~/blocks/kits/manifest.json';
 import blocks from '~/data/blocks.json';
+import practices from '~/data/block-practices.json';
 import { url } from '~/lib/route';
-import { srcdoc } from '~/lib/srcdoc';
-type Id = keyof typeof blocks;
+import { blockVariants } from '~/lib/block-variants';
+const titles = { base: { title: 'Базовые стили темы', ready: true }, ...blocks };
+type Id = keyof typeof titles;
 
-const files = import.meta.glob<string>('/src/blocks/*', { query: '?raw', import: 'default', eager: true });
-const all = (Object.keys(blocks) as Id[])
-	.filter((id) => blocks[id].ready)
+const all = (Object.keys(titles) as Id[])
+	.filter((id) => titles[id].ready)
 	.map((id) => ({
 		id,
-		title: blocks[id].title,
-		js: `/src/blocks/${id}.js` in files,
-		doc: srcdoc(files[`/src/blocks/${id}.html`], files[`/src/blocks/${id}.css`]),
+		title: titles[id].title,
+		practice: practices[id],
+		previews: Object.fromEntries(Object.entries(blockVariants(id, url)).filter(([theme]) => theme !== 'classic').map(([theme, variant]) => [theme, variant.doc])),
 	}));
 ---
 
 <div class="gallery not-content">
-	<p class="gallery__empty">Выбери кейс на <a href={url('/')}>главной</a> — здесь появится набор блоков для твоей главной страницы.</p>
+	<label class="gallery__theme" hidden>Тема сайта
+		<select>{Object.entries(kits).map(([id, kit]) => <option value={id}>{kit.title}</option>)}</select>
+	</label>
 	{
-		cases.map((c) => (
-			<section class="gallery__case" data-case={c.id} hidden>
-				<h2>Твоя главная · {c.title}</h2>
+		Object.entries(kits).map(([key, kit]) => (
+			<section class="gallery__case" data-case={key} hidden={key !== 'own'}>
+				<h2>Твоя главная · {kit.title}</h2>
 				<ol>
-					{(c.blocks as Id[]).map((id) => (
+					{(['base', ...kit.blocks] as Id[]).map((id) => (
 						<li>
-							<a href={url(`blocks/${id}/`)}>{blocks[id].title}</a>
+							<a href={url(`blocks/${id}/`)}>{titles[id].title}</a>
 						</li>
 					))}
 				</ol>
-				<p>{c.note}</p>
 			</section>
 		))
 	}
@@ -39,14 +41,14 @@ const all = (Object.keys(blocks) as Id[])
 	<ul class="gallery__grid">
 		{
 			all.map((b) => (
-				<li>
+			<li data-practice={b.practice}>
 					<a href={url(`blocks/${b.id}/`)}>
 						<span class="gallery__thumb">
-							<iframe title="" tabindex="-1" aria-hidden="true" loading="lazy" sandbox="" srcdoc={b.doc} />
+							<iframe title="" tabindex="-1" aria-hidden="true" loading="lazy" sandbox="" srcdoc={b.previews.own} data-previews={JSON.stringify(b.previews)} />
 						</span>
 						<span class="gallery__name">
 							{b.title}
-							{b.js && <span class="gallery__js">JS</span>}
+							<span class="gallery__availability">За зачёт</span>
 						</span>
 					</a>
 				</li>
@@ -67,12 +69,30 @@ const all = (Object.keys(blocks) as Id[])
 </div>
 
 <script>
-	import { load } from '~/lib/storage';
-	const chosen = load().case;
+	import { load, update, PRACTICE_VERSION } from '~/lib/storage';
+	const theme = document.querySelector<HTMLSelectElement>('.gallery__theme select')!;
 	const sections = document.querySelectorAll<HTMLElement>('.gallery__case');
-	sections.forEach((s) => (s.hidden = s.dataset.case !== chosen));
-	// Своя тема или кейс не выбран — показываем подсказку «выбери кейс»
-	if ([...sections].some((s) => !s.hidden)) document.querySelector<HTMLElement>('.gallery__empty')!.hidden = true;
+	const cards = document.querySelectorAll<HTMLElement>('.gallery__grid [data-practice]');
+	const show = () => {
+		const progress = load();
+		const chosen = [...theme.options].some(option => option.value === progress.case) ? progress.case : 'own';
+		theme.value = chosen!;
+		sections.forEach(section => section.hidden = section.dataset.case !== chosen);
+		cards.forEach(card => {
+			const frame = card.querySelector('iframe')!;
+			const preview = JSON.parse(frame.dataset.previews!)[theme.value];
+			if (frame.srcdoc !== preview) frame.srcdoc = preview;
+			card.querySelector('.gallery__availability')!.textContent =
+				progress.practicePass?.[card.dataset.practice!] === PRACTICE_VERSION ? 'Код открыт' : 'За зачёт';
+		});
+	};
+	theme.closest('label')!.hidden = false;
+	theme.addEventListener('change', () => update(progress => {
+		if (progress.case !== theme.value) progress.caseTitle = undefined;
+		progress.case = theme.value;
+	}));
+	window.addEventListener('nav-progress', show);
+	show();
 </script>
 
 <style>
@@ -183,7 +203,7 @@ const all = (Object.keys(blocks) as Id[])
 		padding: 0.8rem 1rem 0.9rem;
 		font-weight: 600;
 	}
-	.gallery__js {
+	.gallery__availability {
 		padding: 0.05rem 0.5rem;
 		font-size: var(--sl-text-xs);
 		color: var(--a-ink);

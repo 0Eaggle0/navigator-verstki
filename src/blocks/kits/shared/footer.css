@@ -1,0 +1,3 @@
+.kit-footer { padding-block: 1.5rem; border-top: 1px solid var(--kit-line); background: var(--kit-surface); }
+.kit-footer .kit-container { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: .75rem; }
+.kit-footer a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: .25em; }

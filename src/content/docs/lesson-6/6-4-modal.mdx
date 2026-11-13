@@ -12,40 +12,6 @@ links:
     url: https://doka.guide/html/dialog/
   - title: "MDN: элемент dialog"
     url: https://developer.mozilla.org/ru/docs/Web/HTML/Element/dialog
-game:
-  type: "quiz"
-  title: "Окно поверх всего"
-  levels:
-    - task: "Какой тег — готовое модальное окно?"
-      options:
-        - "<dialog>"
-        - "<modal>"
-        - "<popup>"
-        - "<window>"
-      answer: 1
-    - task: "Как открыть его поверх страницы с затемнением?"
-      options:
-        - "modal.showModal()"
-        - "modal.open()"
-        - "modal.show = true"
-        - "modal.display()"
-      answer: 1
-    - task: "Как задать цвет затемнения под окном?"
-      options:
-        - ".modal::backdrop { background: rgba(0, 0, 0, 0.5); }"
-        - ".modal { shadow: dark; }"
-        - "body { opacity: 0.5; }"
-        - ".modal:dark { … }"
-      answer: 1
-    - task: "Окно не открывается. Кликни на строку с ошибкой."
-      code: |
-        const modal = document.querySelector('.modal');
-        const open = document.querySelector('.open');
-        open.addEventListener('click', function () {
-          modal.close();
-        });
-      answer: 4
-      why: "Кнопка «Открыть» должна вызывать modal.showModal(), а не close()."
 warmup:
   task: "По клику на .open-modal открой окно .modal методом showModal(), по клику на .close-modal — закрой методом close()."
   html: |
@@ -76,8 +42,8 @@ warmup:
   checks:
     - js: "return !doc.querySelector('.modal').open"
       fail: "Окно открыто сразу. Оно должно открываться только по кнопке"
-    - js: "doc.querySelector('.open-modal').click(); return doc.querySelector('.modal').open"
-      fail: "После клика по .open-modal окно не открылось. Нужно: modal.showModal()"
+    - js: "doc.querySelector('.open-modal').click(); return doc.querySelector('.modal').matches(':modal')"
+      fail: "Кнопка должна открыть модальное окно поверх страницы."
     - js: "doc.querySelector('.close-modal').click(); return !doc.querySelector('.modal').open"
       fail: "Кнопка .close-modal не закрывает окно. Нужно: modal.close()"
 team:
@@ -103,7 +69,7 @@ mistakes:
     a: "Задай .modal { max-width: calc(100% - 32px); } — у окна всегда будут отступы по краям."
 blocks: [modal]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
 
 ## Теория
 
@@ -133,17 +99,41 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
   height={200}
 />
 
+`showModal()` открывает `dialog` поверх страницы и блокирует взаимодействие с фоном. Затемнение настраивается через `::backdrop`. Для закрытия у `dialog` есть отдельный метод `close()`.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
+
+<Hint title="Подсказка 1">
+Найди в стартовой разметке диалог и две кнопки. Каждой кнопке нужен свой обработчик.
+</Hint>
+
+<Hint title="Подсказка 2">
+Проверь отдельно открытие поверх страницы и закрытие. Если действие выполняется сразу, проверь, передал ли ты обработчик как функцию.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+```js
+const modal = document.querySelector('.modal');
+const openButton = document.querySelector('.open-modal');
+const closeButton = document.querySelector('.close-modal');
+
+openButton.addEventListener('click', function () {
+  modal.showModal();
+});
+
+closeButton.addEventListener('click', function () {
+  modal.close();
+});
+```
+</Hint>
 
 ## Делаем свой сайт
 
@@ -176,33 +166,9 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
 3. В `script.js` откройте окно по нужной кнопке и закройте по кнопке «Закрыть».
 4. Проверьте на 375 px: окно помещается на экран, закрывается по Esc.
 
-<TeamTasks />
+
 
 <BlockLinks />
-
-<Hint title="Подсказка 1">
-Если окно открывают несколько кнопок (в каждой карточке), найдите их все через `document.querySelectorAll('.open-modal')` — он вернёт список. Потом повесьте обработчик на каждую кнопку списка. `forEach` читается как «для каждой кнопки `b` сделай…» (подробнее — в шаге 7.1): `buttons.forEach((b) => b.addEventListener('click', () => modal.showModal()));`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Форма внутри `<dialog>` с атрибутом `method="dialog"` сама закрывает окно при нажатии на кнопку отправки — даже без JS.
-</Hint>
-
-<Hint title="Решение">
-```js
-const modal = document.querySelector('.modal');
-const openButton = document.querySelector('.open-modal');
-const closeButton = document.querySelector('.close-modal');
-
-openButton.addEventListener('click', function () {
-  modal.showModal();
-});
-
-closeButton.addEventListener('click', function () {
-  modal.close();
-});
-```
-</Hint>
 
 <Checklist />
 <Stuck />

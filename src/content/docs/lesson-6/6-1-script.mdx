@@ -11,58 +11,6 @@ links:
     url: https://learn.javascript.ru/variables
   - title: "learn.javascript.ru: функции"
     url: https://learn.javascript.ru/function-basics
-game:
-  type: "quiz"
-  title: "Угадай, что в консоли"
-  levels:
-    - task: "Что появится в консоли?"
-      code: "console.log(2 + 3);"
-      options:
-        - "5"
-        - "2 + 3"
-        - "23"
-        - "Ошибка"
-      answer: 1
-    - task: "А здесь?"
-      code: "console.log('2' + 3);"
-      options:
-        - "5"
-        - "23"
-        - "Ошибка"
-        - "undefined"
-      answer: 2
-      why: "Строка + число = склейка строк: \"2\" + 3 = \"23\"."
-    - task: "Что выведет этот код?"
-      code: |
-        let count = 0;
-        count = count + 1;
-        count = count + 1;
-        console.log(count);
-      options:
-        - "0"
-        - "1"
-        - "2"
-        - "Ошибка"
-      answer: 3
-    - task: "Что напишет функция?"
-      code: |
-        function greet(n) {
-          return 'Привет, ' + n + '!';
-        }
-        console.log(greet('Аня'));
-      options:
-        - "Привет, Аня!"
-        - "greet('Аня')"
-        - "Привет, n!"
-        - "undefined"
-      answer: 1
-    - task: "Код падает с ошибкой. Кликни на строку с ней."
-      code: |
-        const name = 'Аня';
-        name = 'Боря';
-        console.log(name);
-      answer: 2
-      why: "const нельзя менять. Если значение будет меняться — объявляй через let."
 warmup:
   task: "Объяви переменную name со своим именем. Напиши функцию greet(n), которая возвращает строку «Привет, n!». Выведи greet(name) в консоль через console.log и запиши этот же текст в заголовок h1."
   html: |
@@ -76,12 +24,10 @@ warmup:
 
     // 3. console.log и запись в заголовок
   checks:
-    - js: "return typeof doc.defaultView.greet === 'function'"
-      fail: "Нет функции greet. Нужно: function greet(n) { … }"
-    - js: "const greet = doc.defaultView.greet; return typeof greet === 'function' && greet('Оля') === 'Привет, Оля!'"
-      fail: "greet('Оля') должна вернуть ровно «Привет, Оля!» — проверь return, запятую и восклицательный знак"
-    - js: "return doc.querySelector('h1').textContent.startsWith('Привет, ')"
-      fail: "В заголовке пока нет приветствия. Нужно: document.querySelector('h1').textContent = greet(name);"
+    - js: "return typeof greet === 'function' && greet('Оля') === 'Привет, Оля!' && greet('Миша') === 'Привет, Миша!'"
+      fail: "Проверь, что функция возвращает приветствие с переданным ей именем."
+    - js: "const text = greet(name); return typeof name === 'string' && name.trim() !== '' && doc.querySelector('h1').textContent === text && logs.includes(text)"
+      fail: "Выведи одинаковое приветствие со своим именем в заголовок и консоль."
 team:
   - task: "Создай script.js и подключи его последней строкой перед </body>."
     hint: "<script src=\"script.js\"></script> — путь как у style.css."
@@ -105,7 +51,7 @@ mistakes:
     a: "Функцию нужно вызвать: greet(name). Просто объявить мало."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -120,29 +66,20 @@ HTML — это содержимое, CSS — оформление, а **JavaScr
 **Функция** — кусок кода с именем, который можно запускать много раз. В скобках — параметр, `return` возвращает результат:
 
 ```js
-function greet(n) {
-  return 'Привет, ' + n + '!';
+function cityLabel(city) {
+  return 'События в городе: ' + city;
 }
-console.log(greet('Аня')); // Привет, Аня!
+
+console.log(cityLabel('Омск'));
 ```
 
-<Preview
-  html={`<h1>…</h1>`}
-  js={`const name = 'Аня';
-function greet(n) {
-  return 'Привет, ' + n + '!';
-}
-document.querySelector('h1').textContent = greet(name);`}
-  height={90}
-/>
+Оператор `+` складывает два числа, но склеивает значения, если одно из них строка: `2 + 3` даёт `5`, а `"2" + 3` — `"23"`. Проверь свою функцию с двумя разными именами. `const` подходит для значения, которому не нужно присваивать новое.
 
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
@@ -150,24 +87,15 @@ document.querySelector('h1').textContent = greet(name);`}
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Создайте рядом с `index.html` пустой файл `script.js`.
-2. Подключите его в `index.html` последней строкой перед `</body>`: `<script src="script.js"></script>`.
-3. Напишите в `script.js` строку `console.log('Скрипт подключён!');`, сохраните и откройте консоль браузера (F12 → Console). Сообщение появилось — всё работает.
-4. Договоритесь в команде: JavaScript пишет один человек, остальные присылают ему свои кусочки. Иначе файл сломается от одновременных правок.
-
-<TeamTasks />
-
 <Hint title="Подсказка 1">
-Строки можно склеивать плюсом: `'Привет, ' + n + '!'`. Или использовать обратные кавычки: `` `Привет, ${n}!` `` — внутри `${}` подставится значение переменной.
+Раздели задачу на два шага: функция возвращает строку, затем вызов функции передаёт её в заголовок и консоль.
 </Hint>
 
 <Hint title="Подсказка 2">
-Чтобы записать текст в элемент, найдите его и поменяйте свойство `textContent`: `document.querySelector('h1').textContent = 'новый текст';`.
+В примере с городом замени аргумент другим городом и посмотри, что изменится. В своём коде сделай то же с двумя именами.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```js
 const name = 'Аня';
 
@@ -179,6 +107,15 @@ console.log(greet(name));
 document.querySelector('h1').textContent = greet(name);
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Создайте рядом с `index.html` пустой файл `script.js`.
+2. Подключите его в `index.html` последней строкой перед `</body>`: `<script src="script.js"></script>`.
+3. Напишите в `script.js` строку `console.log('Скрипт подключён!');`, сохраните и откройте консоль браузера (F12 → Console). Сообщение появилось — всё работает.
+4. Договоритесь в команде: JavaScript пишет один человек, остальные присылают ему свои кусочки. Иначе файл сломается от одновременных правок.
+
+
 
 <Checklist />
 <Stuck />

@@ -24,6 +24,8 @@ warmup:
       fail: "У .layout нужны display: grid и gap: 16px"
     - js: "const c = getComputedStyle(doc.querySelector('.layout')).gridTemplateColumns.split(' ').map(parseFloat); return c.length === 2 && Math.abs(c[0] / c[1] - 2) < 0.1"
       fail: "Колонки должны быть в пропорции 2 к 1: grid-template-columns: 2fr 1fr;"
+    - js: "return ['.main', '.side'].every(sel => doc.querySelector(sel).checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
+      fail: "Содержимое обеих колонок должно быть видно."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -39,7 +41,7 @@ import { Warmup, Hint } from '~/components';
 Промежуток между колонками — `gap`, как во флексе.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .layout {
   display: grid;

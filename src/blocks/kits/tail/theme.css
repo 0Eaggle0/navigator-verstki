@@ -1,0 +1,19 @@
+/* Цвета и шрифты темы «Хвост домой». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #fffaf4;
+  --kit-surface: #fff0df;
+  --kit-text: #312218;
+  --kit-muted: #624c3d;
+  --kit-accent: #bd5410;
+  --kit-on-accent: #ffffff;
+  --kit-accent-text: #943a08;
+  --kit-line: #d6b799;
+  --kit-hero-bg: #fff0df;
+  --kit-radius: 22px;
+  --kit-display: system-ui, sans-serif;
+  --kit-hero-columns: 1fr 1fr;
+  --kit-image-ratio: 4 / 3;
+  --kit-card-ratio: 4 / 3;
+  --kit-font: system-ui, sans-serif;
+  color-scheme: light;
+}

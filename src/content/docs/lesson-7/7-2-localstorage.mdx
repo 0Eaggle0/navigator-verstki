@@ -11,46 +11,6 @@ links:
     url: https://learn.javascript.ru/localstorage
   - title: "Дока: localStorage"
     url: https://doka.guide/js/local-storage/
-game:
-  type: "quiz"
-  title: "Память браузера"
-  levels:
-    - task: "Как сохранить тему 'dark' под ключом 'theme'?"
-      options:
-        - "localStorage.setItem('theme', 'dark')"
-        - "localStorage.theme('dark')"
-        - "localStorage.save('dark')"
-        - "setItem.localStorage('theme')"
-      answer: 1
-    - task: "Что вернёт строка, если ключа city ещё нет?"
-      code: "localStorage.getItem('city')"
-      options:
-        - "null"
-        - "''"
-        - "undefined"
-        - "Ошибку"
-      answer: 1
-    - task: "Как сохранить список ['a', 'b']?"
-      options:
-        - "localStorage.setItem('list', JSON.stringify(list))"
-        - "localStorage.setItem('list', list)"
-        - "localStorage.list = list"
-        - "Списки сохранить нельзя"
-      answer: 1
-      why: "Хранятся только строки, поэтому список сначала превращают в строку."
-    - task: "Зачем оборачивать localStorage в try/catch?"
-      options:
-        - "В приватном режиме он бросает ошибку — сайт не должен ломаться"
-        - "Так быстрее"
-        - "Иначе данные пропадут"
-        - "Так требует GitHub"
-      answer: 1
-    - task: "Избранное не читается. Кликни на строку с ошибкой."
-      code: |
-        const saved = localStorage.getItem('likes');
-        const likes = JSON.stringify(saved) || [];
-      answer: 2
-      why: "При чтении строку превращают обратно в список: JSON.parse(saved)."
 warmup:
   task: "Сделай «избранное». По клику на ♥ (.fav) у карточки переключай класс active и сохраняй в localStorage под ключом favorites список id избранных карточек (JSON). При загрузке страницы отметь сохранённые. Внутри клика каждый раз читай список из localStorage заново."
   html: |
@@ -93,13 +53,15 @@ warmup:
 
       // 2. По клику: добавь или убери id из списка, сохрани, переключи класс
     });
+  checkStorage:
+    favorites: '["sharik"]'
   checks:
-    - js: "localStorage.removeItem('favorites'); const b = doc.querySelector('[data-id=barsik] .fav'); b.classList.remove('active'); b.click(); return JSON.parse(localStorage.getItem('favorites') || '[]').includes('barsik')"
-      fail: "После клика по ♥ у Барсика в localStorage.favorites нет \"barsik\". Нужно: localStorage.setItem('favorites', JSON.stringify(list))"
-    - js: "return doc.querySelector('[data-id=barsik] .fav').classList.contains('active')"
-      fail: "После клика у кнопки ♥ нет класса active"
-    - js: "doc.querySelector('[data-id=barsik] .fav').click(); const ok = !JSON.parse(localStorage.getItem('favorites') || '[]').includes('barsik'); localStorage.removeItem('favorites'); return ok"
-      fail: "Второй клик должен убрать \"barsik\" из списка favorites"
+    - js: "const a = doc.querySelector('[data-id=barsik] .fav'), b = doc.querySelector('[data-id=sharik] .fav'); return !a.classList.contains('active') && b.classList.contains('active')"
+      fail: "При загрузке должно восстановиться сохранённое избранное."
+    - js: "const a = doc.querySelector('[data-id=barsik] .fav'); a.click(); const list = JSON.parse(localStorage.getItem('favorites')); return a.classList.contains('active') && list.length === 2 && list.includes('barsik') && list.includes('sharik')"
+      fail: "Добавление одной карточки не должно удалять другую из избранного."
+    - js: "const b = doc.querySelector('[data-id=sharik] .fav'); b.click(); const list = JSON.parse(localStorage.getItem('favorites')); return !b.classList.contains('active') && list.length === 1 && list[0] === 'barsik'"
+      fail: "При повторном нажатии из избранного должна удалиться только выбранная карточка."
 team:
   - task: "Реши с командой, что сохраняем и под каким ключом."
     hint: "Ключ — понятное слово латиницей: favorites, theme, draft."
@@ -123,7 +85,7 @@ mistakes:
     a: "localStorage хранит только строки. Массивы и объекты сохраняй через JSON.stringify, читай через JSON.parse."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
+import { Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
 
 ## Теория
 
@@ -143,66 +105,26 @@ localStorage.removeItem('theme');        // удалить
 
 В некоторых браузерах (приватный режим, запрет cookies) localStorage недоступен и бросает ошибку. Чтобы сайт не ломался, чтение и запись оборачивают в `try { … } catch { … }`.
 
-<Preview
-  html={`<button class="like" type="button">♥ Нравится</button>
-<p>Нажми и обнови страницу — выбор сохранится.</p>`}
-  css={`.like { padding: 8px 16px; border: 1px solid #ddd; border-radius: 8px; background: #fff; font: inherit; cursor: pointer; }
-.like.active { background: #FEE2E2; border-color: #EF4444; }`}
-  js={`const like = document.querySelector('.like');
-let saved = false;
-try { saved = localStorage.getItem('demo-like') === 'yes'; } catch {}
-like.classList.toggle('active', saved);
-like.addEventListener('click', function () {
-  const on = like.classList.toggle('active');
-  try { localStorage.setItem('demo-like', on ? 'yes' : 'no'); } catch {}
-});`}
-  height={110}
-/>
+Сохранять можно, например, отмеченные города. При следующем открытии прочитай запись до того, как рисовать состояние элементов.
+
+~~~js
+const saved = localStorage.getItem('cities');
+const cities = saved ? JSON.parse(saved) : [];
+cities.push('Омск');
+localStorage.setItem('cities', JSON.stringify(cities));
+~~~
+
+`getItem` возвращает строку или `null`, если ключа нет. Списки перед сохранением преобразуют в JSON, после чтения разбирают обратно. Проверь обе карточки и перезагрузи превью: состояние должно восстановиться из данных, а не из исходной разметки.
 
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
-
-## Делаем свой сайт
-
-<ForCase>
-Сохраните что-то, что пользователь выбрал сам: избранное, тему, заполненное поле формы. Выберите кейс на главной странице навигатора — здесь появится задание под ваш сайт.
-</ForCase>
-
-<ForCase id="where">
-**Избранные события.** Кнопка ♥ на карточке события добавляет его в избранное, выбор сохраняется. Можно добавить кнопку фильтра «Избранное» из шага 7.1.
-</ForCase>
-
-<ForCase id="watch">
-**Список «Хочу посмотреть».** Кнопка на карточке фильма сохраняет его id. Над карточками — счётчик «В списке: 3 фильма», который обновляется после каждого клика.
-</ForCase>
-
-<ForCase id="teammate">
-**Сохранённые анкеты.** Кнопка «Сохранить» на анкете запоминает её, сохранённые анкеты подсвечены рамкой.
-</ForCase>
-
-<ForCase id="tail">
-**Понравившиеся питомцы.** Кнопка ♥ на карточке питомца, выбор сохраняется. А ещё можно сохранять имя и телефон из формы волонтёра, чтобы при повторном визите их не вводить.
-</ForCase>
-
-<ForCase id="split">
-**Черновик сбора.** Поля формы «Создать сбор» сохраняются при каждом вводе (событие `input`) и восстанавливаются при открытии окна. После успешного создания черновик удаляется.
-</ForCase>
-
-1. Решите, что сохранять и под каким ключом.
-2. При загрузке страницы прочитайте данные и восстановите вид.
-3. При изменении — сохраните.
-4. Проверьте: выберите что-нибудь, обновите страницу (F5) — выбор на месте. Данные видно в DevTools → Application → Local Storage.
-
-<TeamTasks />
 
 <Hint title="Подсказка 1">
 Заведите две маленькие функции и пользуйтесь только ими: `load()` читает список (в `try`), `save(list)` сохраняет (в `try`). Так проще не забыть JSON.
@@ -212,7 +134,7 @@ like.addEventListener('click', function () {
 Добавить в список: `list.push(id)`. Убрать: `list = list.filter((x) => x !== id)`. Есть ли в списке: `list.includes(id)`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```js
 function load() {
   try {
@@ -247,6 +169,39 @@ document.querySelectorAll('.card').forEach(function (card) {
 });
 ```
 </Hint>
+
+## Делаем свой сайт
+
+<ForCase>
+Сохраните что-то, что пользователь выбрал сам: избранное, тему, заполненное поле формы. Выберите кейс на главной странице навигатора — здесь появится задание под ваш сайт.
+</ForCase>
+
+<ForCase id="where">
+**Избранные события.** Кнопка ♥ на карточке события добавляет его в избранное, выбор сохраняется. Можно добавить кнопку фильтра «Избранное» из шага 7.1.
+</ForCase>
+
+<ForCase id="watch">
+**Список «Хочу посмотреть».** Кнопка на карточке фильма сохраняет его id. Над карточками — счётчик «В списке: 3 фильма», который обновляется после каждого клика.
+</ForCase>
+
+<ForCase id="teammate">
+**Сохранённые анкеты.** Кнопка «Сохранить» на анкете запоминает её, сохранённые анкеты подсвечены рамкой.
+</ForCase>
+
+<ForCase id="tail">
+**Понравившиеся питомцы.** Кнопка ♥ на карточке питомца, выбор сохраняется. А ещё можно сохранять имя и телефон из формы волонтёра, чтобы при повторном визите их не вводить.
+</ForCase>
+
+<ForCase id="split">
+**Черновик сбора.** Поля формы «Создать сбор» сохраняются при каждом вводе (событие `input`) и восстанавливаются при открытии окна. После успешного создания черновик удаляется.
+</ForCase>
+
+1. Решите, что сохранять и под каким ключом.
+2. При загрузке страницы прочитайте данные и восстановите вид.
+3. При изменении — сохраните.
+4. Проверьте: выберите что-нибудь, обновите страницу (F5) — выбор на месте. Данные видно в DevTools → Application → Local Storage.
+
+
 
 <Checklist />
 <Stuck />

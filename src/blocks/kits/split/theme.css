@@ -1,0 +1,19 @@
+/* Цвета и шрифты темы «Скинемся». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #fbf9f9;
+  --kit-surface: #fff2f5;
+  --kit-text: #1b1b1c;
+  --kit-muted: #584146;
+  --kit-accent: #ae1e5a;
+  --kit-on-accent: #ffffff;
+  --kit-accent-text: #ae1e5a;
+  --kit-line: #c8aeb5;
+  --kit-hero-bg: #ffd9e2;
+  --kit-radius: 16px;
+  --kit-display: Georgia, serif;
+  --kit-hero-columns: 1.2fr 1fr;
+  --kit-image-ratio: 16 / 10;
+  --kit-card-ratio: 16 / 10;
+  --kit-font: Georgia, serif;
+  color-scheme: light;
+}

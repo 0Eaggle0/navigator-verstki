@@ -1,0 +1,79 @@
+{
+  "watch": {
+    "title": "Киносфера",
+    "blocks": [
+      "header",
+      "hero",
+      "steps",
+      "cards",
+      "footer"
+    ],
+    "images": {}
+  },
+  "teammate": {
+    "title": "Тиммейт",
+    "blocks": [
+      "header",
+      "hero",
+      "cards",
+      "reviews",
+      "footer"
+    ],
+    "images": {
+      "team-valorant.jpg": "mod-sites/teammate/img/valorant.jpg",
+      "team-dota.jpg": "mod-sites/teammate/img/dota.jpg",
+      "team-cs2.jpg": "mod-sites/teammate/img/cs2.jpg"
+    }
+  },
+  "where": {
+    "title": "Куда сходить",
+    "blocks": [
+      "header",
+      "hero",
+      "filters",
+      "cards",
+      "footer"
+    ],
+    "images": {
+      "event-walk.svg": "mod-sites/where/img/walk.svg",
+      "event-people.svg": "mod-sites/where/img/people.svg",
+      "event-pin.svg": "mod-sites/where/img/pin.svg"
+    }
+  },
+  "tail": {
+    "title": "Хвост домой",
+    "blocks": [
+      "header",
+      "hero",
+      "cards",
+      "form",
+      "footer"
+    ],
+    "images": {
+      "tail-sharik.svg": "mod-sites/tail/img/sharik.svg",
+      "tail-barsik.svg": "mod-sites/tail/img/barsik.svg",
+      "tail-murka.svg": "mod-sites/tail/img/murka.svg"
+    }
+  },
+  "split": {
+    "title": "Скинемся",
+    "blocks": [
+      "header",
+      "hero",
+      "steps",
+      "progress",
+      "footer"
+    ],
+    "images": {}
+  },
+  "own": {
+    "title": "Своя тема",
+    "blocks": [
+      "header",
+      "hero",
+      "cards",
+      "footer"
+    ],
+    "images": {}
+  }
+}

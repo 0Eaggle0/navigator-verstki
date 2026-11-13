@@ -2,6 +2,20 @@
 // запрет браузера), сайт работает как обычно, просто ничего не запоминает.
 
 const KEY = 'nav-v1';
+export const PRACTICE_VERSION = 1;
+let temporary: Progress | undefined;
+
+export function canSaveProgress() {
+	if (temporary) return false;
+	try {
+		localStorage.setItem('nav-storage-test', '1');
+		localStorage.removeItem('nav-storage-test');
+		return true;
+	} catch {
+		temporary = load();
+		return false;
+	}
+}
 
 // Профиль — офлайн-регистрация: хранится только в этом браузере
 export type Profile = {
@@ -20,12 +34,14 @@ export type Progress = {
 	checklist: Record<string, number[]>; // отмеченные пункты чек-листа
 	drafts: Record<string, { html: string; css: string; js?: string }>; // черновики песочницы
 	solved: string[]; // id страниц, где разминка решена
+	practicePass?: Record<string, number>;
 	hints: string[]; // id шагов, где открывали подсказку (для звезды «без подсказок»)
 	badges: string[]; // полученные значки
 	games: string[]; // id страниц, где пройдена мини-игра
 };
 
 export function load(): Progress {
+	if (temporary) return temporary;
 	const empty: Progress = { done: [], checklist: {}, drafts: {}, solved: [], hints: [], badges: [], games: [] };
 	try {
 		return { ...empty, ...JSON.parse(localStorage.getItem(KEY) || '{}') };
@@ -39,9 +55,9 @@ export function update(fn: (p: Progress) => void) {
 	const p = load();
 	fn(p);
 	try {
-		localStorage.setItem(KEY, JSON.stringify(p));
+		if (!temporary) localStorage.setItem(KEY, JSON.stringify(p));
 	} catch {
-		// нет доступа к хранилищу — молча продолжаем
+		temporary = p;
 	}
 	// Сообщаем странице: звёзды и значки пересчитываются (слушатель в StepHeader.astro)
 	window.dispatchEvent(new Event('nav-progress'));

@@ -11,39 +11,6 @@ links:
     url: https://pages.github.com/
   - title: "GitHub Docs: загрузка файлов в репозиторий"
     url: https://docs.github.com/ru/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
-game:
-  type: "quiz"
-  title: "Перед публикацией"
-  levels:
-    - task: "Какой путь к картинке сработает на GitHub Pages?"
-      options:
-        - "img/cat.jpg"
-        - "C:\\Users\\Аня\\Desktop\\site\\img\\cat.jpg"
-        - "file:///img/cat.jpg"
-        - "/Desktop/img/cat.jpg"
-      answer: 1
-      why: "Путь от папки сайта. Дисков C: в интернете нет."
-    - task: "Файл называется Cat.JPG, а в коде cat.jpg. Что будет на GitHub Pages?"
-      options:
-        - "Картинка не загрузится: GitHub различает регистр"
-        - "Всё будет работать"
-        - "GitHub сам переименует файл"
-        - "Сайт не опубликуется"
-      answer: 1
-    - task: "Как должен называться главный файл сайта?"
-      options:
-        - "index.html"
-        - "main.html"
-        - "home.html"
-        - "site.html"
-      answer: 1
-    - task: "Как обычно выглядит адрес сайта на GitHub Pages?"
-      options:
-        - "https://логин.github.io/репозиторий/"
-        - "https://github.com/сайт"
-        - "C:/github/site"
-        - "https://pages.ru/логин"
-      answer: 1
 warmup:
   task: "Эта страница сломается в интернете: пути к картинкам и ссылкам ведут на компьютер автора или в корень сайта. Сделай все пути относительными — от папки, где лежит index.html: img/…, about.html."
   html: |
@@ -59,6 +26,8 @@ warmup:
       fail: "Какая-то картинка не загрузилась — проверь имя файла: img/barsik.svg и img/sharik.svg"
     - js: "const h = doc.querySelector('a').getAttribute('href'); return h === 'about.html' || h === './about.html'"
       fail: "Ссылка должна быть относительной: href=\"about.html\""
+    - js: "return doc.images.length === 2"
+      fail: "Оба изображения должны остаться на странице."
 team:
   - task: "Создай репозиторий на GitHub и загрузи файлы проекта."
     hint: "Загружай содержимое папки, а не саму папку: index.html должен лежать в корне."
@@ -82,7 +51,7 @@ mistakes:
     a: "Перетаскивай в окно загрузки содержимое папки проекта (index.html, style.css, script.js, папку img), а не саму папку."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -96,17 +65,33 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 
 Главный файл обязательно называется `index.html` и лежит в корне репозитория — его GitHub Pages открывает по адресу сайта.
 
+Путь на сервере чувствителен к регистру: `Cat.JPG` и `cat.jpg` могут обозначать разные файлы. Начинай проверку с папки, в которой лежит `index.html`, и сравнивай написание всех частей пути с именами файлов.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
+
+<Hint title="Подсказка 1">
+Перед загрузкой откройте `index.html` в VS Code и поищите (Ctrl+F) `C:` и `src="/` — всё найденное нужно исправить на относительные пути.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если сайт открылся, а картинки нет — откройте на сайте DevTools → Console. Ошибка 404 покажет, какой файл браузер искал и не нашёл. Сравните имя с тем, что лежит в репозитории, до буквы.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+```html
+<img src="img/barsik.svg" alt="Кот Барсик" width="150">
+<img src="img/sharik.svg" alt="Пёс Шарик" width="150">
+<p><a href="about.html">О приюте</a></p>
+```
+</Hint>
 
 ## Делаем свой сайт
 
@@ -119,23 +104,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 5. Через 1–2 минуты вверху страницы Pages появится ссылка на сайт. Откройте её с компьютера и с телефона.
 6. Нашли ошибку? Исправьте файл на компьютере и загрузите его снова через **Add file** → **Upload files** — сайт обновится сам.
 
-<TeamTasks />
 
-<Hint title="Подсказка 1">
-Перед загрузкой откройте `index.html` в VS Code и поищите (Ctrl+F) `C:` и `src="/` — всё найденное нужно исправить на относительные пути.
-</Hint>
-
-<Hint title="Подсказка 2">
-Если сайт открылся, а картинки нет — откройте на сайте DevTools → Console. Ошибка 404 покажет, какой файл браузер искал и не нашёл. Сравните имя с тем, что лежит в репозитории, до буквы.
-</Hint>
-
-<Hint title="Решение">
-```html
-<img src="img/barsik.svg" alt="Кот Барсик" width="150">
-<img src="img/sharik.svg" alt="Пёс Шарик" width="150">
-<p><a href="about.html">О приюте</a></p>
-```
-</Hint>
 
 <Checklist />
 <Stuck />

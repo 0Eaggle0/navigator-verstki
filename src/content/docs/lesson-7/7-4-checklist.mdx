@@ -11,38 +11,6 @@ links:
     url: https://doka.guide/a11y/
   - title: "W3C Validator — проверка HTML"
     url: https://validator.w3.org/
-game:
-  type: "quiz"
-  title: "Финальная проверка"
-  levels:
-    - task: "Чем проверить ошибки HTML: незакрытые теги, картинки без alt?"
-      options:
-        - "W3C Validator"
-        - "Figma"
-        - "Paint"
-        - "Word"
-      answer: 1
-    - task: "Как проверить, что на телефоне нет прокрутки вбок?"
-      options:
-        - "DevTools → режим телефона, ширина 375 px"
-        - "Уменьшить шрифт"
-        - "Посмотреть в Figma"
-        - "Никак"
-      answer: 1
-    - task: "Что из этого НЕ входит в чек-лист сдачи?"
-      options:
-        - "Семантические теги"
-        - "У картинок есть alt"
-        - "Анимация на каждой кнопке"
-        - "Сайт открывается по ссылке"
-      answer: 3
-    - task: "Где искать красные ошибки JavaScript и 404?"
-      options:
-        - "Консоль (F12 → Console)"
-        - "В Figma"
-        - "В README"
-        - "В настройках GitHub"
-      answer: 1
 warmup:
   task: "На этой странице четыре ошибки из чек-листа сдачи. Замени div.header на тег header, оставь один h1 (второй сделай h2), добавь картинке alt и дай ссылке href."
   html: |
@@ -61,10 +29,10 @@ warmup:
       fail: "Шапка сделана через div. Нужен семантический тег <header>"
     - js: "return doc.querySelectorAll('h1').length === 1"
       fail: "На странице должен быть ровно один <h1>"
-    - js: "return [...doc.images].every((i) => (i.getAttribute('alt') || '').trim() !== '')"
-      fail: "У картинки нет alt — опиши, что на ней"
-    - js: "return [...doc.querySelectorAll('a')].every((a) => a.hasAttribute('href'))"
-      fail: "У ссылки нет href — без него это не ссылка"
+    - js: "return doc.images.length === 1 && !!doc.images[0].getAttribute('alt')?.trim()"
+      fail: "Оставь картинку на странице и добавь ей описание."
+    - js: "const links = [...doc.querySelectorAll('main a')]; return links.length === 1 && !!links[0].getAttribute('href')?.trim() && !!doc.querySelector('main h2')"
+      fail: "В основном содержимом должны остаться подзаголовок и ссылка с адресом."
 team:
   - task: "Проверь сайт в режиме телефона 375 px: нет прокрутки вбок, всё читается."
     hint: "Пролистай всю страницу сверху вниз, а не только первый экран."
@@ -86,7 +54,7 @@ mistakes:
     a: "Приоритет: сайт открывается по ссылке → нет прокрутки вбок на телефоне → alt у картинок → остальное."
 blocks: []
 ---
-import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Links, Warmup, Hint, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -101,17 +69,38 @@ import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game, TeamTasks } from '~/c
 
 Делите проверку между участниками: один смотрит телефон, второй валидатор, третий сверяет с макетом, четвёртый проверяет ссылки и кнопки.
 
+Проверяй разметку и ошибки по отдельности: валидатор подскажет проблемы с тегами, режим телефона покажет прокрутку вбок, а Console и Network помогут найти ошибки JavaScript и запросы с ответом 404.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
+
+<Hint title="Подсказка 1">
+Быстрая проверка `alt`: в консоли сайта выполните `document.querySelectorAll('img:not([alt])')` — покажет картинки без описания.
+</Hint>
+
+<Hint title="Подсказка 2">
+Проверка лишних `h1`: `document.querySelectorAll('h1').length` в консоли должно дать `1`.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+```html
+<header class="header">
+  <h1>КУДА_СХОДИТЬ</h1>
+</header>
+<main>
+  <h2>Афиша на выходные</h2>
+  <img src="img/murka.svg" width="150" alt="Серая кошка Мурка">
+  <p><a href="#events">Все события</a></p>
+</main>
+```
+</Hint>
 
 ## Делаем свой сайт: чек-лист сдачи
 
@@ -131,28 +120,7 @@ import { Links, Warmup, Hint, Checklist, Stuck, Npc, Game, TeamTasks } from '~/c
 - [ ] Выбор пользователя сохраняется в localStorage
 - [ ] В консоли нет ошибок
 
-<TeamTasks />
 
-<Hint title="Подсказка 1">
-Быстрая проверка `alt`: в консоли сайта выполните `document.querySelectorAll('img:not([alt])')` — покажет картинки без описания.
-</Hint>
-
-<Hint title="Подсказка 2">
-Проверка лишних `h1`: `document.querySelectorAll('h1').length` в консоли должно дать `1`.
-</Hint>
-
-<Hint title="Решение">
-```html
-<header class="header">
-  <h1>КУДА_СХОДИТЬ</h1>
-</header>
-<main>
-  <h2>Афиша на выходные</h2>
-  <img src="img/murka.svg" width="150" alt="Серая кошка Мурка">
-  <p><a href="#events">Все события</a></p>
-</main>
-```
-</Hint>
 
 <Checklist />
 <Stuck />

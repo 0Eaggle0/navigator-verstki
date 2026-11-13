@@ -23,7 +23,7 @@ html,body{margin:0;height:100%;overflow:hidden}
 // Документ для iframe. base — оформление поля. Уровни с другим селектором, пройденные раньше,
 // уже «решены» на обоих слоях: так следующий уровень продолжает предыдущий.
 // Уровни с тем же селектором пишут target целиком (вместе с прошлыми свойствами).
-export function ghostDoc(html: string, base: string, levels: GhostLevel[], n: number, code: string, height: number) {
+export function ghostDoc(html: string, base: string, levels: GhostLevel[], n: number, height: number) {
 	const level = levels[n];
 	const sel = level.selector ?? '.board';
 	const before = levels
@@ -31,7 +31,7 @@ export function ghostDoc(html: string, base: string, levels: GhostLevel[], n: nu
 		.filter((l) => (l.selector ?? '.board') !== sel)
 		.map((l) => `#ghost ${l.selector ?? ".board"},#play ${l.selector ?? ".board"}{${l.target}}`)
 		.join('');
-	const css = spriteCss() + stageCss(height) + base + before + `#ghost ${sel}{${level.target}}` + `#play ${sel}{${code}}`;
+	const css = spriteCss() + stageCss(height) + base + before + `#ghost ${sel}{${level.target}}`;
 	const board = `<div class="board">${html}</div>`;
 	const body = `<div class="stage"><div class="layer"><div class="board"></div></div><div class="layer" id="ghost">${board}</div><div class="layer" id="play">${board}</div></div>`;
 	return srcdoc(body, css);
@@ -42,9 +42,12 @@ export function score(doc: Document) {
 	const a = [...doc.querySelectorAll('#play .board > *')];
 	const b = [...doc.querySelectorAll('#ghost .board > *')];
 	const hit = a.filter((el, i) => {
+		const ghost = b[i];
+		if (![el, ghost].every(item => item?.checkVisibility({ visibilityProperty: true, opacityProperty: true }))) return false;
 		const r = el.getBoundingClientRect();
-		const g = b[i]?.getBoundingClientRect();
-		return g && ['left', 'top', 'width', 'height'].every((k) => Math.abs(r[k as 'left'] - g[k as 'left']) <= TOLERANCE);
+		const g = ghost.getBoundingClientRect();
+		return r.width > 0 && r.height > 0 && g.width > 0 && g.height > 0 &&
+			(['left', 'top', 'width', 'height'] as const).every(k => Math.abs(r[k] - g[k]) <= TOLERANCE);
 	}).length;
 	return { hit, total: a.length };
 }

@@ -11,43 +11,6 @@ links:
     url: https://doka.guide/css/hover/
   - title: "Дока: transition"
     url: https://doka.guide/css/transition/
-game:
-  type: "quiz"
-  title: "Живые кнопки"
-  levels:
-    - task: "Какой селектор срабатывает при наведении мыши?"
-      options:
-        - ".button:hover"
-        - ".button:mouse"
-        - ".button.hover"
-        - ".button:active"
-      answer: 1
-    - task: "Чтобы цвет менялся плавно, что добавить обычному правилу кнопки?"
-      options:
-        - "transition: 0.2s;"
-        - "animation: smooth;"
-        - "hover: slow;"
-        - "delay: 0.2s;"
-      answer: 1
-      why: "transition пишут в обычное правило, а не в :hover — тогда плавно и туда, и обратно."
-    - task: "Как дать тот же стиль тем, кто ходит по сайту клавишей Tab?"
-      options:
-        - ".button:hover, .button:focus-visible { … }"
-        - ".button:tab { … }"
-        - ".button:keyboard { … }"
-        - "Никак"
-      answer: 1
-    - task: "Наведение не работает. Кликни на строку с ошибкой."
-      code: |
-        .button {
-          background: #FF6B35;
-          transition: 0.2s;
-        }
-        .button: hover {
-          background: #C2410C;
-        }
-      answer: 5
-      why: "Между двоеточием и hover не должно быть пробела: .button:hover"
 warmup:
   task: "Сделай, чтобы кнопка реагировала на наведение: добавь правило .button:hover с другим цветом фона и плавный переход transition: 0.2s у .button. Наведи мышку на превью и проверь."
   html: |
@@ -65,12 +28,10 @@ warmup:
 
     /* правило для наведения */
   checks:
-    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.selectorText && r.selectorText.includes('.button:hover')))"
-      fail: "Нет правила .button:hover { … } — стилей при наведении"
-    - js: "const r = [...[...doc.styleSheets].pop().cssRules].find((r) => r.selectorText && r.selectorText.includes('.button:hover')); return !!r && r.style.length > 0"
-      fail: "Правило .button:hover пустое — поменяй в нём, например, background"
-    - js: "return parseFloat(getComputedStyle(doc.querySelector('.button')).transitionDuration) > 0"
-      fail: "Смена цвета резкая. Добавь .button плавный переход: transition: 0.2s;"
+    - js: "return getComputedStyle(doc.querySelector('.button')).transitionDuration.split(',').some(n => Math.abs(parseFloat(n) - 0.2) < 0.001)"
+      fail: "У кнопки должен быть плавный переход длительностью 0,2 секунды."
+    - js: "const b = doc.querySelector('.button'); b.style.setProperty('transition', 'none', 'important'); const before = getComputedStyle(b).backgroundColor; const rules = [...doc.styleSheets].flatMap(s => [...s.cssRules]); for (const rule of rules) if (rule.selectorText?.includes(':hover')) rule.selectorText = rule.selectorText.replaceAll(':hover', '[data-audit-hover]'); b.setAttribute('data-audit-hover', ''); return getComputedStyle(b).backgroundColor !== before"
+      fail: "При наведении фон кнопки должен заметно измениться."
 team:
   - task: "Добавь :hover ссылкам меню и кнопке в шапке."
     hint: "transition: 0.2s пиши в обычное правило, не в :hover."
@@ -94,7 +55,7 @@ mistakes:
     a: На сенсорных экранах наведения нет, это нормально. Главное — чтобы без hover всё было понятно и кликабельно.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -115,26 +76,17 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
   height={90}
 />
 
+Переход задают в основном правиле кнопки, чтобы изменение было плавным в обе стороны. Для клавиатуры пригодится `:focus-visible`. В селекторе псевдокласса между двоеточием и именем пробела нет.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
-
-## Делаем свой сайт
-
-1. Добавьте `:hover` всем кнопкам, пунктам меню и карточкам. Состояния наведения часто нарисованы в макете отдельно — поищите.
-2. Добавьте `transition` к этим элементам.
-3. Сверьте страницу с макетом на 1280 px и на 375 px. Составьте список отличий и исправьте главные.
-4. Пройдите чек-лист ниже — если всё отмечено, **минимум проекта выполнен**. 🎉
-
-<TeamTasks />
 
 <Hint title="Подсказка 1">
 Если в макете нет отдельного состояния наведения, сделайте цвет кнопки чуть темнее. Хватит разницы в 10–15% яркости.
@@ -144,7 +96,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 Карточки красиво «приподнимаются»: `transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);` при наведении и `transition: 0.2s` в обычном правиле.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .button {
   transition: 0.2s;
@@ -169,6 +121,15 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 }
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Добавьте `:hover` всем кнопкам, пунктам меню и карточкам. Состояния наведения часто нарисованы в макете отдельно — поищите.
+2. Добавьте `transition` к этим элементам.
+3. Сверьте страницу с макетом на 1280 px и на 375 px. Составьте список отличий и исправьте главные.
+4. Пройдите чек-лист ниже — если всё отмечено, **минимум проекта выполнен**. 🎉
+
+
 
 <Checklist />
 <Stuck />

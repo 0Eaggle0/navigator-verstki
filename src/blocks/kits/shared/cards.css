@@ -1,0 +1,5 @@
+.kit-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1rem; }
+.kit-card { display: flex; flex-direction: column; min-width: 0; overflow: hidden; border: 1px solid var(--kit-line); border-radius: var(--kit-radius); background: var(--kit-surface); }
+.kit-card img { width: 100%; aspect-ratio: var(--kit-card-ratio, 16 / 10); object-fit: var(--kit-image-fit, cover); }
+.kit-card-copy { display: grid; gap: .4rem; padding: 1rem; }
+.kit-card p { color: var(--kit-muted); }

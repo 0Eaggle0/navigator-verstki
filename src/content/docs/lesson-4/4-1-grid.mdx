@@ -91,6 +91,8 @@ warmup:
     - selector: ".grid"
       style: { column-gap: "12px", row-gap: "12px" }
       fail: "Между плитками нет промежутка gap: 12px"
+    - js: "const tiles = [...doc.querySelectorAll('.grid > .tile')]; return tiles.length === 6 && tiles.every(el => el.checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
+      fail: "В сетке должны быть видны все шесть плиток."
 team:
   - task: "Пройди Grid Garden до 10 уровня. Посчитай колонки в подвале."
     hint: "Колонки подвала — классика для grid: repeat(3, 1fr) или 4."
@@ -114,7 +116,7 @@ mistakes:
     a: Flexbox — для одного ряда (меню, кнопки). Grid — для сетки из рядов и колонок (карточки, галерея, футер из колонок).
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -149,14 +151,6 @@ Flexbox думает рядами: элементы идут друг за др�
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Пройдите [Grid Garden](https://cssgridgarden.com/#ru) до 10-го уровня (10 минут).
-2. Найдите на макете всё, что выглядит как сетка: карточки, галерея, колонки в футере. Посчитайте, сколько там колонок и какие промежутки.
-3. Запишите это рядом с паспортом стиля — пригодится в следующих двух шагах.
-
-<TeamTasks />
-
 <Hint title="Подсказка 1">
 Колонок в сетке столько, сколько значений в `grid-template-columns`: `1fr 1fr` — две, `repeat(4, 1fr)` — четыре.
 </Hint>
@@ -165,7 +159,7 @@ Flexbox думает рядами: элементы идут друг за др�
 В DevTools рядом с элементом с `display: grid` есть значок **grid**. Нажмите — на странице нарисуются линии сетки с номерами.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .grid {
   display: grid;
@@ -174,6 +168,14 @@ Flexbox думает рядами: элементы идут друг за др�
 }
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Пройдите [Grid Garden](https://cssgridgarden.com/#ru) до 10-го уровня (10 минут).
+2. Найдите на макете всё, что выглядит как сетка: карточки, галерея, колонки в футере. Посчитайте, сколько там колонок и какие промежутки.
+3. Запишите это рядом с паспортом стиля — пригодится в следующих двух шагах.
+
+
 
 <Checklist />
 <Stuck />

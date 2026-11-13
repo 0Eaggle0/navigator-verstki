@@ -140,9 +140,13 @@ const type = g?.type;
 			if (type === 'ghost') {
 				const box = $<HTMLTextAreaElement>('textarea');
 				const codes = levels.map((l) => l.start ?? '');
-				const render = () => (frame!.srcdoc = ghostDoc(html, css, levels, n, box.value, +height));
+				const render = () => (frame!.srcdoc = ghostDoc(html, css, levels, n, +height));
 				frame!.addEventListener('load', () => {
-					const { hit, total } = score(frame!.contentDocument!);
+					const doc = frame!.contentDocument!;
+					const selector = levels[n].selector ?? '.board';
+					// cssText разбирает только декларации и не позволяет дописать правила для эталона.
+					doc.querySelectorAll<HTMLElement>('#play ' + selector).forEach(el => (el.style.cssText += ';' + box.value));
+					const { hit, total } = score(doc);
 					if (total > 0 && hit === total) win('Все на месте!', frame!);
 					else say(`На месте: ${hit} из ${total}`);
 				});

@@ -34,8 +34,9 @@ warmup:
       fail: "На телефоне .desktop-only должен быть скрыт: display: none; в медиазапросе"
     - js: "return getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 1"
       fail: "На телефоне карточки должны быть в одну колонку"
-    - js: "return [...doc.styleSheets].some((s) => [...s.cssRules].some((r) => r.constructor.name === 'CSSMediaRule'))"
-      fail: "Правила нужно писать внутри @media (max-width: 768px) { … }"
+    - js: "return doc.querySelector('.desktop-only').checkVisibility({ visibilityProperty: true, opacityProperty: true }) && getComputedStyle(doc.querySelector('.cards')).gridTemplateColumns.split(' ').length === 2"
+      fail: "На широком экране слоган и две колонки должны оставаться видимыми."
+      widths: [769,1280]
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -51,7 +52,7 @@ import { Warmup, Hint } from '~/components';
 Без медиазапроса `.desktop-only` пропадёт и на компьютере — так нельзя.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 @media (max-width: 768px) {
   .desktop-only {

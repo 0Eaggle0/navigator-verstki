@@ -29,6 +29,8 @@ warmup:
       fail: "У .box нет display: flex"
     - js: "const b = doc.querySelector('.box').getBoundingClientRect(), d = doc.querySelector('.dot').getBoundingClientRect(); return Math.abs((b.left + b.right) / 2 - (d.left + d.right) / 2) < 2 && Math.abs((b.top + b.bottom) / 2 - (d.top + d.bottom) / 2) < 2"
       fail: "Кружок пока не в центре. Нужны justify-content: center и align-items: center"
+    - js: "return doc.querySelector('.dot').checkVisibility({ visibilityProperty: true, opacityProperty: true })"
+      fail: "Кружок должен оставаться видимым."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -44,7 +46,7 @@ import { Warmup, Hint } from '~/components';
 Оба свойства пишутся контейнеру `.box`, а не кружку.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .box {
   display: flex;

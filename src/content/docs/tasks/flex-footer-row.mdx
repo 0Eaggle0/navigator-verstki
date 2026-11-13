@@ -34,6 +34,8 @@ warmup:
     - selector: ".socials"
       style: { display: "flex", column-gap: "12px" }
       fail: "У .socials нужны display: flex и gap: 12px"
+    - js: "return ['.bottom', '.socials'].every(sel => getComputedStyle(doc.querySelector(sel)).flexDirection === 'row')"
+      fail: "Ссылки и элементы подвала должны идти слева направо."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -49,7 +51,7 @@ import { Warmup, Hint } from '~/components';
 У `p` есть стандартный margin — если строка получилась высокой, добавьте `.bottom p { margin: 0; }`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .bottom {
   display: flex;

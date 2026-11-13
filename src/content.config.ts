@@ -14,6 +14,7 @@ const check = z.object({
 	attr: z.string().optional(), // у элемента selector есть этот атрибут (и он не пустой)
 	count: z.object({ selector: z.string(), min: z.number() }).optional(),
 	js: z.string().optional(), // тело функции (doc) => true/false, для редких случаев
+	widths: z.array(z.number().int().positive()).min(1).optional(),
 });
 
 // Дополнительные поля шага. Все необязательные, чтобы обычные страницы тоже проходили проверку.
@@ -32,6 +33,7 @@ const step = z.object({
 			css: z.string().default(''),
 			js: z.string().optional(), // есть поле (даже пустое) — в песочнице появятся JavaScript и консоль
 			width: z.number().optional(), // ширина превью в px, например 375 — «как на телефоне»
+			checkStorage: z.record(z.string(), z.string()).optional(),
 			checks: z.array(check).default([]),
 		})
 		.optional(),
@@ -64,7 +66,7 @@ const step = z.object({
 			),
 		})
 		.optional(),
-	// «Кто что делает»: задачи шага для участников 1–4 по порядку (части — src/data/parts.json)
+	// Старые данные о распределении задач сохраняются для совместимости с уроками.
 	team: z.array(z.object({ task: z.string(), hint: z.string().optional() })).max(4).optional(),
 	checklist: z.array(z.string()).default([]),
 	mistakes: z.array(z.object({ q: z.string(), a: z.string() })).default([]),

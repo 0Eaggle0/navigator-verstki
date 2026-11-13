@@ -92,6 +92,8 @@ warmup:
     - selector: ".row"
       style: { align-items: "center" }
       fail: "Кружки не по центру по вертикали. Нужно: align-items: center;"
+    - js: "return doc.querySelectorAll('.row > .dot').length === 3 && [...doc.querySelectorAll('.row > .dot')].every(dot => dot.checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
+      fail: "На экране должны быть видны три кружка."
 team:
   - task: "Пройди Flexbox Froggy до 10 уровня и найди на макете ряды в шапке и подвале."
     hint: "Ряд — когда элементы стоят слева направо: логотип, меню, кнопка."
@@ -115,7 +117,7 @@ mistakes:
     a: "Flex по умолчанию сжимает детей, чтобы поместились в ряд. Задай им ширину и flex-shrink: 0 или разреши перенос flex-wrap: wrap."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -150,14 +152,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Пройдите [Flexbox Froggy](https://flexboxfroggy.com/#ru) до 10-го уровня. На это есть 10 минут, дальше — по желанию дома.
-2. Найдите на своём макете все места, где элементы стоят **в ряд**: шапка, первый экран, кнопки, иконки, футер. Запишите их — это задачи на следующие шаги.
-3. Попробуйте на своей странице: поставьте `display: flex` шапке и посмотрите, что изменилось.
-
-<TeamTasks />
-
 <Hint title="Подсказка 1">
 Запомните правило: «flex — родителю, выравнивание — родителю». Детям обычно ничего писать не нужно.
 </Hint>
@@ -166,7 +160,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 В Chrome DevTools рядом с элементом, у которого `display: flex`, есть значок **flex**. Нажмите на него — на странице подсветится ряд и промежутки.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .row {
   display: flex;
@@ -175,6 +169,14 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 }
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Пройдите [Flexbox Froggy](https://flexboxfroggy.com/#ru) до 10-го уровня. На это есть 10 минут, дальше — по желанию дома.
+2. Найдите на своём макете все места, где элементы стоят **в ряд**: шапка, первый экран, кнопки, иконки, футер. Запишите их — это задачи на следующие шаги.
+3. Попробуйте на своей странице: поставьте `display: flex` шапке и посмотрите, что изменилось.
+
+
 
 <Checklist />
 <Stuck />

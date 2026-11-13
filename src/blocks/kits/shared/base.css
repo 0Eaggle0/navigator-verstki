@@ -1,0 +1,43 @@
+/* Вставь один раз в начало style.css, затем добавь theme.css своей темы. */
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  color: var(--kit-text);
+  background: var(--kit-bg);
+  font: 1rem/1.55 var(--kit-font);
+  overflow-wrap: anywhere;
+}
+
+h1, h2, h3, p, figure { margin: 0; }
+h1, h2, h3 { line-height: 1.14; }
+img { display: block; max-width: 100%; height: auto; }
+a { color: inherit; }
+button, input { font: inherit; }
+[hidden] { display: none !important; }
+:where(a, button, input):focus-visible {
+  outline: 3px solid var(--kit-accent);
+  outline-offset: 4px;
+}
+
+.kit-container { width: min(100% - 2rem, 72rem); margin-inline: auto; }
+
+.kit-button {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 44px;
+  padding: .6rem 1rem;
+  border: 1px solid transparent;
+  border-radius: var(--kit-radius);
+  background: var(--kit-accent);
+  color: var(--kit-on-accent);
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.kit-button:hover { filter: brightness(.9); }
+.kit-button--quiet { background: transparent; color: var(--kit-text); border-color: var(--kit-line); }
+.kit-section { padding-block: clamp(2rem, 5vw, 4.5rem); }
+.kit-section h2 { margin-bottom: 1.25rem; font-size: clamp(1.55rem, 3.5vw, 2.6rem); }

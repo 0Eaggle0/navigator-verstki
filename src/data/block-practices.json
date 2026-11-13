@@ -1,0 +1,14 @@
+{
+  "base": "tasks/site-base",
+  "header": "lesson-3/3-2-menu",
+  "hero": "lesson-3/3-3-hero",
+  "cards": "lesson-4/4-2-grid-cards",
+  "steps": "lesson-4/4-1-grid",
+  "reviews": "lesson-4/4-1-grid",
+  "footer": "lesson-4/4-3-sections-footer",
+  "progress": "tasks/progress-bar",
+  "filters": "lesson-7/7-1-filter-form",
+  "form": "tasks/js-form",
+  "burger": "lesson-6/6-3-burger",
+  "modal": "lesson-6/6-4-modal"
+}

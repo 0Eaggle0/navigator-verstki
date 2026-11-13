@@ -1,0 +1,4 @@
+.kit-reviews-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr)); gap: 1rem; }
+.kit-reviews-list figure { padding: 1rem; border-left: .25rem solid var(--kit-accent); background: var(--kit-surface); }
+.kit-reviews-list blockquote { margin: 0 0 .65rem; }
+.kit-reviews-list figcaption { color: var(--kit-muted); }

@@ -11,39 +11,6 @@ links:
     url: https://learn.javascript.ru/introduction-browser-events
   - title: "Дока: classList"
     url: https://doka.guide/js/element-classlist/
-game:
-  type: "quiz"
-  title: "Охота на баги в DOM"
-  levels:
-    - task: "Как найти на странице кнопку с классом btn?"
-      options:
-        - "document.querySelector('.btn')"
-        - "document.find('btn')"
-        - "querySelector(btn)"
-        - "document.class('.btn')"
-      answer: 1
-    - task: "Что делает эта строка?"
-      code: "menu.classList.toggle('open');"
-      options:
-        - "Добавляет класс open, если его нет, и убирает, если есть"
-        - "Всегда добавляет класс open"
-        - "Удаляет меню"
-        - "Открывает новую страницу"
-      answer: 1
-    - task: "Клик не работает. Кликни на строку с ошибкой."
-      code: |
-        const btn = document.querySelector('.btn');
-        btn.addEventListener('click' function () {
-          btn.classList.toggle('active');
-        });
-      answer: 2
-      why: "Между 'click' и function нужна запятая."
-    - task: "Консоль: «Cannot read properties of null». Кликни на строку с ошибкой."
-      code: |
-        const card = document.querySelector('card');
-        card.classList.add('active');
-      answer: 1
-      why: "Класс в селекторе пишется с точкой: '.card'. Без точки ищется тег <card>, а его нет."
 warmup:
   task: "По клику на кнопку .theme-button переключай у body класс dark: первый клик — тёмная тема, второй — обратно светлая. Используй querySelector, addEventListener и classList.toggle."
   html: |
@@ -65,10 +32,8 @@ warmup:
   checks:
     - js: "return !doc.body.classList.contains('dark')"
       fail: "Тема тёмная сразу при загрузке. Класс dark должен появляться только по клику"
-    - js: "doc.querySelector('.theme-button').click(); const on = doc.body.classList.contains('dark'); doc.querySelector('.theme-button').click(); return on"
-      fail: "После клика у body нет класса dark. Нужно: document.body.classList.toggle('dark') внутри обработчика клика"
-    - js: "return !doc.body.classList.contains('dark')"
-      fail: "Второй клик не убирает тёмную тему. Используй toggle, а не add"
+    - js: "const b = doc.querySelector('.theme-button'); return [true, false, true, false].every(dark => { b.click(); return doc.body.classList.contains('dark') === dark; })"
+      fail: "Тема должна меняться при каждом нажатии."
 team:
   - task: "Сделай кнопку, которая переключает класс в шапке — например, подсветку пункта меню."
     hint: "querySelector → addEventListener(\"click\") → classList.toggle."
@@ -92,7 +57,7 @@ mistakes:
     a: "В addEventListener передают саму функцию, без скобок: addEventListener('click', toggleTheme). Со скобками она вызовется сразу."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -104,15 +69,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 
 Реакция на действия пользователя — **события**. `addEventListener('click', функция)` говорит элементу: «когда по тебе кликнут, запусти эту функцию».
 
-```js
-const button = document.querySelector('.theme-button');
-
-button.addEventListener('click', function () {
-  document.body.classList.toggle('dark');
-});
-```
-
-Почти весь интерактив на сайтах — это три строки: найти элемент, дождаться события, переключить класс.
+В примере ниже кнопка меняет собственный цвет. В разминке класс будет меняться у всей страницы.
 
 <Preview
   html={`<button class="btn" type="button">Нажми меня</button>`}
@@ -125,36 +82,27 @@ btn.addEventListener('click', function () {
   height={80}
 />
 
+Точка в `.card` означает класс. Без неё браузер ищет тег `card` и может вернуть `null`. У `addEventListener` два аргумента, разделённые запятой: имя события и функция, которая выполнится позже.
+
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Найдите на своём макете, что должно меняться по клику: кнопка «в избранное», переключатель, вкладки, раскрывающийся ответ.
-2. Опишите в CSS, как элемент выглядит в «нажатом» состоянии, через дополнительный класс: `.fav.active`.
-3. В `script.js` найдите элемент и переключайте класс по клику.
-4. Проверьте в браузере и в консоли: ошибок нет, класс переключается (видно в DevTools → Elements).
-
-<TeamTasks />
-
 <Hint title="Подсказка 1">
-Порядок всегда один: сначала `const кнопка = document.querySelector(…)`, потом `кнопка.addEventListener('click', function () { … })`, внутри — `classList.toggle`.
+Сначала проверь, что селектор находит кнопку, затем свяжи её с событием клика.
 </Hint>
 
 <Hint title="Подсказка 2">
-Класс нужно переключать у `document.body`, а не у кнопки: тема меняется у всей страницы.
+Тема меняется на всей странице. Найди элемент, который содержит заголовок и кнопку, и переключай класс у него.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```js
 const themeButton = document.querySelector('.theme-button');
 
@@ -163,6 +111,15 @@ themeButton.addEventListener('click', function () {
 });
 ```
 </Hint>
+
+## Делаем свой сайт
+
+1. Найдите на своём макете, что должно меняться по клику: кнопка «в избранное», переключатель, вкладки, раскрывающийся ответ.
+2. Опишите в CSS, как элемент выглядит в «нажатом» состоянии, через дополнительный класс: `.fav.active`.
+3. В `script.js` найдите элемент и переключайте класс по клику.
+4. Проверьте в браузере и в консоли: ошибок нет, класс переключается (видно в DevTools → Elements).
+
+
 
 <Checklist />
 <Stuck />

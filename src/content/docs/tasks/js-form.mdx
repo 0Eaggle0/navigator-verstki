@@ -23,10 +23,10 @@ warmup:
       // 2. проверить form.elements.name.value
     });
   checks:
-    - js: "const f = doc.querySelector('.form'); f.elements.name.value = '   '; f.requestSubmit(); return doc.querySelector('.error').textContent.trim() !== ''"
-      fail: "С пустым именем в .error должен появиться текст ошибки (и страница не перезагружается)"
-    - js: "const f = doc.querySelector('.form'); f.elements.name.value = 'Аня'; f.requestSubmit(); return f.textContent.includes('Спасибо')"
-      fail: "С заполненным именем форма должна показать «Спасибо!»"
+    - js: "const f = doc.querySelector('.form'); f.elements.name.value = '   '; const event = new Event('submit', { bubbles: true, cancelable: true }); f.dispatchEvent(event); return event.defaultPrevented && f.querySelector('.error')?.textContent.trim() === 'Напиши своё имя'"
+      fail: "Пустое имя должно вызывать понятную ошибку без отправки формы."
+    - js: "const f = doc.querySelector('.form'); f.elements.name.value = 'Аня'; const event = new Event('submit', { bubbles: true, cancelable: true }); f.dispatchEvent(event); return event.defaultPrevented && f.textContent.trim() === 'Спасибо!' && !f.querySelector('input, button, .error')"
+      fail: "После успешной проверки замени поля и ошибку сообщением «Спасибо!»."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -35,14 +35,14 @@ import { Warmup, Hint } from '~/components';
 <Warmup />
 
 <Hint title="Подсказка 1">
-`value.trim()` убирает пробелы по краям — поле из одних пробелов тоже считается пустым.
+Пробелы по краям имени не считаются содержимым. Обработчик должен отличать пустую строку от имени.
 </Hint>
 
 <Hint title="Подсказка 2">
-Заменить содержимое формы: `form.innerHTML = '<p>Спасибо!</p>';`.
+Раздели действия для ошибки и успеха. При ошибке оставь поля, чтобы имя можно было исправить.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```js
 const form = document.querySelector('.form');
 

@@ -1,0 +1,7 @@
+.kit-header { border-bottom: 1px solid var(--kit-line); }
+.kit-header .kit-container { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: .5rem 1.5rem; padding-block: .75rem; }
+.kit-brand { display: inline-flex; align-items: center; min-height: 44px; font-size: 1.15rem; font-weight: 800; text-decoration: none; }
+.kit-menu { display: flex; flex-wrap: wrap; gap: .25rem 1.25rem; }
+.kit-menu a { display: inline-flex; align-items: center; min-height: 44px; text-underline-offset: .25em; }
+.kit-skip { position: absolute; left: 1rem; top: 1rem; transform: translateY(-200%); }
+.kit-skip:focus { z-index: 1; transform: none; }

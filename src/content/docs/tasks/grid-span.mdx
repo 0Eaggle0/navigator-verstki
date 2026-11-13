@@ -28,8 +28,8 @@ warmup:
       border-radius: 8px;
     }
   checks:
-    - js: "const big = doc.querySelector('.card--big').getBoundingClientRect().width, small = doc.querySelectorAll('.card')[1].getBoundingClientRect().width; return big > small * 1.9"
-      fail: "Первая карточка пока шириной в одну колонку. Нужно: .card--big { grid-column: span 2; }"
+    - js: "const grid = doc.querySelector('.grid'), tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').map(parseFloat), big = doc.querySelector('.card--big'); const gap = parseFloat(getComputedStyle(grid).columnGap); return tracks.length === 3 && Math.abs(big.getBoundingClientRect().width - (tracks[0] + tracks[1] + gap)) < 2"
+      fail: "Первая карточка должна занимать ровно две колонки."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -45,7 +45,7 @@ import { Warmup, Hint } from '~/components';
 `span 2` значит «занять две колонки». Остальные карточки сетка расставит сама.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .card--big {
   grid-column: span 2;

@@ -102,14 +102,14 @@ warmup:
     - selector: ".cards"
       style: { display: "grid" }
       fail: "У .cards пока нет display: grid"
-    - js: "return /minmax\\(\\s*140px/.test([...doc.querySelectorAll('style')].pop().textContent)"
-      fail: "Колонки задаются через repeat(auto-fill, minmax(140px, 1fr))"
+    - js: "const grid = doc.querySelector('.cards'); const tracks = getComputedStyle(grid).gridTemplateColumns.split(/\\s+/).map(Number.parseFloat); return tracks.length === (innerWidth < 400 ? 2 : 3) && tracks.every(n => n >= 140 && Math.abs(n - tracks[0]) < 2)"
+      fail: "Сетка должна менять число равных колонок в зависимости от ширины."
+      widths: [375,480]
     - selector: ".cards"
       style: { column-gap: "16px", row-gap: "16px" }
       fail: "Между карточками нет промежутка gap: 16px"
-    - selector: ".card img"
-      style: { object-fit: "cover" }
-      fail: "Картинки сплющены. Нужно: object-fit: cover;"
+    - js: "const images = [...doc.querySelectorAll('.card img')]; return images.length === 3 && images.every(img => img.naturalWidth > 0 && img.checkVisibility({ visibilityProperty: true, opacityProperty: true }) && getComputedStyle(img).objectFit === 'cover')"
+      fail: "Все три картинки должны быть видны и заполнять карточки без искажений."
 team:
   - task: "Помоги с картинками: экспортируй недостающие фото для карточек."
     hint: "Фото карточек одного размера смотрятся аккуратнее: обрежь их в Figma одинаково."
@@ -133,7 +133,7 @@ mistakes:
     a: "Сделай карточку флекс-столбиком (display: flex; flex-direction: column;), а кнопке добавь margin-top: auto — она прижмётся к низу."
 blocks: [cards]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -176,6 +176,21 @@ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 
 <Warmup />
 
+<Hint title="Подсказка 1">
+Как подобрать minmax: ширина контейнера 1200 px, промежутки 24 px, в макете 3 колонки → (1200 − 2 × 24) / 3 ≈ 384. Минимум возьмите чуть меньше, например 300 px.
+</Hint>
+
+<Hint title="Подсказка 2">
+Если нужно ровно N колонок на компьютере, можно написать `repeat(3, 1fr)`, а перестройку для телефона сделать в занятии 5 медиазапросом. Оба способа нормальные.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+~~~css
+.cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 16px; }
+.card img { object-fit: cover; }
+~~~
+</Hint>
+
 ## Делаем свой сайт
 
 <ForCase>
@@ -207,19 +222,11 @@ grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
 3. Оформите одну карточку по макету, остальные подтянутся сами.
 4. Сузьте окно браузера — сетка должна перестраиваться без горизонтальной прокрутки.
 
-<TeamTasks />
+
 
 <BlockLinks />
 
-<Hint title="Подсказка 1">
-Как подобрать minmax: ширина контейнера 1200 px, промежутки 24 px, в макете 3 колонки → (1200 − 2 × 24) / 3 ≈ 384. Минимум возьмите чуть меньше, например 300 px.
-</Hint>
-
-<Hint title="Подсказка 2">
-Если нужно ровно N колонок на компьютере, можно написать `repeat(3, 1fr)`, а перестройку для телефона сделать в занятии 5 медиазапросом. Оба способа нормальные.
-</Hint>
-
-<Hint title="Решение">
+<Hint title="Пример для проекта" afterPractice>
 ```css
 .cards {
   display: grid;

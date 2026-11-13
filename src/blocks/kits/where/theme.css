@@ -1,0 +1,20 @@
+/* Цвета и шрифты темы «Куда сходить». Здесь их можно заменить на свои. */
+:root {
+  --kit-bg: #111316;
+  --kit-surface: #1e2023;
+  --kit-text: #e2e2e6;
+  --kit-muted: #d7c3ae;
+  --kit-accent: #f5a623;
+  --kit-on-accent: #2d1d00;
+  --kit-accent-text: #f5a623;
+  --kit-line: #655849;
+  --kit-hero-bg: #25201a;
+  --kit-radius: 14px;
+  --kit-display: system-ui, sans-serif;
+  --kit-hero-columns: 1.2fr 1fr;
+  --kit-image-ratio: 16 / 10;
+  --kit-card-ratio: 16 / 8;
+  --kit-font: system-ui, sans-serif;
+  color-scheme: dark;
+  --kit-image-fit: contain;
+}

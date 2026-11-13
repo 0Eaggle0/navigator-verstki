@@ -10,23 +10,8 @@ export type Check = {
 	attr?: string;
 	count?: { selector: string; min: number };
 	js?: string;
+	widths?: number[];
 };
-
-function pass(doc: Document, c: Check): boolean {
-	if (c.exists) return !!doc.querySelector(c.exists);
-	if (c.count) return doc.querySelectorAll(c.count.selector).length >= c.count.min;
-	if (c.js) return !!new Function('doc', c.js)(doc);
-	const el = c.selector ? doc.querySelector(c.selector) : null;
-	if (!el) return false;
-	if (c.style) {
-		// getComputedStyle отдаёт «посчитанные» значения: цвета в rgb(), размеры в px
-		const cs = doc.defaultView!.getComputedStyle(el);
-		if (!Object.entries(c.style).every(([prop, value]) => cs.getPropertyValue(prop).trim() === value)) return false;
-	}
-	if (c.text && !el.textContent?.includes(c.text)) return false;
-	if (c.attr && !el.getAttribute(c.attr)?.trim()) return false;
-	return true;
-}
 
 // Браузер сам «дозакрывает» теги, поэтому незакрытый тег ищем в исходном тексте:
 // открывающих <tag больше, чем закрывающих </tag>. Возвращает имя первого такого тега.
@@ -39,15 +24,28 @@ export function unclosedTag(html: string): string | null {
 }
 
 // Возвращает список проверок с результатом. Ошибка внутри правила = проверка не прошла.
-export function runChecks(doc: Document, checks: Check[]) {
+// Этот код также выполняется в iframe. Все зависимости функции локальны.
+export function runChecks(doc: Document, checks: Check[], logs: string[] = []) {
+	function pass(c: Check): boolean {
+		if (c.exists) return !!doc.querySelector(c.exists);
+		if (c.count) return doc.querySelectorAll(c.count.selector).length >= c.count.min;
+		if (c.js) return !!new Function('doc', 'logs', c.js)(doc, logs);
+		const el = c.selector ? doc.querySelector(c.selector) : null;
+		if (!el) return false;
+		if (c.style) {
+			const cs = doc.defaultView!.getComputedStyle(el);
+			if (!Object.entries(c.style).every(([prop, value]) => cs.getPropertyValue(prop).trim() === value)) return false;
+		}
+		if (c.text && !el.textContent?.includes(c.text)) return false;
+		if (c.attr && !el.getAttribute(c.attr)?.trim()) return false;
+		return true;
+	}
 	return checks.map((c) => {
 		let ok = false;
 		try {
-			ok = pass(doc, c);
-		} catch (e) {
-			// Недописанный код ученика часто роняет правило — это просто «не прошло».
-			// Модератору при локальной разработке (npm run dev) показываем подробности.
-			if (import.meta.env.DEV) console.warn('Ошибка в правиле проверки', c, e);
+			ok = pass(c);
+		} catch {
+			// Правило может упасть, пока ученик редактирует код.
 		}
 		return { ok, message: c.fail };
 	});

@@ -94,12 +94,8 @@ warmup:
     - selector: ".features"
       style: { row-gap: "16px", column-gap: "16px" }
       fail: "Между преимуществами нет промежутка gap: 16px"
-    - selector: ".feature"
-      style: { display: "flex", flex-direction: "column" }
-      fail: "Каждый .feature должен быть столбиком: display: flex; flex-direction: column;"
-    - selector: ".feature"
-      style: { align-items: "center" }
-      fail: "Иконка и текст не по центру: align-items: center;"
+    - js: "const items = [...doc.querySelectorAll('.features > .feature')]; return items.length === 3 && items.every(el => { const s = getComputedStyle(el); return el.checkVisibility({ visibilityProperty: true, opacityProperty: true }) && s.display === 'flex' && s.flexDirection === 'column' && s.alignItems === 'center'; })"
+      fail: "Все три преимущества должны быть видны, а содержимое каждого стоять столбиком по центру."
 team:
   - task: "Выровняй ряды в подвале: колонки ссылок, соцсети."
     hint: "Иконки соцсетей — flex и gap."
@@ -120,7 +116,7 @@ mistakes:
     a: "align-items: center выравнивает сами блоки. Если строк текста несколько, добавь text-align: center."
 blocks: [steps]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -156,14 +152,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 
 <Warmup />
 
-## Делаем свой сайт
-
-Найдите на макете оставшиеся ряды — кнопки, иконки, преимущества, соцсети — и выровняйте каждый через flex и `gap`. Шаг можно пропустить, если команда отстаёт: эти ряды не главное для минимума.
-
-<TeamTasks />
-
-<BlockLinks />
-
 <Hint title="Подсказка 1">
 Две кнопки рядом: оберните их в `<div class="buttons">` и дайте ему `display: flex; gap: 16px;`.
 </Hint>
@@ -172,7 +160,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 Иконки соцсетей — это ссылки с картинками внутри. Картинкам задайте одинаковую высоту: `height: 32px`.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .features {
   display: flex;
@@ -188,6 +176,14 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, 
 }
 ```
 </Hint>
+
+## Делаем свой сайт
+
+Найдите на макете оставшиеся ряды — кнопки, иконки, преимущества, соцсети — и выровняйте каждый через flex и `gap`. Шаг можно пропустить, если команда отстаёт: эти ряды не главное для минимума.
+
+
+
+<BlockLinks />
 
 <Checklist />
 <Stuck />

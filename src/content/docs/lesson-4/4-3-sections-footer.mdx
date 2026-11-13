@@ -87,17 +87,15 @@ warmup:
       margin: 4px 0 0;
     }
   checks:
-    - js: "const s = getComputedStyle(doc.querySelector('.footer')); return s.backgroundColor !== 'rgba(0, 0, 0, 0)' && s.backgroundColor !== 'rgb(255, 255, 255)'"
-      fail: "У подвала нет тёмного фона (background)"
-    - js: "const s = getComputedStyle(doc.querySelector('.footer')); const [r, g, b] = s.color.match(/\\d+/g).map(Number); return r + g + b > 450"
-      fail: "Текст в подвале тёмный — на тёмном фоне его не видно. Сделай color светлым, например #FFFFFF"
-    - js: "return parseFloat(getComputedStyle(doc.querySelector('.footer')).paddingTop) >= 24"
-      fail: "У подвала нет внутреннего отступа хотя бы 24px"
+    - js: "const s = getComputedStyle(doc.querySelector('.footer')); const luminance = color => { const ctx = doc.createElement('canvas').getContext('2d'); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); const [r,g,b,a] = ctx.getImageData(0, 0, 1, 1).data; const channels = [r,g,b].map(n => (n / 255) ** 2.2); return (0.2126*channels[0] + 0.7152*channels[1] + 0.0722*channels[2]) * a/255 + (1-a/255); }; const bg = luminance(s.backgroundColor), fg = luminance(s.color); return bg < 0.18 && (fg + 0.05) / (bg + 0.05) >= 4.5"
+      fail: "Светлый текст должен хорошо читаться на тёмном фоне."
+    - js: "const s = getComputedStyle(doc.querySelector('.footer')); return ['paddingTop','paddingRight','paddingBottom','paddingLeft'].every(side => parseFloat(s[side]) >= 24)"
+      fail: "Подвалу нужны внутренние отступы со всех сторон."
     - selector: ".footer__cols"
       style: { display: "grid" }
       fail: "У .footer__cols пока нет display: grid"
-    - js: "const c = getComputedStyle(doc.querySelector('.footer__cols')).gridTemplateColumns.split(' '); return c.length === 3"
-      fail: "Нужно три колонки: grid-template-columns: repeat(3, 1fr);"
+    - js: "const c = getComputedStyle(doc.querySelector('.footer__cols')).gridTemplateColumns.split(' ').map(parseFloat); return c.length === 3 && Math.max(...c) - Math.min(...c) < 2"
+      fail: "В подвале нужны три одинаковые колонки."
     - selector: ".footer__cols"
       style: { column-gap: "24px" }
       fail: "Между колонками нет промежутка gap: 24px"
@@ -124,7 +122,7 @@ mistakes:
     a: "У fr делится свободное место. Если у колонки длинный текст, задай ей minmax(0, 1fr) или просто сократи текст."
 blocks: [steps, form, footer]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game, TeamTasks } from '~/components';
+import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -165,6 +163,21 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Np
 
 <Warmup />
 
+<Hint title="Подсказка 1">
+Чтобы CSS разных участников не мешал друг другу, каждый пишет стили только со своим классом секции в начале: `.steps h3`, `.steps .icon`. Тогда блоки собираются в один файл без конфликтов. Работать удобно в шаблоне <a href="../../starter/section.html" download>section.html</a> + <a href="../../starter/section.css" download>section.css</a>: он подключает общий `style.css`.
+</Hint>
+
+<Hint title="Подсказка 2">
+Строку копирайта под колонками сделайте отдельным блоком с верхней линией: `border-top: 1px solid rgba(255, 255, 255, 0.2); margin-top: 24px; padding-top: 16px;`.
+</Hint>
+
+<Hint title="Разбор разминки" afterPractice>
+~~~css
+.footer { padding: 24px; background: #1e1e1e; color: white; }
+.footer__cols { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+~~~
+</Hint>
+
 ## Делаем свой сайт
 
 <ForCase>
@@ -197,19 +210,11 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Np
 4. Сверстайте подвал сеткой из колонок.
 5. Откройте страницу на ширине 1280 px рядом с макетом и поправьте заметные отличия.
 
-<TeamTasks />
+
 
 <BlockLinks />
 
-<Hint title="Подсказка 1">
-Чтобы CSS разных участников не мешал друг другу, каждый пишет стили только со своим классом секции в начале: `.steps h3`, `.steps .icon`. Тогда блоки собираются в один файл без конфликтов. Работать удобно в шаблоне <a href="../../starter/section.html" download>section.html</a> + <a href="../../starter/section.css" download>section.css</a>: он подключает общий `style.css`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Строку копирайта под колонками сделайте отдельным блоком с верхней линией: `border-top: 1px solid rgba(255, 255, 255, 0.2); margin-top: 24px; padding-top: 16px;`.
-</Hint>
-
-<Hint title="Решение">
+<Hint title="Пример для проекта" afterPractice>
 ```css
 .footer {
   padding: 48px 0 24px;

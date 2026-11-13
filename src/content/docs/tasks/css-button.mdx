@@ -17,18 +17,16 @@ warmup:
     - selector: ".button"
       style: { display: "inline-block" }
       fail: "Нужно display: inline-block"
-    - selector: ".button"
-      style: { padding-top: "12px", padding-left: "24px" }
-      fail: "Нужен padding: 12px 24px"
+    - js: "const s = getComputedStyle(doc.querySelector('.button')); return s.paddingTop === '12px' && s.paddingBottom === '12px' && s.paddingLeft === '24px' && s.paddingRight === '24px'"
+      fail: "Проверь внутренние отступы со всех сторон."
     - selector: ".button"
       style: { background-color: "rgb(79, 70, 229)", color: "rgb(255, 255, 255)" }
       fail: "Нужен фон #4F46E5 и белый текст"
     - selector: ".button"
       style: { text-decoration-line: "none" }
       fail: "Убери подчёркивание: text-decoration: none"
-    - selector: ".button"
-      style: { border-top-left-radius: "8px" }
-      fail: "Нужно скругление border-radius: 8px"
+    - js: "const s = getComputedStyle(doc.querySelector('.button')); return ['TopLeft','TopRight','BottomLeft','BottomRight'].every(c => s['border' + c + 'Radius'] === '8px')"
+      fail: "Проверь скругление всех четырёх углов."
 ---
 import { Warmup, Hint } from '~/components';
 
@@ -44,7 +42,7 @@ import { Warmup, Hint } from '~/components';
 Без `display: inline-block` вертикальный padding у ссылки работает странно.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```css
 .button {
   display: inline-block;

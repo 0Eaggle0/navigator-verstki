@@ -12,42 +12,6 @@ links:
     url: https://doka.guide/a11y/aria-expanded/
   - title: "Дока: медиазапросы"
     url: https://doka.guide/css/media/
-game:
-  type: "quiz"
-  title: "Почини бургер"
-  levels:
-    - task: "На телефоне меню спрятано. Какое правило показывает его после клика?"
-      options:
-        - ".menu.open { display: flex; }"
-        - ".menu { display: none; }"
-        - ".burger:hover { display: flex; }"
-        - ".open { display: none; }"
-      answer: 1
-    - task: "Меню только что открылось. Что окажется в isOpen?"
-      code: "const isOpen = menu.classList.toggle('open');"
-      options:
-        - "true"
-        - "false"
-        - "'open'"
-        - "undefined"
-      answer: 1
-      why: "toggle возвращает true, если класс добавился."
-    - task: "Что сообщает атрибут aria-expanded?"
-      options:
-        - "Открыто меню или нет — для программ чтения экрана"
-        - "Ширину меню"
-        - "Цвет кнопки"
-        - "Сколько пунктов в меню"
-      answer: 1
-    - task: "Меню не открывается. Кликни на строку с ошибкой."
-      code: |
-        const burger = document.querySelector('.burger');
-        const menu = document.querySelector('.menu');
-        burger.addEventListener('click', function () {
-          menu.classList.toggle('.open');
-        });
-      answer: 4
-      why: "В classList имя класса пишется без точки: toggle('open')."
 warmup:
   width: 375
   task: "Превью шириной с телефон. По клику на кнопку .burger переключай у .menu класс open (меню показывается). Заодно меняй у кнопки aria-expanded: \"true\", когда меню открыто, и \"false\", когда закрыто."
@@ -106,12 +70,12 @@ warmup:
   checks:
     - js: "return getComputedStyle(doc.querySelector('.menu')).display === 'none'"
       fail: "Меню должно быть скрыто, пока не нажали на бургер"
-    - js: "doc.querySelector('.burger').click(); return doc.querySelector('.menu').classList.contains('open')"
-      fail: "После клика по .burger у .menu нет класса open"
+    - js: "doc.querySelector('.burger').click(); const m = doc.querySelector('.menu'); return m.classList.contains('open') && m.checkVisibility({ visibilityProperty: true, opacityProperty: true })"
+      fail: "После первого нажатия меню должно стать видимым."
     - js: "return doc.querySelector('.burger').getAttribute('aria-expanded') === 'true'"
       fail: "Когда меню открыто, у кнопки должно быть aria-expanded=\"true\" (setAttribute)"
-    - js: "doc.querySelector('.burger').click(); return !doc.querySelector('.menu').classList.contains('open') && doc.querySelector('.burger').getAttribute('aria-expanded') === 'false'"
-      fail: "Второй клик должен закрыть меню и вернуть aria-expanded=\"false\""
+    - js: "const b = doc.querySelector('.burger'), m = doc.querySelector('.menu'); b.click(); return !m.classList.contains('open') && !m.checkVisibility({ visibilityProperty: true, opacityProperty: true }) && b.getAttribute('aria-expanded') === 'false'"
+      fail: "Второе нажатие должно скрыть меню и обновить состояние кнопки."
 team:
   - task: "Добавь кнопку-бургер в шапку и напиши JS: по клику меню открывается."
     hint: "classList.toggle(\"open\") и aria-expanded — из теории шага."
@@ -135,7 +99,7 @@ mistakes:
     a: Незрячие пользователи с программой экранного доступа услышат «меню развёрнуто» или «свёрнуто». Без этого кнопка ☰ для них — непонятный символ.
 blocks: [burger]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game, TeamTasks } from '~/components';
+import { Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -154,54 +118,37 @@ const isOpen = menu.classList.toggle('open');
 burger.setAttribute('aria-expanded', isOpen);
 ```
 
-<Preview
-  html={`<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
-<nav><ul class="menu"><li><a href="#">Сборы</a></li><li><a href="#">Войти</a></li></ul></nav>`}
-  css={`.burger { font-size: 24px; background: none; border: 0; cursor: pointer; }
-.menu { display: none; flex-direction: column; gap: 8px; padding: 0; list-style: none; }
-.menu.open { display: flex; }`}
-  js={`const burger = document.querySelector('.burger');
-const menu = document.querySelector('.menu');
-burger.addEventListener('click', function () {
-  const isOpen = menu.classList.toggle('open');
-  burger.setAttribute('aria-expanded', isOpen);
-});`}
-  height={130}
-/>
+На другом элементе тот же принцип работает для отметки избранного.
+
+~~~js
+const button = document.querySelector('.favorite');
+button.addEventListener('click', () => {
+  const active = button.classList.toggle('active');
+  button.setAttribute('aria-pressed', String(active));
+});
+~~~
+
+`classList.toggle` возвращает `true`, если добавил класс, и `false`, если убрал. Этот результат можно использовать, чтобы атрибут `aria-expanded` сообщал реальное состояние меню. Точка нужна в CSS-селекторе, но в `classList` передают само имя класса.
 
 </Npc>
 
 <Links />
 
-## Игра
-
-<Game />
+<span id="игра"></span>
 
 ## Разминка
 
 <Warmup />
 
-## Делаем свой сайт
-
-1. Добавьте в шапку кнопку `<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>`.
-2. В CSS спрячьте её на компьютере: `.burger { display: none; }`.
-3. В медиазапросе для телефона (`max-width: 768px`): верните шапке строку с переносом, покажите бургер, поставьте `nav` отдельной строкой на всю ширину, спрячьте меню и добавьте правило `.menu.open`.
-4. В `script.js` переключайте класс `open` и `aria-expanded` по клику.
-5. Проверьте на 375 px и на 1280 px.
-
-<TeamTasks />
-
-<BlockLinks />
-
 <Hint title="Подсказка 1">
-В занятии 5 шапка на телефоне стала столбиком. С бургером удобнее строка: логотип слева, ☰ справа, а меню — отдельной строкой ниже. Поэтому в медиазапросе снова пишем `.header .container { flex-direction: row; flex-wrap: wrap; }`. Правила бургера добавляйте в самый конец медиазапроса из занятия 5 — тогда они перебьют старые.
+В стартовом CSS уже описано открытое меню. Найди, какой класс включает это правило.
 </Hint>
 
 <Hint title="Подсказка 2">
-`setAttribute('aria-expanded', isOpen)` сам превратит `true` и `false` в строки `"true"` и `"false"`.
+Сохрани состояние после переключения класса и передай его кнопке, чтобы она сообщала, открыто ли меню.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Разбор разминки" afterPractice>
 ```js
 const burger = document.querySelector('.burger');
 const menu = document.querySelector('.menu');
@@ -211,7 +158,21 @@ burger.addEventListener('click', function () {
   burger.setAttribute('aria-expanded', isOpen);
 });
 ```
+</Hint>
 
+## Делаем свой сайт
+
+1. Добавьте в шапку кнопку `<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>`.
+2. В CSS спрячьте её на компьютере: `.burger { display: none; }`.
+3. В медиазапросе для телефона (`max-width: 768px`): верните шапке строку с переносом, покажите бургер, поставьте `nav` отдельной строкой на всю ширину, спрячьте меню и добавьте правило `.menu.open`.
+4. В `script.js` переключайте класс `open` и `aria-expanded` по клику.
+5. Проверьте на 375 px и на 1280 px.
+
+
+
+<BlockLinks />
+
+<Hint title="Пример для проекта" afterPractice>
 ```css
 .burger {
   display: none;

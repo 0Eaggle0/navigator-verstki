@@ -1,0 +1,4 @@
+.kit-steps-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr)); gap: 1rem; margin: 0; padding-left: 1.75rem; }
+.kit-steps-list li { padding: .5rem .5rem .75rem .15rem; border-bottom: 1px solid var(--kit-line); }
+.kit-steps-list li::marker { color: var(--kit-accent-text); font-weight: 700; }
+.kit-steps-list p { margin-top: .4rem; color: var(--kit-muted); }

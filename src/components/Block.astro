@@ -1,129 +1,156 @@
 ---
-// Готовый блок: превью + код + кнопки «Скопировать». Код лежит в src/blocks/<id>.html и <id>.css,
-// у блоков с поведением — ещё <id>.js
-import { Code } from '@astrojs/starlight/components';
-import { srcdoc } from '~/lib/srcdoc';
+import { getEntry } from 'astro:content';
+import kits from '~/blocks/kits/manifest.json';
+import practices from '~/data/block-practices.json';
+import { blockVariants } from '~/lib/block-variants';
+import { url } from '~/lib/route';
+import Warmup from './Warmup.astro';
 
-interface Props {
-	id: string;
-	height?: number;
-}
+interface Props { id: keyof typeof practices; height?: number }
 const { id, height = 320 } = Astro.props;
-const files = import.meta.glob<string>('/src/blocks/*', { query: '?raw', import: 'default', eager: true });
-const html = files[`/src/blocks/${id}.html`];
-const css = files[`/src/blocks/${id}.css`];
-const js = files[`/src/blocks/${id}.js`]; // может не быть
-if (html === undefined || css === undefined) throw new Error(`Нет файлов блока src/blocks/${id}.html / .css`);
-const tabs = [
-	{ kind: 'html', code: html, where: `Вставь в index.html, внутрь <body>` },
-	{ kind: 'css', code: css, where: 'Вставь в конец style.css' },
-	...(js ? [{ kind: 'js', code: js, where: 'Вставь в script.js — он подключён в конце <body>' }] : []),
-];
+const practiceId = practices[id];
+const practice = await getEntry('docs', practiceId);
+if (!practice?.data.warmup?.checks.length) throw new Error('Нет проверяемого задания для блока ' + id);
+const link = url(practiceId + '/?block=' + id + '#разминка');
+const variants = blockVariants(id, url);
+const instructions: Partial<Record<keyof typeof practices, string>> = {
+  base: 'Добавь CSS один раз в начало style.css. Остальные стили вставляй ниже.',
+  header: 'Вставь HTML перед <main id="main">. Проверь, что пункты меню ведут к твоим секциям.',
+  footer: 'Вставь HTML после </main>. Добавь контакты, если их можно публиковать.',
+  burger: 'Используй вместе с шапкой из комплекта. Добавь CSS в style.css и JS в script.js.',
+  modal: 'Вставь окно перед </body>. Кнопка «О проекте» уже есть в первом экране.',
+  filters: 'Вставь фильтры перед карточками. Укажи у карточек data-kit-category="free" или "paid".',
+  form: 'Вставь HTML внутрь main и подключи JS. Форма проверяет поля локально.',
+};
+const guidance = instructions[id] ?? 'Вставь HTML внутрь <main id="main">. Перенеси свои тексты и изображения.';
 ---
-
-<nav-block class="block not-content" data-html={html} data-css={css} data-js={js}>
-	<iframe title="Превью блока" srcdoc={srcdoc(html, css, js)} sandbox={js ? undefined : 'allow-same-origin'} style={`height:${height}px`}></iframe>
-	<div class="block__code">
-		<div class="block__bar">
-			<div class="block__tabs" role="tablist" aria-label="Код блока">
-				{tabs.map((t, i) => (
-					<button type="button" role="tab" id={`${id}-tab-${t.kind}`} aria-controls={`${id}-panel-${t.kind}`} aria-selected={String(i === 0)} data-kind={t.kind}>
-						{t.kind.toUpperCase()}
-					</button>
-				))}
-			</div>
-			<button type="button" class="a-btn--go" data-copy>Скопировать HTML</button>
-		</div>
-		{tabs.map((t, i) => (
-			<div role="tabpanel" id={`${id}-panel-${t.kind}`} aria-labelledby={`${id}-tab-${t.kind}`} hidden={i > 0}>
-				<p class="block__where">{t.where}</p>
-				<Code code={t.code} lang={t.kind} />
-			</div>
-		))}
-		<p class="block__status" aria-live="polite"></p>
-	</div>
+<nav-block class="block not-content" data-practice={practiceId} data-block={id} data-variants={JSON.stringify(variants)}>
+  <label class="block__theme" hidden>Тема сайта
+    <select>
+      {Object.entries(kits).map(([key, kit]) => <option value={key}>{kit.title}</option>)}
+      {id !== 'base' && <option value="classic">Исходный универсальный шаблон</option>}
+    </select>
+  </label>
+  <p class="block__variant" aria-live="polite">{variants.own.label}</p>
+  <iframe title="Превью блока" srcdoc={variants.own.doc} sandbox="allow-scripts" style={`height:${height}px`}></iframe>
+  <p class="block__locked">
+    Код открывается после зачёта. <a class="block__practice" href={link}>Решить задание «{practice.data.title}»</a>.
+  </p>
+  <noscript><p>Включи JavaScript, чтобы пройти проверку и открыть код.</p></noscript>
+  <section class="block__local" hidden>
+    <p>Браузер не сохраняет прогресс. Реши задание здесь и скопируй код до закрытия страницы.</p>
+    <Warmup practice={practice} />
+  </section>
+  <div class="block__code" hidden>
+    <p class="block__instructions">{guidance}</p>
+    {id !== 'base' && <p class="block__base">Для секций комплекта сначала добавь <a href={url('blocks/base/')}>базовые стили темы</a>.</p>}
+    <p class="block__js">Подключи script.js в HTML: <code>&lt;script src="script.js" defer&gt;&lt;/script&gt;</code>.</p>
+    <label>Файл
+      <select class="block__file" aria-label="Файл с кодом">
+        <option value="html">HTML · index.html</option>
+        <option value="css">CSS · style.css</option>
+        <option value="js">JavaScript · script.js</option>
+      </select>
+    </label>
+    <button type="button" class="a-btn--go" data-copy>Скопировать код</button>
+    <textarea readonly wrap="off" rows="12" aria-label="Код выбранного файла"></textarea>
+    <p class="block__status" aria-live="polite"></p>
+    <div class="block__downloads" hidden><p>Скачай в папку <code>img</code> рядом с index.html:</p><ul></ul></div>
+  </div>
 </nav-block>
 
 <script>
-	class Block extends HTMLElement {
-		connectedCallback() {
-			const status = this.querySelector('.block__status')!;
-			const copy = this.querySelector<HTMLButtonElement>('[data-copy]')!;
-			const tabs = [...this.querySelectorAll<HTMLButtonElement>('[role=tab]')];
-			let kind = 'html';
-			// Вкладка HTML / CSS / JS: показываем её код, кнопка копирует именно его
-			tabs.forEach((tab) =>
-				tab.addEventListener('click', () => {
-					kind = tab.dataset.kind!;
-					tabs.forEach((t) => {
-						t.setAttribute('aria-selected', String(t === tab));
-						this.querySelector<HTMLElement>('#' + t.getAttribute('aria-controls'))!.hidden = t !== tab;
-					});
-					copy.textContent = `Скопировать ${kind.toUpperCase()}`;
-					status.textContent = '';
-				})
-			);
-			copy.addEventListener('click', async () => {
-				try {
-					await navigator.clipboard.writeText(this.dataset[kind]!);
-					status.textContent = `${kind.toUpperCase()} скопирован ✓`;
-				} catch {
-					status.textContent = 'Не получилось скопировать — выдели код и нажми Ctrl+C';
-				}
-			});
-		}
-	}
-	customElements.define('nav-block', Block);
+  import { canSaveProgress, load, PRACTICE_VERSION, update } from '~/lib/storage';
+  type Language = 'html' | 'css' | 'js';
+  type Variant = Partial<Record<Language, string>> & { label: string; doc: string; downloads: { name: string; href: string }[] };
+  class Block extends HTMLElement {
+    connectedCallback() {
+      const find = <T extends HTMLElement>(selector: string) => this.querySelector<T>(selector)!;
+      const variants: Record<string, Variant> = JSON.parse(this.dataset.variants!);
+      const theme = find<HTMLSelectElement>('.block__theme select');
+      const frame = find<HTMLIFrameElement>('iframe');
+      const code = find('.block__code');
+      const locked = find('.block__locked');
+      const local = find('.block__local');
+      const file = find<HTMLSelectElement>('.block__file');
+      const box = find<HTMLTextAreaElement>('.block__code textarea');
+      const status = find('.block__status');
+      const downloads = find('.block__downloads');
+      const practice = this.dataset.practice!;
+      let classic = false;
+      const language = () => file.value as Language;
+      const current = () => variants[theme.value];
+      const selectFile = () => {
+        box.value = code.hidden ? '' : current()[language()] ?? '';
+        status.textContent = '';
+      };
+      const show = () => {
+        const persistent = canSaveProgress();
+        const progress = load();
+        const chosen = progress.case ?? 'own';
+        theme.value = classic ? 'classic' : Object.hasOwn(variants, chosen) ? chosen : 'own';
+        const variant = current();
+        if (frame.srcdoc !== variant.doc) frame.srcdoc = variant.doc;
+        find('.block__variant').textContent = variant.label;
+        const open = progress.practicePass?.[practice] === PRACTICE_VERSION;
+        code.hidden = !open;
+        locked.hidden = open || !persistent;
+        local.hidden = open || persistent;
+        for (const option of file.options) option.hidden = !variant[option.value as Language];
+        if (!variant[language()]) file.value = [...file.options].find(option => !option.hidden)!.value;
+        const instructions = find('.block__instructions');
+        if (!instructions.dataset.kit) instructions.dataset.kit = instructions.textContent ?? '';
+        instructions.textContent = classic ? 'HTML вставь внутрь body, CSS добавь в style.css. Этот пример использует классы старого шаблона.' : instructions.dataset.kit;
+        const base = this.querySelector<HTMLElement>('.block__base');
+        if (base) base.hidden = classic;
+        find('.block__js').hidden = !variant.js;
+        selectFile();
+        const list = downloads.querySelector('ul')!;
+        list.replaceChildren(...(open ? variant.downloads : []).map(({ href, name }) => {
+          const item = document.createElement('li');
+          const link = document.createElement('a');
+          link.href = href;
+          link.download = name;
+          link.textContent = name;
+          item.append(link);
+          return item;
+        }));
+        downloads.hidden = !list.childElementCount;
+      };
+      theme.closest('label')!.hidden = false;
+      theme.addEventListener('change', () => {
+        classic = theme.value === 'classic';
+        if (classic) show();
+        else update(progress => {
+          if (progress.case !== theme.value) progress.caseTitle = undefined;
+          progress.case = theme.value;
+        });
+      });
+      file.addEventListener('change', selectFile);
+      find('[data-copy]').addEventListener('click', async () => {
+        if (code.hidden || !box.value) return;
+        try {
+          await navigator.clipboard.writeText(box.value);
+          status.textContent = 'Код скопирован.';
+        } catch {
+          box.focus();
+          box.select();
+          status.textContent = 'Нажми Ctrl+C или ⌘C, чтобы скопировать выделенный код.';
+        }
+      });
+      window.addEventListener('nav-progress', show);
+      show();
+    }
+  }
+  customElements.define('nav-block', Block);
 </script>
 
 <style>
-	.block iframe {
-		width: 100%;
-		background: #fff;
-		border: 0;
-		border-radius: var(--a-r-card);
-		box-shadow:
-			inset 0 0 0 2px var(--a-line),
-			0 6px 0 var(--a-edge);
-		resize: vertical;
-	}
-	.block__code {
-		margin-top: 1.5rem;
-		padding: 1rem;
-		background: var(--a-surface);
-		border-radius: var(--a-r-card);
-		box-shadow:
-			inset 0 0 0 2px var(--a-line),
-			0 6px 0 var(--a-edge);
-	}
-	.block__bar {
-		display: flex;
-		flex-wrap: wrap;
-		gap: 0.75rem;
-		align-items: center;
-		justify-content: space-between;
-	}
-	.block__tabs {
-		display: flex;
-		gap: 0.4rem;
-	}
-	.block .block__tabs button[aria-selected='true'] {
-		color: var(--a-ink);
-		background: var(--a-coin);
-		box-shadow: 0 5px 0 var(--a-coin-edge);
-	}
-	.block__where {
-		margin: 1rem 0 0.5rem;
-		font-size: var(--sl-text-sm);
-		color: var(--a-muted);
-	}
-	.block__status {
-		min-height: 1.4em;
-		margin: 0.5rem 0 0;
-		font-size: var(--sl-text-sm);
-		color: var(--a-go);
-	}
-	.block :global(.expressive-code pre) {
-		max-height: 28rem;
-	}
+  .block { display: block; }
+  .block iframe { width: 100%; border: 0; border-radius: var(--a-r-card); background: white; resize: vertical; }
+  .block select { max-width: 100%; margin: .4rem .5rem; }
+  .block__variant, .block__instructions, .block__base, .block__js, .block__locked { margin: .7rem 0; }
+  .block__code, .block__local { margin-top: 1rem; padding: 1rem; background: var(--a-surface); border-radius: var(--a-r-card); }
+  .block__code textarea { box-sizing: border-box; width: 100%; margin-top: .75rem; font-family: var(--sl-font-mono); }
+  .block__status { min-height: 1.4em; }
 </style>
