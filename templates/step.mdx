@@ -73,13 +73,16 @@ game:
 
 # Разминка в песочнице
 warmup:
-  task: "Задача для ученика одним-двумя предложениями."
+  task: "В поле CSS замени ___ на «flex». Затем нажми «Проверить»."
   html: |
     <div class="box">Стартовый HTML</div>
   css: |
     .box {
-      /* ученик пишет здесь */
+      display: ___;
     }
+  answer:
+    field: css
+    missing: "flex"
   # width: 375                         # превью шириной с телефон — для шагов про адаптив
   # js: |                             # поле JavaScript и консоль в песочнице (для занятий 6–7)
   #   // стартовый код
@@ -91,14 +94,6 @@ warmup:
       style: { display: "flex" }                       # цвета пишите как rgb(255, 0, 0), размеры в px
                                                        # толщину рамки так не проверяйте: браузер округляет её (2px → 1.6px)
       fail: "У .box пока нет display: flex"
-    - count: { selector: ".box > *", min: 3 }          # элементов не меньше, чем min
-      fail: "Внутри .box нужно хотя бы 3 элемента"
-    - selector: ".box"                                 # текст внутри элемента
-      text: "Привет"
-      fail: "В .box нет слова «Привет»"
-    - selector: "img"                                  # у элемента есть атрибут (не пустой)
-      attr: "alt"
-      fail: "У картинки нет alt"
     # - js: "return doc.querySelectorAll('li').length === 3"   # для сложных случаев (нужен JS)
     # - js: "doc.querySelector('.burger').click(); return doc.querySelector('.menu').classList.contains('open')"  # проверка клика
     #   fail: "Нужно ровно 3 пункта"
@@ -164,7 +159,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Np
 Вторая — почти ответ.
 </Hint>
 
-<Hint title="Решение">
+<Hint title="Пример для проекта">
 ```css
 .box { display: flex; }
 ```

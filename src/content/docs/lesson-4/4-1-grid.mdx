@@ -59,7 +59,7 @@ game:
       target: "grid-column: 1 / -1;"
       hint: "grid-column: 1 / -1;"
 warmup:
-  task: "Разложи шесть плиток в сетку из трёх одинаковых колонок: у .grid включи grid, задай три колонки через repeat(3, 1fr) и промежуток 12px."
+  task: "В поле CSS замени ___ на «12px». Затем нажми «Проверить»."
   html: |
     <div class="grid">
       <div class="tile">1</div>
@@ -71,7 +71,7 @@ warmup:
     </div>
   css: |
     .grid {
-      /* сетка */
+
     }
 
     .tile {
@@ -80,6 +80,15 @@ warmup:
       border-radius: 8px;
       text-align: center;
     }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: ___;
+    }
+  answer:
+    field: css
+    missing: "12px"
   checks:
     - selector: ".grid"
       style: { display: "grid" }
@@ -116,7 +125,7 @@ mistakes:
     a: Flexbox — для одного ряда (меню, кнопки). Grid — для сетки из рядов и колонок (карточки, галерея, футер из колонок).
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
+import { Preview, Links, Warmup, BlockLinks, Checklist, Stuck, Npc, Game } from '~/components';
 
 ## Теория
 
@@ -150,24 +159,6 @@ Flexbox думает рядами: элементы идут друг за др�
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Колонок в сетке столько, сколько значений в `grid-template-columns`: `1fr 1fr` — две, `repeat(4, 1fr)` — четыре.
-</Hint>
-
-<Hint title="Подсказка 2">
-В DevTools рядом с элементом с `display: grid` есть значок **grid**. Нажмите — на странице нарисуются линии сетки с номерами.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-}
-```
-</Hint>
 
 ## Делаем свой сайт
 

@@ -12,13 +12,16 @@ links:
   - title: "GitHub Docs: загрузка файлов в репозиторий"
     url: https://docs.github.com/ru/repositories/working-with-files/managing-files/adding-a-file-to-a-repository
 warmup:
-  task: "Эта страница сломается в интернете: пути к картинкам и ссылкам ведут на компьютер автора или в корень сайта. Сделай все пути относительными — от папки, где лежит index.html: img/…, about.html."
+  task: "В поле HTML замени ___ на «about.html». Затем нажми «Проверить»."
   html: |
-    <img src="C:\Users\Anya\Desktop\site\img\barsik.svg" alt="Кот Барсик" width="150">
-    <img src="/img/sharik.svg" alt="Пёс Шарик" width="150">
-    <p><a href="/about.html">О приюте</a></p>
+    <img src="img/barsik.svg" alt="Кот Барсик" width="150">
+    <img src="img/sharik.svg" alt="Пёс Шарик" width="150">
+    <p><a href="___">О приюте</a></p>
   css: |
     img { border-radius: 8px; }
+  answer:
+    field: html
+    missing: "about.html"
   checks:
     - js: "return [...doc.images].every((i) => { const s = i.dataset.src ?? i.getAttribute('src'); return !/^([a-z]:|file:|\\/)/i.test(s) && !s.includes('\\\\'); })"
       fail: "У картинок остались пути с диском (C:\\…), обратными слешами или слешем в начале. Нужно: src=\"img/barsik.svg\""
@@ -51,7 +54,7 @@ mistakes:
     a: "Перетаскивай в окно загрузки содержимое папки проекта (index.html, style.css, script.js, папку img), а не саму папку."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
+import { Preview, Links, Warmup, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -76,22 +79,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from 
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Перед загрузкой откройте `index.html` в VS Code и поищите (Ctrl+F) `C:` и `src="/` — всё найденное нужно исправить на относительные пути.
-</Hint>
-
-<Hint title="Подсказка 2">
-Если сайт открылся, а картинки нет — откройте на сайте DevTools → Console. Ошибка 404 покажет, какой файл браузер искал и не нашёл. Сравните имя с тем, что лежит в репозитории, до буквы.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```html
-<img src="img/barsik.svg" alt="Кот Барсик" width="150">
-<img src="img/sharik.svg" alt="Пёс Шарик" width="150">
-<p><a href="about.html">О приюте</a></p>
-```
-</Hint>
 
 ## Делаем свой сайт
 

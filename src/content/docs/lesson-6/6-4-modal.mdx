@@ -13,7 +13,7 @@ links:
   - title: "MDN: элемент dialog"
     url: https://developer.mozilla.org/ru/docs/Web/HTML/Element/dialog
 warmup:
-  task: "По клику на .open-modal открой окно .modal методом showModal(), по клику на .close-modal — закрой методом close()."
+  task: "В поле JavaScript замени ___ на «showModal». Затем нажми «Проверить»."
   html: |
     <button class="open-modal" type="button">Создать сбор</button>
 
@@ -34,11 +34,20 @@ warmup:
       background: rgba(0, 0, 0, 0.5);   /* затемнение под окном */
     }
   js: |
-    // Найди окно и обе кнопки
+    const modal = document.querySelector('.modal');
+    const openButton = document.querySelector('.open-modal');
+    const closeButton = document.querySelector('.close-modal');
 
-    // Открытие: modal.showModal()
+    openButton.addEventListener('click', function () {
+      modal.___();
+    });
 
-    // Закрытие: modal.close()
+    closeButton.addEventListener('click', function () {
+      modal.close();
+    });
+  answer:
+    field: js
+    missing: "showModal"
   checks:
     - js: "return !doc.querySelector('.modal').open"
       fail: "Окно открыто сразу. Оно должно открываться только по кнопке"
@@ -69,7 +78,7 @@ mistakes:
     a: "Задай .modal { max-width: calc(100% - 32px); } — у окна всегда будут отступы по краям."
 blocks: [modal]
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
+import { Preview, Links, Warmup, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
 
 ## Теория
 
@@ -110,30 +119,6 @@ document.querySelector('.close').addEventListener('click', () => modal.close());
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Найди в стартовой разметке диалог и две кнопки. Каждой кнопке нужен свой обработчик.
-</Hint>
-
-<Hint title="Подсказка 2">
-Проверь отдельно открытие поверх страницы и закрытие. Если действие выполняется сразу, проверь, передал ли ты обработчик как функцию.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-const modal = document.querySelector('.modal');
-const openButton = document.querySelector('.open-modal');
-const closeButton = document.querySelector('.close-modal');
-
-openButton.addEventListener('click', function () {
-  modal.showModal();
-});
-
-closeButton.addEventListener('click', function () {
-  modal.close();
-});
-```
-</Hint>
 
 ## Делаем свой сайт
 

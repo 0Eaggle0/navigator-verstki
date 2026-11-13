@@ -12,18 +12,21 @@ links:
   - title: "W3C Validator — проверка HTML"
     url: https://validator.w3.org/
 warmup:
-  task: "На этой странице четыре ошибки из чек-листа сдачи. Замени div.header на тег header, оставь один h1 (второй сделай h2), добавь картинке alt и дай ссылке href."
+  task: "В поле HTML замени ___ на «alt=\"Серая кошка Мурка\"». Затем нажми «Проверить»."
   html: |
-    <div class="header">
+    <header class="header">
       <h1>КУДА_СХОДИТЬ</h1>
-    </div>
+    </header>
     <main>
-      <h1>Афиша на выходные</h1>
-      <img src="img/murka.svg" width="150">
-      <p><a>Все события</a></p>
+      <h2>Афиша на выходные</h2>
+      <img src="img/murka.svg" width="150" ___>
+      <p><a href="#events">Все события</a></p>
     </main>
   css: |
     .header { padding: 8px; background: #EEF2FF; }
+  answer:
+    field: html
+    missing: "alt=\"Серая кошка Мурка\""
   checks:
     - exists: "header"
       fail: "Шапка сделана через div. Нужен семантический тег <header>"
@@ -54,7 +57,7 @@ mistakes:
     a: "Приоритет: сайт открывается по ссылке → нет прокрутки вбок на телефоне → alt у картинок → остальное."
 blocks: []
 ---
-import { Links, Warmup, Hint, Checklist, Stuck, Npc } from '~/components';
+import { Links, Warmup, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -80,27 +83,6 @@ import { Links, Warmup, Hint, Checklist, Stuck, Npc } from '~/components';
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Быстрая проверка `alt`: в консоли сайта выполните `document.querySelectorAll('img:not([alt])')` — покажет картинки без описания.
-</Hint>
-
-<Hint title="Подсказка 2">
-Проверка лишних `h1`: `document.querySelectorAll('h1').length` в консоли должно дать `1`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```html
-<header class="header">
-  <h1>КУДА_СХОДИТЬ</h1>
-</header>
-<main>
-  <h2>Афиша на выходные</h2>
-  <img src="img/murka.svg" width="150" alt="Серая кошка Мурка">
-  <p><a href="#events">Все события</a></p>
-</main>
-```
-</Hint>
 
 ## Делаем свой сайт: чек-лист сдачи
 

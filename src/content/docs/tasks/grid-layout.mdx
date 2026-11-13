@@ -6,7 +6,7 @@ topic: grid
 sidebar:
   order: 7
 warmup:
-  task: "Сделай у .layout сетку из двух колонок: левая вдвое шире правой (2fr 1fr), промежуток 16px."
+  task: "В поле CSS замени ___ на «16px». Затем нажми «Проверить»."
   html: |
     <div class="layout">
       <div class="main">Описание события</div>
@@ -18,6 +18,15 @@ warmup:
       background: #DBEAFE;
       border-radius: 8px;
     }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: ___;
+    }
+  answer:
+    field: css
+    missing: "16px"
   checks:
     - selector: ".layout"
       style: { display: "grid", column-gap: "16px" }
@@ -27,26 +36,8 @@ warmup:
     - js: "return ['.main', '.side'].every(sel => doc.querySelector(sel).checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
       fail: "Содержимое обеих колонок должно быть видно."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Раскладка «широкая колонка + узкая» — статья и боковая панель, карточка события и блок покупки.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-`fr` — доля свободного места. `2fr 1fr` — всего 3 доли, левой достаются 2.
-</Hint>
-
-<Hint title="Подсказка 2">
-Промежуток между колонками — `gap`, как во флексе.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.layout {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 16px;
-}
-```
-</Hint>

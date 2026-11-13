@@ -5,7 +5,7 @@ import path from 'node:path';
 import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 import yaml from 'js-yaml';
-import { edgeCases, referenceOverrides, equivalents } from './audit-learning-fixtures.mjs';
+import { edgeCases, equivalents } from './audit-learning-fixtures.mjs';
 
 const root = 'src/content/docs';
 const out = '.astro/audit-learning';
@@ -17,20 +17,14 @@ const pages = fs.readdirSync(root, { recursive: true }).filter(f => f.endsWith('
   if (!fm) return [];
   const data = yaml.load(fm[1]);
   if (!data.warmup || data.lesson < 3) return [];
-  const hint = source.match(/<Hint title="(?:Решение|Разбор разминки)"(?: afterPractice)?>([\s\S]*?)<\/Hint>/)?.[1] || '';
-  const snippets = [...hint.matchAll(/(```|~~~)(html|css|js)\r?\n([\s\S]*?)\1/g)];
   const solution = { html: data.warmup.html || '', css: data.warmup.css || '', ...(data.warmup.js !== undefined ? { js: data.warmup.js } : {}) };
-  const seen = new Set();
-  for (const [, , lang, code] of snippets) {
-    if (seen.has(lang)) continue; // 7.1 содержит два альтернативных JS-примера; разминка — фильтр.
-    seen.add(lang);
-    solution[lang] = lang === 'css' ? solution.css + '\n' + code : code;
-  }
+  const { field, missing } = data.warmup.answer;
+  solution[field] = solution[field].replace('___', () => missing);
   return [{ id: file.replaceAll('\\', '/').replace(/\.mdx$/, ''), file, ...data, solution }];
 });
 assert.equal(pages.length, 32, 'Объём аудита изменился: обновите ожидаемый список');
 const gameLevelCount = pages.reduce((n, p) => n + (p.game?.levels.length || 0), 0);
-for (const id of [...Object.keys(referenceOverrides), ...edgeCases.map(e => e.id), ...equivalents.map(e => e.id)]) assert(pages.some(p => p.id === id), id);
+for (const { id } of [...edgeCases, ...equivalents]) assert(pages.some(p => p.id === id), id);
 fs.mkdirSync(out, { recursive: true });
 fs.writeFileSync(path.join(out, 'inventory.json'), JSON.stringify(pages, null, 2));
 
@@ -113,10 +107,7 @@ async function setCode(page, code) {
   return check;
 }
 
-function reference(p) {
-  const override = referenceOverrides[p.id];
-  return override ? { ...p.solution, ...override, css: override.css === undefined ? p.solution.css : (p.warmup.css || '') + '\n' + override.css } : p.solution;
-}
+const reference = p => p.solution;
 
 try {
   if (phase === 'practice') {
@@ -157,7 +148,8 @@ try {
           if (p.game.type === 'ghost') {
             await page.waitForTimeout(200);
             const initial = await page.locator('.game__status').textContent();
-            await page.locator('nav-game textarea').fill(l.target);
+            await page.locator('.game__answer').click();
+            assert.equal(await page.locator('nav-game textarea').inputValue(), l.target);
             await page.waitForTimeout(400);
             const solved = await page.locator('.game__status').textContent();
             const geometry = await page.locator('nav-game iframe').evaluate(el => [...el.contentDocument.querySelectorAll('#play .board > *')].map(x => ({ width: x.getBoundingClientRect().width, height: x.getBoundingClientRect().height })));
@@ -339,9 +331,11 @@ try {
       assert.equal(progress.caseTitle, 'Настольные игры');
       await page.goto(base + '/tasks/site-base/');
       const editor = page.locator('textarea[name=css]');
+      const starter = await editor.inputValue();
       await editor.focus();
+      await editor.evaluate(el => el.setSelectionRange(0, 0));
       await page.keyboard.press('Tab');
-      assert.equal(await editor.inputValue(), '  ');
+      assert.equal(await editor.inputValue(), '  ' + starter);
       await page.keyboard.press('Escape');
       await page.keyboard.press('Tab');
       assert.equal(await editor.evaluate(el => el === document.activeElement), false);
@@ -391,8 +385,10 @@ try {
       const task = pages.find(p => p.id === practices.base);
       assert.equal((await setCode(page, { html: task.warmup.html, css: '' })).accepted, false);
       assert.equal(await page.locator('.sandbox__return').isVisible(), false);
-      const baseCheck = await setCode(page, reference(task));
-      assert.equal(baseCheck.accepted, true, baseCheck.feedback);
+      await page.locator('.sandbox__answer summary').click();
+      await page.locator('.sandbox__apply-answer').click();
+      await page.locator('.sandbox__check').click();
+      await page.locator('.sandbox__checks.is-ok').waitFor();
       await page.locator('.sandbox__return').click();
       await page.locator('.block__code').waitFor();
       assert.match(await page.locator('.block__code textarea').inputValue(), /#bd5410/);
@@ -408,7 +404,7 @@ try {
       assert.match(await page.locator('.block__status').textContent(), /Ctrl\+C/);
       assert(await page.locator('.block__code textarea').evaluate(el => el.selectionEnd > el.selectionStart));
       const hints = await page.evaluate(() => JSON.parse(localStorage.getItem('nav-v1')).hints);
-      assert.deepEqual(hints, ['old']);
+      assert.deepEqual(hints, ['old', task.id]);
       await page.goto(base + '/blocks/');
       await page.locator('.gallery__theme').waitFor();
       assert.match(await page.locator('.gallery__case:visible').textContent(), /Скинемся/);
@@ -427,9 +423,10 @@ try {
     const local = await open({ id: 'blocks/header' }, {}, true);
     try {
       assert(await local.page.locator('.block__local').isVisible());
-      const task = pages.find(p => p.id === practices.header);
-      const localCheck = await setCode(local.page, reference(task));
-      assert.equal(localCheck.accepted, true, localCheck.feedback);
+      await local.page.locator('.sandbox__answer summary').click();
+      await local.page.locator('.sandbox__apply-answer').click();
+      await local.page.locator('.sandbox__check').click();
+      await local.page.locator('.block__code').waitFor();
       assert(await local.page.locator('.block__code').isVisible());
       await local.page.reload();
       await local.page.locator('.block__theme').waitFor();
@@ -443,33 +440,41 @@ try {
       assert(await page.locator('nav-block noscript').isVisible());
     } finally { await noJs.close(); }
   } else if (phase === 'practice-content') {
-    const oldId = 'lesson-6/6-1-script';
-    const old = { profile: { name: 'Аудит', role: 'student' }, games: [oldId], solved: [oldId], badges: ['old-badge'] };
-    const { page, context } = await open({ id: oldId }, { 'nav-v1': JSON.stringify(old) });
-    try {
-      assert.equal(await page.locator('nav-game').count(), 0, 'На странице остался тест с вариантами');
-      const summary = page.locator('details[data-after-practice] summary').first();
-      assert.equal(await summary.getAttribute('aria-disabled'), 'true');
-      await summary.evaluate(el => el.click());
-      assert.equal(await summary.evaluate(el => el.parentElement.open), false);
-      assert.equal((await setCode(page, reference(pages.find(p => p.id === oldId)))).accepted, true);
-      assert.equal(await summary.getAttribute('aria-disabled'), 'false');
-      await summary.click();
-      assert.equal(await summary.evaluate(el => el.parentElement.open), true);
-      const progress = await page.evaluate(() => JSON.parse(localStorage.getItem('nav-v1')));
-      assert.deepEqual(progress.games, old.games);
-      assert(old.badges.every(badge => progress.badges.includes(badge)));
-      assert(!progress.hints.includes(oldId));
-      await page.reload();
-      await page.waitForFunction(() => document.querySelector('details[data-after-practice] summary')?.getAttribute('aria-disabled') === 'false');
-      await page.goto(base + '/tasks/');
-      assert.equal(await page.locator(`li[data-kind="game"][data-id="${oldId}"]`).count(), 0);
-      assert.equal(await page.locator(`li[data-kind="warmup"][data-id="${oldId}"] a[href$="/#разминка"]`).count(), 1);
-    } finally { await context.close(); }
+    for (const p of pages) {
+      const { page, context } = await open(p);
+      try {
+        const editor = page.locator('nav-sandbox textarea');
+        const values = () => editor.evaluateAll(fields => fields.map(field => field.value));
+        const initial = await values();
+        assert.equal(initial.join('').match(/___/g)?.length, 1, p.id);
+        const check = page.locator('.sandbox__check');
+        await check.click();
+        await page.locator('.sandbox__checks.is-wip').waitFor();
+        await page.locator('.sandbox__answer summary').click();
+        assert.equal((await result(page)).recorded, false, p.id);
+        await page.locator('.sandbox__apply-answer').click();
+        assert.equal((await result(page)).recorded, false, p.id);
+        const filled = await values();
+        assert.equal(initial.join('\n').replace('___', () => p.warmup.answer.missing), filled.join('\n'), p.id);
+        await check.click();
+        await page.locator('.sandbox__checks.is-ok').waitFor();
+        assert.equal((await result(page)).recorded, true, p.id);
+        const progress = await page.evaluate(() => JSON.parse(localStorage.getItem('nav-v1')));
+        assert(progress.hints.includes(p.id), p.id);
+        results.push({ id: p.id, accepted: true });
+        console.log('PASS ' + p.id);
+      } finally { await context.close(); }
+    }
   } else if (phase === 'check-button') {
     const p = pages.find(p => p.id === 'tasks/js-counter');
-    const { page, context } = await open(p);
+    const old = { profile: { name: 'Аудит', role: 'student' }, drafts: { [p.id]: { js: '// Мой старый черновик' } } };
+    const { page, context } = await open(p, { 'nav-v1': JSON.stringify(old) });
     try {
+      assert.equal(await page.locator('textarea[name=js]').inputValue(), old.drafts[p.id].js);
+      assert(await page.locator('.sandbox__draft-note').isVisible());
+      await page.locator('.sandbox__reset').click();
+      assert.equal(await page.locator('textarea[name=js]').inputValue(), p.warmup.js);
+      assert.equal(await page.locator('.sandbox__draft-note').isVisible(), false);
       await page.locator('textarea[name=js]').fill(reference(p).js);
       await page.waitForTimeout(1100);
       assert.equal((await result(page)).recorded, false, 'Зачёт появился до нажатия «Проверить»');

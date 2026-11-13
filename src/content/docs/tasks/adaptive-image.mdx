@@ -6,7 +6,7 @@ topic: adaptive
 sidebar:
   order: 10
 warmup:
-  task: "Превью шириной 375 px. Картинка шириной 600 px ломает страницу. Сделай так, чтобы она не выходила за экран (max-width: 100%) и сохраняла пропорции (height: auto)."
+  task: "В поле CSS замени ___ на «100%». Затем нажми «Проверить»."
   html: |
     <h1>Шарик ищет дом</h1>
     <img src="img/sharik.svg" width="600" height="400" alt="Пёс Шарик">
@@ -14,34 +14,25 @@ warmup:
     body { margin: 16px; }
 
     img {
-      
+
+    }
+
+    img {
+      max-width: ___;
+      height: auto;
     }
   width: 375
+  answer:
+    field: css
+    missing: "100%"
   checks:
     - js: "return doc.documentElement.scrollWidth <= doc.documentElement.clientWidth"
       fail: "Есть горизонтальная прокрутка — картинка шире экрана. Нужно: max-width: 100%"
     - js: "const img = doc.querySelector('img'); return img.checkVisibility({ visibilityProperty: true, opacityProperty: true }) && img.naturalWidth > 0 && Math.abs(img.width / img.height - img.naturalWidth / img.naturalHeight) < 0.05"
       fail: "Картинка должна оставаться видимой и сохранять пропорции."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Самая частая причина прокрутки вбок на телефоне — картинка шире экрана.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-`max-width: 100%` — «не шире родителя». На широком экране картинка останется 600 px.
-</Hint>
-
-<Hint title="Подсказка 2">
-Атрибут `height="400"` в HTML фиксирует высоту. `height: auto` в CSS пересчитает её по ширине.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-img {
-  max-width: 100%;
-  height: auto;
-}
-```
-</Hint>

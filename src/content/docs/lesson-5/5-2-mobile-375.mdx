@@ -49,7 +49,7 @@ game:
       width: 300
 warmup:
   width: 375
-  task: "На телефоне страница уехала вбок. В медиазапросе @media (max-width: 768px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно."
+  task: "В поле CSS замени ___ на «1fr». Затем нажми «Проверить»."
   html: |
     <header class="header">
       <a class="logo" href="#">ТИММЕЙТ</a>
@@ -100,7 +100,14 @@ warmup:
       border-radius: 8px;
     }
 
-    /* медиазапрос для телефона */
+    @media (max-width: 768px) {
+      .header { flex-direction: column; }
+      .menu { flex-wrap: wrap; gap: 12px; }
+      .cards { grid-template-columns: ___; }
+    }
+  answer:
+    field: css
+    missing: "1fr"
   checks:
     - selector: ".header"
       style: { flex-direction: "column" }
@@ -174,24 +181,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 
 <Warmup />
 
-<Hint title="Подсказка 1">
-Делите работу: каждый участник проверяет на 375 px свою секцию и пишет для неё правила. Модератор собирает все в один медиазапрос.
-</Hint>
-
-<Hint title="Подсказка 2">
-Большие отступы секций (`padding: 80px 0`) на телефоне съедают полэкрана. В медиазапросе уменьшите их вдвое: `section { padding: 40px 0; }`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-~~~css
-@media (max-width: 768px) {
-  .header { flex-direction: column; }
-  .menu { flex-wrap: wrap; gap: 12px; }
-  .cards { grid-template-columns: 1fr; }
-}
-~~~
-</Hint>
-
 ## Делаем свой сайт
 
 1. Откройте сайт в режиме устройства на 375 px.
@@ -204,7 +193,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 
 <BlockLinks />
 
-<Hint title="Пример для проекта" afterPractice>
+<Hint title="Пример для проекта">
 ```css
 @media (max-width: 768px) {
   .header .container {

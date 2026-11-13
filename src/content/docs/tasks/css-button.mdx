@@ -6,13 +6,25 @@ topic: css
 sidebar:
   order: 3
 warmup:
-  task: "Оформи ссылку .button как кнопку: display: inline-block, padding 12px 24px, фон #4F46E5, белый текст без подчёркивания, скругление 8px."
+  task: "В поле CSS замени ___ на «8px». Затем нажми «Проверить»."
   html: |
     <a class="button" href="#">Найти команду</a>
   css: |
     .button {
-      
+
     }
+
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      background: #4F46E5;
+      color: #FFFFFF;
+      text-decoration: none;
+      border-radius: ___;
+    }
+  answer:
+    field: css
+    missing: "8px"
   checks:
     - selector: ".button"
       style: { display: "inline-block" }
@@ -28,29 +40,8 @@ warmup:
     - js: "const s = getComputedStyle(doc.querySelector('.button')); return ['TopLeft','TopRight','BottomLeft','BottomRight'].every(c => s['border' + c + 'Radius'] === '8px')"
       fail: "Проверь скругление всех четырёх углов."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Большинство кнопок на сайтах — это ссылки, оформленные как кнопка.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Порядок в `padding: 12px 24px`: сначала сверху-снизу, потом слева-справа.
-</Hint>
-
-<Hint title="Подсказка 2">
-Без `display: inline-block` вертикальный padding у ссылки работает странно.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.button {
-  display: inline-block;
-  padding: 12px 24px;
-  background: #4F46E5;
-  color: #FFFFFF;
-  text-decoration: none;
-  border-radius: 8px;
-}
-```
-</Hint>

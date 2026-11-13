@@ -1,12 +1,3 @@
-// Эталоны исправляют только входные данные аудита; материалы и проверки сайта остаются прежними.
-export const referenceOverrides = {
-  'lesson-3/3-2-menu': { css: '.header{display:flex;justify-content:space-between;align-items:center}.menu{display:flex;gap:24px;list-style:none;margin:0;padding:0}' },
-  'lesson-3/3-3-hero': { css: '.hero{display:flex;align-items:center;gap:32px}.hero__text,.hero__img{flex:1;min-width:0}' },
-  'lesson-4/4-2-grid-cards': { css: '.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:16px}.card img{object-fit:cover}' },
-  'lesson-4/4-3-sections-footer': { css: '.footer{padding:24px;background:#1e1e1e;color:white}.footer__cols{display:grid;grid-template-columns:repeat(3,1fr);gap:24px}' },
-  'lesson-5/5-2-mobile-375': { css: '@media(max-width:768px){.header{flex-direction:column}.menu{flex-wrap:wrap;gap:12px}.cards{grid-template-columns:1fr}}' },
-};
-
 const css = (id, name, extra) => ({ id, name, make: r => ({ ...r, css: r.css + '\n' + extra }) });
 const js = (id, name, code) => ({ id, name, make: r => ({ ...r, js: code }) });
 const html = (id, name, code) => ({ id, name, make: r => ({ ...r, html: code }) });
@@ -22,7 +13,7 @@ export const edgeCases = [
   css('lesson-4/4-3-sections-footer', 'Белый текст на почти белом фоне, нет боковых отступов', '.footer{background:#fefefe;color:white;padding:24px 0 0}.footer__cols{grid-template-columns:3fr 1fr 1fr}'),
   { id:'lesson-5/5-1-media',name:'Мобильные стили применены ко всем экранам',make:(r,w)=>({...r,css:w.css+'\nh1{font-size:24px}.row{flex-direction:column}@media(max-width:1px){body{color:red}}'}),observe:async page=>{const f=page.locator('nav-sandbox iframe').first();return f.evaluate(el=>{el.style.width='1280px';return new Promise(resolve=>requestAnimationFrame(()=>resolve({width:el.contentWindow.innerWidth,h1:el.contentWindow.getComputedStyle(el.contentDocument.querySelector('h1')).fontSize,row:el.contentWindow.getComputedStyle(el.contentDocument.querySelector('.row')).flexDirection})))})} },
   { id:'lesson-5/5-2-mobile-375',name:'Одна колонка на всех экранах',make:(r,w)=>({...r,css:w.css+'\n.header{flex-direction:column}.menu{flex-wrap:wrap;gap:12px}.cards{grid-template-columns:1fr}@media(max-width:1px){body{color:red}}'}) },
-  { id:'lesson-5/5-3-hover-check',name:'Наведение не меняет фон',make:(r,w)=>({...r,css:w.css+'\n.button{transition:0.2s}.button:hover{cursor:pointer}'}) },
+  css('lesson-5/5-3-hover-check', 'Наведение не меняет фон', '.button:hover{background:#FF6B35}'),
   js('lesson-6/6-1-script', 'Захардкожена Оля, нет name и console.log', "function greet(){return 'Привет, Оля!'};document.querySelector('h1').textContent='Привет, кто-то!';"),
   js('lesson-6/6-2-dom', 'Переключение работает только два раза', "let n=0;document.querySelector('.theme-button').onclick=()=>{if(++n<=2)document.body.classList.toggle('dark')};"),
   css('lesson-6/6-3-burger', 'Меню не показывается даже после открытия', '.menu{display:none!important}'),

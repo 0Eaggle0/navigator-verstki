@@ -12,7 +12,7 @@ links:
   - title: "Дока: transition"
     url: https://doka.guide/css/transition/
 warmup:
-  task: "Сделай, чтобы кнопка реагировала на наведение: добавь правило .button:hover с другим цветом фона и плавный переход transition: 0.2s у .button. Наведи мышку на превью и проверь."
+  task: "В поле CSS замени ___ на «0.2s». Затем нажми «Проверить»."
   html: |
     <a class="button" href="#">Стать волонтёром</a>
   css: |
@@ -23,10 +23,33 @@ warmup:
       color: #fff;
       text-decoration: none;
       border-radius: 8px;
-      /* плавный переход */
+
     }
 
-    /* правило для наведения */
+    .button {
+      transition: ___;
+    }
+
+    .button:hover,
+    .button:focus-visible {
+      background: #E85A24;
+    }
+
+    .menu a:hover {
+      color: var(--color-accent);
+    }
+
+    .card {
+      transition: 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    }
+  answer:
+    field: css
+    missing: "0.2s"
   checks:
     - js: "return getComputedStyle(doc.querySelector('.button')).transitionDuration.split(',').some(n => Math.abs(parseFloat(n) - 0.2) < 0.001)"
       fail: "У кнопки должен быть плавный переход длительностью 0,2 секунды."
@@ -55,7 +78,7 @@ mistakes:
     a: На сенсорных экранах наведения нет, это нормально. Главное — чтобы без hover всё было понятно и кликабельно.
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
+import { Preview, Links, Warmup, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -87,40 +110,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from 
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Если в макете нет отдельного состояния наведения, сделайте цвет кнопки чуть темнее. Хватит разницы в 10–15% яркости.
-</Hint>
-
-<Hint title="Подсказка 2">
-Карточки красиво «приподнимаются»: `transform: translateY(-4px); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);` при наведении и `transition: 0.2s` в обычном правиле.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.button {
-  transition: 0.2s;
-}
-
-.button:hover,
-.button:focus-visible {
-  background: #E85A24;
-}
-
-.menu a:hover {
-  color: var(--color-accent);
-}
-
-.card {
-  transition: 0.2s;
-}
-
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-}
-```
-</Hint>
 
 ## Делаем свой сайт
 

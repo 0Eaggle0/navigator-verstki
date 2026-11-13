@@ -12,7 +12,7 @@ links:
   - title: "Дока: localStorage"
     url: https://doka.guide/js/local-storage/
 warmup:
-  task: "Сделай «избранное». По клику на ♥ (.fav) у карточки переключай класс active и сохраняй в localStorage под ключом favorites список id избранных карточек (JSON). При загрузке страницы отметь сохранённые. Внутри клика каждый раз читай список из localStorage заново."
+  task: "В поле JavaScript замени ___ на «favorites». Затем нажми «Проверить»."
   html: |
     <article class="card" data-id="barsik">
       Барсик <button class="fav" type="button" aria-label="В избранное">♥</button>
@@ -42,19 +42,42 @@ warmup:
       color: #EF4444;
     }
   js: |
-    // Прочитать список: JSON.parse(localStorage.getItem('favorites') || '[]')
-    // Сохранить список: localStorage.setItem('favorites', JSON.stringify(list))
+    function load() {
+      try {
+        return JSON.parse(localStorage.getItem('___') || '[]');
+      } catch {
+        return [];
+      }
+    }
+
+    function save(list) {
+      try {
+        localStorage.setItem('favorites', JSON.stringify(list));
+      } catch {}
+    }
 
     document.querySelectorAll('.card').forEach(function (card) {
       const button = card.querySelector('.fav');
       const id = card.dataset.id;
 
-      // 1. При загрузке: если id есть в списке — добавь button класс active
+      button.classList.toggle('active', load().includes(id));
 
-      // 2. По клику: добавь или убери id из списка, сохрани, переключи класс
+      button.addEventListener('click', function () {
+        let list = load();
+        if (list.includes(id)) {
+          list = list.filter((x) => x !== id);
+        } else {
+          list.push(id);
+        }
+        save(list);
+        button.classList.toggle('active', list.includes(id));
+      });
     });
   checkStorage:
     favorites: '["sharik"]'
+  answer:
+    field: js
+    missing: "favorites"
   checks:
     - js: "const a = doc.querySelector('[data-id=barsik] .fav'), b = doc.querySelector('[data-id=sharik] .fav'); return !a.classList.contains('active') && b.classList.contains('active')"
       fail: "При загрузке должно восстановиться сохранённое избранное."
@@ -85,7 +108,7 @@ mistakes:
     a: "localStorage хранит только строки. Массивы и объекты сохраняй через JSON.stringify, читай через JSON.parse."
 blocks: []
 ---
-import { Links, Warmup, Hint, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
+import { Links, Warmup, BlockLinks, Checklist, Stuck, ForCase, Npc } from '~/components';
 
 ## Теория
 
@@ -125,50 +148,6 @@ localStorage.setItem('cities', JSON.stringify(cities));
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Заведите две маленькие функции и пользуйтесь только ими: `load()` читает список (в `try`), `save(list)` сохраняет (в `try`). Так проще не забыть JSON.
-</Hint>
-
-<Hint title="Подсказка 2">
-Добавить в список: `list.push(id)`. Убрать: `list = list.filter((x) => x !== id)`. Есть ли в списке: `list.includes(id)`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-function load() {
-  try {
-    return JSON.parse(localStorage.getItem('favorites') || '[]');
-  } catch {
-    return [];
-  }
-}
-
-function save(list) {
-  try {
-    localStorage.setItem('favorites', JSON.stringify(list));
-  } catch {}
-}
-
-document.querySelectorAll('.card').forEach(function (card) {
-  const button = card.querySelector('.fav');
-  const id = card.dataset.id;
-
-  button.classList.toggle('active', load().includes(id));
-
-  button.addEventListener('click', function () {
-    let list = load();
-    if (list.includes(id)) {
-      list = list.filter((x) => x !== id);
-    } else {
-      list.push(id);
-    }
-    save(list);
-    button.classList.toggle('active', list.includes(id));
-  });
-});
-```
-</Hint>
 
 ## Делаем свой сайт
 

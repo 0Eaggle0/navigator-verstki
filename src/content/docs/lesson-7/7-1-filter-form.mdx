@@ -13,7 +13,7 @@ links:
   - title: "learn.javascript.ru: отправка формы"
     url: https://learn.javascript.ru/forms-submit
 warmup:
-  task: "Сделай фильтр. У каждой кнопки есть data-filter, у каждой карточки — data-type. По клику на кнопку покажи только карточки с тем же типом (остальным поставь hidden = true). Кнопка «Все» (data-filter=\"all\") показывает все карточки."
+  task: "В поле JavaScript замени ___ на «all». Затем нажми «Проверить»."
   html: |
     <div class="filters">
       <button type="button" data-filter="all">Все</button>
@@ -49,8 +49,19 @@ warmup:
     const buttons = document.querySelectorAll('[data-filter]');
     const cards = document.querySelectorAll('.card');
 
-    // Для каждой кнопки: по клику пройди по карточкам
-    // и спрячь те, у которых другой data-type
+    buttons.forEach(function (button) {
+      button.addEventListener('click', function () {
+        const filter = button.dataset.filter;
+        cards.forEach(function (card) {
+          card.hidden = filter !== '___' && card.dataset.type !== filter;
+        });
+        buttons.forEach((b) => b.classList.remove('active'));
+        button.classList.add('active');
+      });
+    });
+  answer:
+    field: js
+    missing: "all"
   checks:
     - js: "const cards = [...doc.querySelectorAll('.cards > .card')]; return ['cat', 'dog'].every(type => cards.some(c => c.dataset.type === type)) && cards.length === 4 && cards.every(c => c.checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
       fail: "До фильтрации должны быть видны все четыре карточки."
@@ -129,34 +140,6 @@ checkbox.addEventListener('change', () => {
 
 <Warmup />
 
-<Hint title="Подсказка 1">
-Выделить нажатую кнопку фильтра: сначала у всех кнопок `classList.remove('active')`, потом у нажатой `classList.add('active')`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Для формы удобно завести функцию `showError(input, text)`, которая пишет текст в `<p class="error">` после поля. И в начале каждой проверки очищать старые ошибки.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-Фильтр:
-
-```js
-const buttons = document.querySelectorAll('[data-filter]');
-const cards = document.querySelectorAll('.card');
-
-buttons.forEach(function (button) {
-  button.addEventListener('click', function () {
-    const filter = button.dataset.filter;
-    cards.forEach(function (card) {
-      card.hidden = filter !== 'all' && card.dataset.type !== filter;
-    });
-    buttons.forEach((b) => b.classList.remove('active'));
-    button.classList.add('active');
-  });
-});
-```
-</Hint>
-
 ## Делаем свой сайт
 
 <ForCase>
@@ -191,7 +174,7 @@ buttons.forEach(function (button) {
 
 <BlockLinks />
 
-<Hint title="Пример для проекта" afterPractice>
+<Hint title="Пример для проекта">
 Форма (подходит к блоку «Форма»: поля `name`, `phone`, `agree` и `<p class="error">`):
 
 ```js

@@ -34,11 +34,11 @@ const guidance = instructions[id] ?? 'Вставь HTML внутрь <main id="m
   <p class="block__variant" aria-live="polite">{variants.own.label}</p>
   <iframe title="Превью блока" srcdoc={variants.own.doc} sandbox="allow-scripts" style={`height:${height}px`}></iframe>
   <p class="block__locked">
-    Код открывается после зачёта. <a class="block__practice" href={link}>Решить задание «{practice.data.title}»</a>.
+    Заполни один пропуск или вставь готовый ответ и нажми «Проверить». <a class="block__practice" href={link}>Перейти к заданию «{practice.data.title}»</a>.
   </p>
   <noscript><p>Включи JavaScript, чтобы пройти проверку и открыть код.</p></noscript>
   <section class="block__local" hidden>
-    <p>Браузер не сохраняет прогресс. Реши задание здесь и скопируй код до закрытия страницы.</p>
+    <p>Браузер не сохраняет прогресс. Проверь ответ здесь и скопируй код до закрытия страницы.</p>
     <Warmup practice={practice} />
   </section>
   <div class="block__code" hidden>

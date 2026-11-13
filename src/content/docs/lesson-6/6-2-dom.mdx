@@ -12,7 +12,7 @@ links:
   - title: "Дока: classList"
     url: https://doka.guide/js/element-classlist/
 warmup:
-  task: "По клику на кнопку .theme-button переключай у body класс dark: первый клик — тёмная тема, второй — обратно светлая. Используй querySelector, addEventListener и classList.toggle."
+  task: "В поле JavaScript замени ___ на «dark». Затем нажми «Проверить»."
   html: |
     <h1>Тёмная тема</h1>
     <button class="theme-button" type="button">Переключить тему</button>
@@ -26,9 +26,14 @@ warmup:
       color: #F9FAFB;
     }
   js: |
-    // Найди кнопку
+    const themeButton = document.querySelector('.theme-button');
 
-    // По клику переключай класс dark у document.body
+    themeButton.addEventListener('click', function () {
+      document.body.classList.toggle('___');
+    });
+  answer:
+    field: js
+    missing: "dark"
   checks:
     - js: "return !doc.body.classList.contains('dark')"
       fail: "Тема тёмная сразу при загрузке. Класс dark должен появляться только по клику"
@@ -57,7 +62,7 @@ mistakes:
     a: "В addEventListener передают саму функцию, без скобок: addEventListener('click', toggleTheme). Со скобками она вызовется сразу."
 blocks: []
 ---
-import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
+import { Preview, Links, Warmup, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -93,24 +98,6 @@ btn.addEventListener('click', function () {
 ## Разминка
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Сначала проверь, что селектор находит кнопку, затем свяжи её с событием клика.
-</Hint>
-
-<Hint title="Подсказка 2">
-Тема меняется на всей странице. Найди элемент, который содержит заголовок и кнопку, и переключай класс у него.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-const themeButton = document.querySelector('.theme-button');
-
-themeButton.addEventListener('click', function () {
-  document.body.classList.toggle('dark');
-});
-```
-</Hint>
 
 ## Делаем свой сайт
 

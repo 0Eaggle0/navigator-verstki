@@ -11,14 +11,31 @@ const returns = Object.fromEntries(Object.entries(practices).filter(([, id]) => 
 const w = entry.data.warmup;
 const hasJs = w?.js !== undefined; // есть поле js — разминка на JavaScript
 const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
+const answer = w?.answer;
+const language = answer && { html: 'HTML', css: 'CSS', js: 'JavaScript' }[answer.field];
+const example = answer && w?.[answer.field]?.replace('___', () => answer.missing);
+if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
+	throw new Error(`В задании ${entry.id} нужен ровно один пропуск в поле ${answer.field}`);
+}
 ---
 
 {
 	w && (
-		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined} data-manual={manual ? '' : undefined} data-width={w.width} data-check-storage={JSON.stringify(w.checkStorage ?? {})} data-return-blocks={practice ? undefined : JSON.stringify(returns)}>
+		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined} data-manual={manual ? '' : undefined} data-width={w.width} data-check-storage={JSON.stringify(w.checkStorage ?? {})} data-return-blocks={practice ? undefined : JSON.stringify(returns)} data-answer-field={answer?.field}>
+			{!practice && entry.data.lesson === undefined && <span id="разминка" />}
 			<p class="sandbox__task">
 				<strong>Задача:</strong> {w.task}
 			</p>
+			{answer && (
+				<details class="sandbox__answer">
+					<summary>Показать полный ответ</summary>
+					<p>Впиши <code>{answer.missing}</code> вместо <code>___</code> в поле {language}.</p>
+					<pre><code>{example}</code></pre>
+					<button type="button" class="sandbox__apply-answer a-btn--sky">Вставить готовый ответ</button>
+					<p>Кнопка заменит код в редакторах. Затем нажми «Проверить».</p>
+				</details>
+			)}
+			{answer && <p class="sandbox__draft-note" hidden>Открыт твой черновик. Если хочешь начать с пропуска, нажми «Сбросить к началу».</p>}
 			<div class="sandbox__grid">
 				<div class="sandbox__editors">
 					<label>
@@ -102,6 +119,7 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 			const checks: Check[] = JSON.parse(this.dataset.checks || '[]');
 			const fields = [...this.querySelectorAll('textarea')];
 			const [htmlBox, cssBox, jsBox] = fields;
+			const answerField = fields.find(box => box.name === this.dataset.answerField);
 			const frame = this.querySelector<HTMLIFrameElement>('iframe:not(.sandbox__checker)')!;
 			// Где запускаем проверки: для JS — в скрытой копии, иначе прямо в превью
 			const checker = this.querySelector<HTMLIFrameElement>('.sandbox__checker') ?? frame;
@@ -164,7 +182,6 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 							if (manual) (p.practicePass ??= {})[id] = PRACTICE_VERSION;
 						});
 					}
-					if (manual) this.dispatchEvent(new CustomEvent('practice-passed', { bubbles: true, detail: id }));
 					showReturn();
 					if (first) {
 						clear.hidden = false;
@@ -200,6 +217,10 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 			if (button) {
 				button.disabled = false;
 				button.addEventListener('click', async () => {
+					if (answerField?.value.includes('___')) {
+						showResults([{ ok: false, message: 'Заполни пропуск ___ или нажми «Показать полный ответ».' }]);
+						return;
+					}
 					const request = new AbortController();
 					pending = request;
 					button.disabled = true;
@@ -239,6 +260,28 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 					hasJs ? 800 : 400 // JS ждём дольше: недописанный код почти всегда с ошибкой
 				);
 			};
+			const answer = this.querySelector<HTMLDetailsElement>('.sandbox__answer');
+			const draftNote = this.querySelector<HTMLElement>('.sandbox__draft-note');
+			if (draftNote && draft) draftNote.hidden = fields.some(box => box.value.includes('___'));
+			const markHint = () => {
+				if (!load().hints.includes(id)) update(p => p.hints.push(id));
+			};
+			answer?.addEventListener('toggle', () => {
+				if (answer.open) markHint();
+			});
+			if (answer && answerField) {
+				answer.querySelector('button')!.addEventListener('click', () => {
+					markHint();
+					htmlBox.value = html;
+					cssBox.value = css;
+					if (jsBox) jsBox.value = js ?? '';
+					answerField.value = answer.querySelector('pre code')!.textContent!;
+					onInput();
+					if (draftNote) draftNote.hidden = true;
+					answer.open = false;
+					button?.focus();
+				});
+			}
 
 			let escaped = false; // после Esc Tab снова переводит фокус, а не вставляет отступ
 			for (const box of fields) {
@@ -258,6 +301,7 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 				htmlBox.value = html;
 				cssBox.value = css;
 				if (jsBox) jsBox.value = js ?? '';
+				if (draftNote) draftNote.hidden = true;
 				update((p) => delete p.drafts[id]);
 				render();
 			});
@@ -282,6 +326,22 @@ const manual = entry.data.lesson === undefined || entry.data.lesson >= 3;
 	}
 	.sandbox__task {
 		margin: 0 0 1rem;
+	}
+	.sandbox__answer {
+		margin-bottom: 1rem;
+		padding: .65rem .85rem;
+		border: 1px solid var(--a-line);
+		border-radius: var(--a-r-card);
+	}
+	.sandbox__answer summary {
+		cursor: pointer;
+		font-weight: 700;
+	}
+	.sandbox__answer pre {
+		overflow: auto;
+		max-height: 16rem;
+		padding: .65rem;
+		background: var(--a-bg);
 	}
 	.sandbox__grid {
 		display: grid;

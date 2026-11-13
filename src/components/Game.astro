@@ -61,6 +61,9 @@ const type = g?.type;
 								Подсказка
 							</button>
 						)}
+						{type === 'ghost' && (entry.data.lesson ?? 0) >= 3 && (
+							<button type="button" class="game__answer a-btn--sky">Вставить готовый CSS</button>
+						)}
 					</div>
 					<p class="game__hint" hidden />
 				</div>
@@ -155,6 +158,10 @@ const type = g?.type;
 					codes[n] = box.value;
 					clearTimeout(timer);
 					timer = window.setTimeout(render, 250);
+				});
+				this.querySelector('.game__answer')?.addEventListener('click', () => {
+					box.value = levels[n].target;
+					box.dispatchEvent(new Event('input'));
 				});
 				show = (l) => {
 					$('.game__lock').textContent = `${l.selector ?? '.board'} {`;

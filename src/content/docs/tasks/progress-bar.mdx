@@ -5,12 +5,16 @@ topic: html
 sidebar:
   order: 6
 warmup:
-  task: "Покажи, что собрано 8 400 ₽ из 12 000 ₽. Добавь в карточку тег progress с текущей и максимальной суммой. Свяжи полоску с заголовком через aria-labelledby."
+  task: "В поле HTML замени ___ на «8400». Затем нажми «Проверить»."
   html: |
     <article class="goal">
       <h2 id="goal-title">Поездка за город</h2>
       <p>Собрано 8 400 ₽ из 12 000 ₽</p>
+      <progress value="___" max="12000" aria-labelledby="goal-title">70%</progress>
     </article>
+  answer:
+    field: html
+    missing: "8400"
   checks:
     - js: |
         const bar = doc.querySelector('.goal progress');
@@ -24,26 +28,8 @@ warmup:
         return !!title?.id && bar?.getAttribute('aria-labelledby') === title.id;
       fail: "Свяжи полоску с заголовком карточки."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Нативный элемент `progress` показывает долю выполненного. Например, `<progress value="3" max="5" aria-label="Прочитано глав"></progress>` показывает три главы из пяти.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Для атрибутов полоски нужны числа без пробелов и знака валюты.
-</Hint>
-
-<Hint title="Подсказка 2">
-Значение `aria-labelledby` указывает на идентификатор уже существующего заголовка.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```html
-<article class="goal">
-  <h2 id="goal-title">Поездка за город</h2>
-  <p>Собрано 8 400 ₽ из 12 000 ₽</p>
-  <progress value="8400" max="12000" aria-labelledby="goal-title">70%</progress>
-</article>
-```
-</Hint>

@@ -6,7 +6,7 @@ topic: flex
 sidebar:
   order: 6
 warmup:
-  task: "Сделай .bottom строкой: копирайт слева, соцсети справа, по центру по вертикали, с переносом. Ссылки соцсетей .socials — в ряд с промежутком 12px."
+  task: "В поле CSS замени ___ на «12px». Затем нажми «Проверить»."
   html: |
     <div class="bottom">
       <p>© 2026 ХВОСТ_ДОМОЙ</p>
@@ -24,6 +24,21 @@ warmup:
     }
 
     .bottom a { color: #fff; }
+
+    .bottom {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .socials {
+      display: flex;
+      gap: ___;
+    }
+  answer:
+    field: css
+    missing: "12px"
   checks:
     - selector: ".bottom"
       style: { display: "flex", justify-content: "space-between", align-items: "center" }
@@ -37,32 +52,8 @@ warmup:
     - js: "return ['.bottom', '.socials'].every(sel => getComputedStyle(doc.querySelector(sel)).flexDirection === 'row')"
       fail: "Ссылки и элементы подвала должны идти слева направо."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Внизу сайтов часто строка: копирайт слева, соцсети справа. На узком экране — переносится.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Здесь два флекса: у `.bottom` (копирайт и блок соцсетей) и у `.socials` (сами ссылки).
-</Hint>
-
-<Hint title="Подсказка 2">
-У `p` есть стандартный margin — если строка получилась высокой, добавьте `.bottom p { margin: 0; }`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.bottom {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.socials {
-  display: flex;
-  gap: 12px;
-}
-```
-</Hint>

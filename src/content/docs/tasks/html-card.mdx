@@ -6,16 +6,19 @@ topic: html
 sidebar:
   order: 2
 warmup:
-  task: "Замени div на article, «Заголовок» сделай h3, текст — p, картинке добавь alt «Кошка Мурка», а «Подробнее» сделай ссылкой a с href."
+  task: "В поле HTML замени ___ на «Кошка Мурка». Затем нажми «Проверить»."
   html: |
-    <div class="card">
-      <img src="img/murka.svg" width="200">
-      <div>Мурка</div>
-      <div>1 год, спокойная</div>
-      <span>Подробнее</span>
-    </div>
+    <article class="card">
+      <img src="img/murka.svg" width="200" alt="___">
+      <h3>Мурка</h3>
+      <p>1 год, спокойная</p>
+      <a href="#">Подробнее</a>
+    </article>
   css: |
     .card { max-width: 220px; }
+  answer:
+    field: html
+    missing: "Кошка Мурка"
   checks:
     - exists: "article.card"
       fail: "Карточка должна быть тегом article с классом card"
@@ -30,27 +33,8 @@ warmup:
       attr: "href"
       fail: "«Подробнее» должно быть ссылкой a с href"
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Повторяющийся кусок страницы — карточку — удобно делать тегом article: он законченный и самостоятельный.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Меняйте теги по одному и смотрите в превью — вид почти не изменится, а смысл станет понятным.
-</Hint>
-
-<Hint title="Подсказка 2">
-Не забудьте поменять и закрывающие теги: `</div>` → `</article>`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```html
-<article class="card">
-  <img src="img/murka.svg" width="200" alt="Кошка Мурка">
-  <h3>Мурка</h3>
-  <p>1 год, спокойная</p>
-  <a href="#">Подробнее</a>
-</article>
-```
-</Hint>

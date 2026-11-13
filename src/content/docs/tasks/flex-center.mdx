@@ -6,7 +6,7 @@ topic: flex
 sidebar:
   order: 5
 warmup:
-  task: "Поставь кружок .dot ровно в центр .box по горизонтали и по вертикали с помощью Flexbox."
+  task: "В поле CSS замени ___ на «center». Затем нажми «Проверить»."
   html: |
     <div class="box">
       <div class="dot"></div>
@@ -23,6 +23,15 @@ warmup:
       border-radius: 50%;
       background: #4F46E5;
     }
+
+    .box {
+      display: flex;
+      justify-content: ___;
+      align-items: center;
+    }
+  answer:
+    field: css
+    missing: "center"
   checks:
     - selector: ".box"
       style: { display: "flex" }
@@ -32,26 +41,8 @@ warmup:
     - js: "return doc.querySelector('.dot').checkVisibility({ visibilityProperty: true, opacityProperty: true })"
       fail: "Кружок должен оставаться видимым."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Поставить элемент ровно в центр блока — классическая задача, которую Flexbox решает в три строки.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-По горизонтали центрирует `justify-content`, по вертикали — `align-items`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Оба свойства пишутся контейнеру `.box`, а не кружку.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-.box {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-```
-</Hint>

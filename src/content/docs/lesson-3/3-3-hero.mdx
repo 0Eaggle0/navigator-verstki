@@ -51,7 +51,7 @@ game:
         gap: 32px;
       target: "display: flex; gap: 32px; align-items: center;"
 warmup:
-  task: "Поставь текст и картинку первого экрана рядом: у .hero — flex, по центру по вертикали, промежуток 32px. Колонки .hero__text и .hero__img сделай одинаковой ширины через flex: 1."
+  task: "В поле CSS замени ___ на «32px». Затем нажми «Проверить»."
   html: |
     <section class="hero">
       <div class="hero__text">
@@ -65,7 +65,7 @@ warmup:
     .hero {
       padding: 16px;
       background: #FFF8F0;
-      /* две колонки */
+
     }
 
     .hero__img {
@@ -80,6 +80,12 @@ warmup:
       text-decoration: none;
       border-radius: 8px;
     }
+
+    .hero { display: flex; align-items: center; gap: ___; }
+    .hero__text, .hero__img { flex: 1; min-width: 0; }
+  answer:
+    field: css
+    missing: "32px"
   checks:
     - selector: ".hero"
       style: { display: "flex" }
@@ -156,21 +162,6 @@ h1 { margin-top: 0; font-size: 28px; }`}
 
 <Warmup />
 
-<Hint title="Подсказка 1">
-Если секция внутри себя имеет `.container`, флекс ставится контейнеру: `.hero .container { display: flex; }`. Ставить его самой секции бесполезно — у неё один ребёнок.
-</Hint>
-
-<Hint title="Подсказка 2">
-Колонка с текстом не сжимается и ломает ряд? Добавьте колонкам `min-width: 0` — это разрешает им становиться уже своего содержимого.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-~~~css
-.hero { display: flex; align-items: center; gap: 32px; }
-.hero__text, .hero__img { flex: 1; min-width: 0; }
-~~~
-</Hint>
-
 ## Делаем свой сайт
 
 <ForCase>
@@ -206,7 +197,7 @@ h1 { margin-top: 0; font-size: 28px; }`}
 
 <BlockLinks />
 
-<Hint title="Пример для проекта" afterPractice>
+<Hint title="Пример для проекта">
 ```css
 .hero .container {
   display: flex;

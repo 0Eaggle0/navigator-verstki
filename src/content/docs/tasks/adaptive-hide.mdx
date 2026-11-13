@@ -6,7 +6,7 @@ topic: adaptive
 sidebar:
   order: 9
 warmup:
-  task: "Превью шириной 375 px. В медиазапросе @media (max-width: 768px) спрячь .desktop-only (display: none), а карточки .cards поставь в одну колонку."
+  task: "В поле CSS замени ___ на «none». Затем нажми «Проверить»."
   html: |
     <p class="desktop-only">Самая большая афиша бесплатных событий Омска для подростков</p>
     <div class="cards">
@@ -26,8 +26,19 @@ warmup:
       border-radius: 8px;
     }
 
-    /* медиазапрос */
+    @media (max-width: 768px) {
+      .desktop-only {
+        display: ___;
+      }
+
+      .cards {
+        grid-template-columns: 1fr;
+      }
+    }
   width: 375
+  answer:
+    field: css
+    missing: "none"
   checks:
     - selector: ".desktop-only"
       style: { display: "none" }
@@ -38,30 +49,8 @@ warmup:
       fail: "На широком экране слоган и две колонки должны оставаться видимыми."
       widths: [769,1280]
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 На телефоне не всё нужно показывать. Длинный слоган или декоративную картинку часто прячут.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Оба правила — внутри одного медиазапроса.
-</Hint>
-
-<Hint title="Подсказка 2">
-Без медиазапроса `.desktop-only` пропадёт и на компьютере — так нельзя.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```css
-@media (max-width: 768px) {
-  .desktop-only {
-    display: none;
-  }
-
-  .cards {
-    grid-template-columns: 1fr;
-  }
-}
-```
-</Hint>

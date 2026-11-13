@@ -6,41 +6,28 @@ topic: html
 sidebar:
   order: 1
 warmup:
-  task: "Сделай меню: внутри nav — список ul с тремя пунктами li, в каждом ссылка a с href. Тексты: «Главная», «Каталог», «Контакты»."
+  task: "В поле HTML замени ___ на «Контакты». Затем нажми «Проверить»."
   html: |
     <nav>
-      <!-- список ссылок -->
+      <ul>
+        <li><a href="#">Главная</a></li>
+        <li><a href="#">Каталог</a></li>
+        <li><a href="#">___</a></li>
+      </ul>
     </nav>
   css: |
     a { color: #4F46E5; }
+  answer:
+    field: html
+    missing: "Контакты"
   checks:
     - exists: "nav ul"
       fail: "Внутри nav нет списка ul"
     - js: "const links = [...doc.querySelectorAll('nav ul > li > a')]; const labels = ['Главная', 'Каталог', 'Контакты']; return links.length === labels.length && links.every((a, i) => a.textContent.trim() === labels[i] && a.getAttribute('href')?.trim())"
       fail: "Сохрани три пункта в указанном порядке и добавь каждой ссылке адрес."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Меню сайта почти всегда — список ссылок. Так его понимают поисковики и программы экранного доступа.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Структура: `nav` → `ul` → три `li` → в каждом `a`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Пока страниц нет, пишите `href="#"`.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```html
-<nav>
-  <ul>
-    <li><a href="#">Главная</a></li>
-    <li><a href="#">Каталог</a></li>
-    <li><a href="#">Контакты</a></li>
-  </ul>
-</nav>
-```
-</Hint>

@@ -52,7 +52,7 @@ game:
         align-items: center;
       target: "display: flex; justify-content: space-between; align-items: center; padding: 0 24px;"
 warmup:
-  task: "Поставь шапку в строку: у .header — flex, логотип слева, кнопка справа, всё по центру по вертикали. Пункты меню (ul) тоже поставь в строку с промежутком 24px и убери у списка точки."
+  task: "В поле CSS замени ___ на «24px». Затем нажми «Проверить»."
   html: |
     <header class="header">
       <a class="logo" href="#">КУДА_СХОДИТЬ</a>
@@ -71,19 +71,25 @@ warmup:
     .header {
       padding: 16px 24px;
       background: #111827;
-      /* строка */
+
     }
 
     .menu {
       margin: 0;
       padding: 0;
-      /* строка и промежутки */
+
     }
 
     .header a {
       color: #fff;
       text-decoration: none;
     }
+
+    .header { display: flex; justify-content: space-between; align-items: center; }
+    .menu { display: flex; gap: ___; list-style: none; margin: 0; padding: 0; }
+  answer:
+    field: css
+    missing: "24px"
   checks:
     - selector: ".header"
       style: { display: "flex" }
@@ -166,21 +172,6 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 
 <Warmup />
 
-<Hint title="Подсказка 1">
-Нарисуйте на листке, что лежит в чём: `header` → `.container` → (`logo`, `nav` → `ul` → `li`, `button`). Flex нужен каждому, чьи дети должны стоять в ряд: это `.container` в шапке и `ul`.
-</Hint>
-
-<Hint title="Подсказка 2">
-Если в макете кнопки в шапке нет и меню должно быть справа, `space-between` на двух элементах так и сработает: логотип слева, меню справа.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-~~~css
-.header { display: flex; justify-content: space-between; align-items: center; }
-.menu { display: flex; gap: 24px; list-style: none; margin: 0; padding: 0; }
-~~~
-</Hint>
-
 ## Делаем свой сайт
 
 1. Содержимое шапки лежит в `.container` (шаг 2.3). Поэтому flex ставим контейнеру внутри шапки: `.header .container`. Именно его дети — логотип, `nav` и кнопка.
@@ -192,7 +183,7 @@ import { Preview, Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc, Game }
 
 <BlockLinks />
 
-<Hint title="Пример для проекта" afterPractice>
+<Hint title="Пример для проекта">
 ```css
 .header .container {
   display: flex;

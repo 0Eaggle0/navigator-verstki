@@ -6,7 +6,7 @@ topic: js
 sidebar:
   order: 11
 warmup:
-  task: "По клику на кнопку .plus увеличивай число в .count на 1. Храни значение в переменной let count."
+  task: "В поле JavaScript замени ___ на «1». Затем нажми «Проверить»."
   html: |
     <p>Идут: <span class="count">0</span></p>
     <button class="plus" type="button">Я тоже иду</button>
@@ -14,34 +14,21 @@ warmup:
     .count { font-weight: 700; }
   js: |
     let count = 0;
+    const countEl = document.querySelector('.count');
 
-    // по клику: count + 1 и записать в .count
+    document.querySelector('.plus').addEventListener('click', function () {
+      count = count + ___;
+      countEl.textContent = count;
+    });
+  answer:
+    field: js
+    missing: "1"
   checks:
     - js: "const b = doc.querySelector('.plus'), counter = doc.querySelector('.count'); if (counter.textContent.trim() !== '0') return false; return [1,2,3,4].every(n => { b.click(); return counter.textContent.trim() === String(n); })"
       fail: "Число должно начинаться с нуля и увеличиваться на один за каждое нажатие."
 ---
-import { Warmup, Hint } from '~/components';
+import { Warmup } from '~/components';
 
 Переменная, событие и запись в DOM — всё, что нужно для счётчика «лайков» или «иду».
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Значение счётчика должно переживать отдельные клики. Подумай, где объявить переменную.
-</Hint>
-
-<Hint title="Подсказка 2">
-После каждого клика обновляй сначала число в памяти, затем текст на странице.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-let count = 0;
-const countEl = document.querySelector('.count');
-
-document.querySelector('.plus').addEventListener('click', function () {
-  count = count + 1;
-  countEl.textContent = count;
-});
-```
-</Hint>

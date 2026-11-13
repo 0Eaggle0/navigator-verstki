@@ -14,7 +14,7 @@ links:
     url: https://doka.guide/css/media/
 warmup:
   width: 375
-  task: "Превью шириной с телефон. По клику на кнопку .burger переключай у .menu класс open (меню показывается). Заодно меняй у кнопки aria-expanded: \"true\", когда меню открыто, и \"false\", когда закрыто."
+  task: "В поле JavaScript замени ___ на «open». Затем нажми «Проверить»."
   html: |
     <header class="header">
       <a class="logo" href="#">СКИНЕМСЯ</a>
@@ -63,10 +63,16 @@ warmup:
       display: flex;            /* класс open его показывает */
     }
   js: |
-    // Найди кнопку и меню
+    const burger = document.querySelector('.burger');
+    const menu = document.querySelector('.menu');
 
-    // По клику: переключи класс open у меню
-    // и поставь aria-expanded у кнопки
+    burger.addEventListener('click', function () {
+      const isOpen = menu.classList.toggle('___');
+      burger.setAttribute('aria-expanded', isOpen);
+    });
+  answer:
+    field: js
+    missing: "open"
   checks:
     - js: "return getComputedStyle(doc.querySelector('.menu')).display === 'none'"
       fail: "Меню должно быть скрыто, пока не нажали на бургер"
@@ -140,26 +146,6 @@ button.addEventListener('click', () => {
 
 <Warmup />
 
-<Hint title="Подсказка 1">
-В стартовом CSS уже описано открытое меню. Найди, какой класс включает это правило.
-</Hint>
-
-<Hint title="Подсказка 2">
-Сохрани состояние после переключения класса и передай его кнопке, чтобы она сообщала, открыто ли меню.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-const burger = document.querySelector('.burger');
-const menu = document.querySelector('.menu');
-
-burger.addEventListener('click', function () {
-  const isOpen = menu.classList.toggle('open');
-  burger.setAttribute('aria-expanded', isOpen);
-});
-```
-</Hint>
-
 ## Делаем свой сайт
 
 1. Добавьте в шапку кнопку `<button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>`.
@@ -172,7 +158,7 @@ burger.addEventListener('click', function () {
 
 <BlockLinks />
 
-<Hint title="Пример для проекта" afterPractice>
+<Hint title="Пример для проекта">
 ```css
 .burger {
   display: none;

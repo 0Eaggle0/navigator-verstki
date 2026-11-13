@@ -1,19 +1,18 @@
 ---
-// Подсказка или решение. На странице открываются строго по очереди:
-// следующую можно открыть, только когда открыта предыдущая.
+// Последовательное открытие сохранено в первых двух уроках.
 // Открытая подсказка забирает звезду «без подсказок» у этого уровня.
 // <Hint title="Подсказка 1">текст</Hint>
 import Icon from './Icon.astro';
 interface Props {
 	title: string;
-	afterPractice?: boolean;
 }
-const { title, afterPractice } = Astro.props;
-const id = Astro.locals.starlightRoute.entry.id;
+const { title } = Astro.props;
+const { id, data } = Astro.locals.starlightRoute.entry;
+const sequential = data.lesson === 1 || data.lesson === 2;
 ---
 
-<details class:list={['hint not-content', { 'is-locked': afterPractice }]} data-id={id} data-after-practice={afterPractice ? '' : undefined}>
-	<summary class="px-font" aria-disabled={afterPractice ? 'true' : undefined}>
+<details class="hint not-content" data-id={id} data-sequential={sequential ? '' : undefined}>
+	<summary class="px-font">
 		<Icon name="bulb" size={18} class="hint__bulb" />
 		<Icon name="lock" size={18} class="hint__lock" />
 		{title}
@@ -22,25 +21,15 @@ const id = Astro.locals.starlightRoute.entry.id;
 </details>
 
 <script>
-	import { load, update, PRACTICE_VERSION } from '~/lib/storage';
+	import { load, update } from '~/lib/storage';
 	const hints = [...document.querySelectorAll<HTMLDetailsElement>('details.hint')];
-	const passedHere = new Set<string>();
 	const lock = () => {
-		const passed = load().practicePass;
 		hints.forEach((h, i) => {
-			const id = h.dataset.id!;
-			const locked = h.hasAttribute('data-after-practice')
-				? !passedHere.has(id) && passed?.[id] !== PRACTICE_VERSION
-				: i > 0 && !hints[i - 1].open;
+			const locked = h.hasAttribute('data-sequential') && i > 0 && !hints[i - 1].open;
 			h.classList.toggle('is-locked', locked);
 			h.querySelector('summary')!.setAttribute('aria-disabled', String(locked));
 		});
 	};
-	window.addEventListener('nav-progress', lock);
-	document.addEventListener('practice-passed', event => {
-		passedHere.add((event as CustomEvent<string>).detail);
-		lock();
-	});
 	hints.forEach((h) => {
 		h.querySelector('summary')!.addEventListener('click', (e) => {
 			if (h.classList.contains('is-locked')) e.preventDefault();
@@ -48,7 +37,7 @@ const id = Astro.locals.starlightRoute.entry.id;
 		h.addEventListener('toggle', () => {
 			lock();
 			const id = h.dataset.id!;
-			if (h.open && !h.hasAttribute('data-after-practice')) update((p) => !p.hints.includes(id) && p.hints.push(id));
+			if (h.open && !load().hints.includes(id)) update((p) => p.hints.push(id));
 		});
 	});
 	lock();
@@ -102,9 +91,6 @@ const id = Astro.locals.starlightRoute.entry.id;
 		font-family: var(--sl-font);
 		font-weight: 400;
 		font-size: var(--sl-text-sm);
-	}
-	.hint.is-locked[data-after-practice] summary::after {
-		content: 'после зачёта разминки';
 	}
 	.hint__body {
 		padding: 0.75rem 1rem;

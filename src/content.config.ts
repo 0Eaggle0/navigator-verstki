@@ -32,6 +32,10 @@ const step = z.object({
 			html: z.string().default(''),
 			css: z.string().default(''),
 			js: z.string().optional(), // есть поле (даже пустое) — в песочнице появятся JavaScript и консоль
+			answer: z.object({
+				field: z.enum(['html', 'css', 'js']),
+				missing: z.string().min(1),
+			}).optional(),
 			width: z.number().optional(), // ширина превью в px, например 375 — «как на телефоне»
 			checkStorage: z.record(z.string(), z.string()).optional(),
 			checks: z.array(check).default([]),

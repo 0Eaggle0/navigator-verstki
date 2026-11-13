@@ -12,17 +12,23 @@ links:
   - title: "learn.javascript.ru: функции"
     url: https://learn.javascript.ru/function-basics
 warmup:
-  task: "Объяви переменную name со своим именем. Напиши функцию greet(n), которая возвращает строку «Привет, n!». Выведи greet(name) в консоль через console.log и запиши этот же текст в заголовок h1."
+  task: "В поле JavaScript замени ___ на «log». Затем нажми «Проверить»."
   html: |
     <h1>Здесь будет приветствие</h1>
   css: |
     h1 { color: #4F46E5; }
   js: |
-    // 1. Переменная с именем
+    const name = 'Аня';
 
-    // 2. Функция greet
+    function greet(n) {
+      return 'Привет, ' + n + '!';
+    }
 
-    // 3. console.log и запись в заголовок
+    console.___(greet(name));
+    document.querySelector('h1').textContent = greet(name);
+  answer:
+    field: js
+    missing: "log"
   checks:
     - js: "return typeof greet === 'function' && greet('Оля') === 'Привет, Оля!' && greet('Миша') === 'Привет, Миша!'"
       fail: "Проверь, что функция возвращает приветствие с переданным ей именем."
@@ -51,7 +57,7 @@ mistakes:
     a: "Функцию нужно вызвать: greet(name). Просто объявить мало."
 blocks: []
 ---
-import { Links, Warmup, Hint, BlockLinks, Checklist, Stuck, Npc } from '~/components';
+import { Links, Warmup, BlockLinks, Checklist, Stuck, Npc } from '~/components';
 
 ## Теория
 
@@ -86,27 +92,6 @@ console.log(cityLabel('Омск'));
 В песочнице под превью есть своя **консоль** — туда попадает всё из `console.log` и ошибки с номером строки.
 
 <Warmup />
-
-<Hint title="Подсказка 1">
-Раздели задачу на два шага: функция возвращает строку, затем вызов функции передаёт её в заголовок и консоль.
-</Hint>
-
-<Hint title="Подсказка 2">
-В примере с городом замени аргумент другим городом и посмотри, что изменится. В своём коде сделай то же с двумя именами.
-</Hint>
-
-<Hint title="Разбор разминки" afterPractice>
-```js
-const name = 'Аня';
-
-function greet(n) {
-  return 'Привет, ' + n + '!';
-}
-
-console.log(greet(name));
-document.querySelector('h1').textContent = greet(name);
-```
-</Hint>
 
 ## Делаем свой сайт
 
