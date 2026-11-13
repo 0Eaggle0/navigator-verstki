@@ -34,6 +34,33 @@ warmup:
   answer:
     field: css
     missing: "2"
+  normal:
+    task: Сделай так, чтобы первая карточка .card--big занимала две колонки сетки.
+    explanation: 'Запись grid-column: span N растягивает элемент на N колонок.'
+    example: '.banner { grid-column: span 3; }'
+    replacement: "1"
+  hard:
+    task: 'В сетке из трёх колонок растяни первую карточку .card--big на две колонки через grid-column: span 2.'
+    html: |
+      <div class="grid">
+        <div class="card card--big">Главное событие</div>
+        <div class="card">2</div>
+        <div class="card">3</div>
+        <div class="card">4</div>
+        <div class="card">5</div>
+      </div>
+    css: |
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 8px;
+      }
+
+      .card {
+        padding: 16px;
+        background: #FEF3C7;
+        border-radius: 8px;
+      }
   checks:
     - js: "const grid = doc.querySelector('.grid'), tracks = getComputedStyle(grid).gridTemplateColumns.split(' ').map(parseFloat), big = doc.querySelector('.card--big'); const gap = parseFloat(getComputedStyle(grid).columnGap); return tracks.length === 3 && Math.abs(big.getBoundingClientRect().width - (tracks[0] + tracks[1] + gap)) < 2"
       fail: "Первая карточка должна занимать ровно две колонки."

@@ -48,6 +48,38 @@ warmup:
   answer:
     field: js
     missing: "showModal"
+  normal:
+    task: Сделай так, чтобы кнопка открытия показывала окно поверх страницы и блокировала клики по фону.
+    explanation: У dialog метод show открывает обычное окно. Метод showModal открывает модальное окно, у которого фон недоступен.
+    example: helpDialog.showModal();
+    replacement: "show"
+  hard:
+    task: По клику на .open-modal открой окно .modal методом showModal(), по клику на .close-modal — закрой методом close().
+    html: |
+      <button class="open-modal" type="button">Создать сбор</button>
+
+      <dialog class="modal">
+        <h2>Новый сбор</h2>
+        <p>Название, сумма и срок — и можно звать друзей.</p>
+        <button class="close-modal" type="button">Закрыть</button>
+      </dialog>
+    css: |
+      .modal {
+        max-width: 320px;
+        padding: 24px;
+        border: 0;
+        border-radius: 16px;
+      }
+
+      .modal::backdrop {
+        background: rgba(0, 0, 0, 0.5);   /* затемнение под окном */
+      }
+    js: |
+      // Найди окно и обе кнопки
+
+      // Открытие: modal.showModal()
+
+      // Закрытие: modal.close()
   checks:
     - js: "return !doc.querySelector('.modal').open"
       fail: "Окно открыто сразу. Оно должно открываться только по кнопке"

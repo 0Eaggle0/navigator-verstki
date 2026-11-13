@@ -19,6 +19,22 @@ warmup:
   answer:
     field: html
     missing: "Кошка Мурка"
+  normal:
+    task: Добавь картинке описание «Кошка Мурка». Остальная карточка готова.
+    explanation: Атрибут alt задаёт описание картинки. Текст пишут между кавычками после alt=.
+    example: <img src="dog.svg" alt="Пёс Шарик">
+    replacement: ""
+  hard:
+    task: Замени div на article, «Заголовок» сделай h3, текст — p, картинке добавь alt «Кошка Мурка», а «Подробнее» сделай ссылкой a с href.
+    html: |
+      <div class="card">
+        <img src="img/murka.svg" width="200">
+        <div>Мурка</div>
+        <div>1 год, спокойная</div>
+        <span>Подробнее</span>
+      </div>
+    css: |
+      .card { max-width: 220px; }
   checks:
     - exists: "article.card"
       fail: "Карточка должна быть тегом article с классом card"

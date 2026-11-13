@@ -4,6 +4,7 @@
 import type { CollectionEntry } from 'astro:content';
 import { url } from '~/lib/route';
 import practices from '~/data/block-practices.json';
+import { DIFFICULTIES } from '~/lib/storage';
 interface Props { practice?: CollectionEntry<'docs'> }
 const { practice } = Astro.props;
 const entry = practice ?? Astro.locals.starlightRoute.entry;
@@ -17,17 +18,38 @@ const example = answer && w?.[answer.field]?.replace('___', () => answer.missing
 if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 	throw new Error(`В задании ${entry.id} нужен ровно один пропуск в поле ${answer.field}`);
 }
+const normal = w?.normal;
+const variants = answer && normal && w?.hard && {
+	easy: { task: w.task, html: w.html, css: w.css, js: w.js },
+	normal: {
+		task: normal.task,
+		html: w.html,
+		css: w.css,
+		js: w.js,
+		[answer.field]: w[answer.field]!.replace('___', () => normal.replacement),
+	},
+	hard: w.hard,
+};
 ---
 
 {
 	w && (
-		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined} data-manual={manual ? '' : undefined} data-width={w.width} data-check-storage={JSON.stringify(w.checkStorage ?? {})} data-return-blocks={practice ? undefined : JSON.stringify(returns)} data-answer-field={answer?.field}>
+		<nav-sandbox class="sandbox not-content" data-id={entry.id} data-html={w.html} data-css={w.css} data-checks={JSON.stringify(w.checks)} data-js={hasJs ? w.js : undefined} data-manual={manual ? '' : undefined} data-width={w.width} data-check-storage={JSON.stringify(w.checkStorage ?? {})} data-return-blocks={practice ? undefined : JSON.stringify(returns)} data-answer-field={answer?.field} data-variants={variants ? JSON.stringify(variants) : undefined}>
 			{!practice && entry.data.lesson === undefined && <span id="разминка" />}
+			{variants && normal && (
+				<>
+					<p class="sandbox__difficulty">Сложность: <b>{DIFFICULTIES.normal}</b>. <button type="button" data-open-profile>Изменить в профиле</button></p>
+					<div class="sandbox__theory" hidden>
+						<p><strong>Как это работает.</strong> {normal.explanation}</p>
+						<pre><code>{normal.example}</code></pre>
+					</div>
+				</>
+			)}
 			<p class="sandbox__task">
-				<strong>Задача:</strong> {w.task}
+				<strong>Задача:</strong> <span>{variants?.normal.task ?? w.task}</span>
 			</p>
 			{answer && (
-				<details class="sandbox__answer">
+				<details class="sandbox__answer" data-pagefind-ignore hidden={!!variants}>
 					<summary>Показать полный ответ</summary>
 					<p>Впиши <code>{answer.missing}</code> вместо <code>___</code> в поле {language}.</p>
 					<pre><code>{example}</code></pre>
@@ -35,7 +57,7 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 					<p>Кнопка заменит код в редакторах. Затем нажми «Проверить».</p>
 				</details>
 			)}
-			{answer && <p class="sandbox__draft-note" hidden>Открыт твой черновик. Если хочешь начать с пропуска, нажми «Сбросить к началу».</p>}
+			{answer && <p class="sandbox__draft-note" hidden>Открыт твой черновик. Чтобы вернуть стартовый код, нажми «Сбросить к началу».</p>}
 			<div class="sandbox__grid">
 				<div class="sandbox__editors">
 					<label>
@@ -96,7 +118,7 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 }
 
 <script>
-	import { load, update, PRACTICE_VERSION } from '~/lib/storage';
+	import { DIFFICULTIES, difficultyOf, load, update, PRACTICE_VERSION, type Difficulty } from '~/lib/storage';
 	import { runChecks, unclosedTag, type Check } from '~/lib/checks';
 	import { srcdoc } from '~/lib/srcdoc';
 	import { checkFrame } from '~/lib/check-frame';
@@ -120,6 +142,12 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 			const fields = [...this.querySelectorAll('textarea')];
 			const [htmlBox, cssBox, jsBox] = fields;
 			const answerField = fields.find(box => box.name === this.dataset.answerField);
+			const answer = this.querySelector<HTMLDetailsElement>('.sandbox__answer');
+			const draftNote = this.querySelector<HTMLElement>('.sandbox__draft-note');
+			const variants = this.dataset.variants && JSON.parse(this.dataset.variants) as Record<Difficulty, { task: string; html: string; css: string; js?: string }>;
+			const starter = { html, css, js };
+			let difficulty = variants ? difficultyOf(load().profile?.difficulty) : 'easy';
+			let draftKey = id;
 			const frame = this.querySelector<HTMLIFrameElement>('iframe:not(.sandbox__checker)')!;
 			// Где запускаем проверки: для JS — в скрытой копии, иначе прямо в превью
 			const checker = this.querySelector<HTMLIFrameElement>('.sandbox__checker') ?? frame;
@@ -137,10 +165,29 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 			showReturn();
 			let pending: AbortController | undefined;
 
-			const draft = load().drafts[id];
-			htmlBox.value = draft?.html ?? html;
-			cssBox.value = draft?.css ?? css;
-			if (jsBox) jsBox.value = draft?.js ?? js ?? '';
+			const putCode = (code: { html: string; css: string; js?: string }) => {
+				htmlBox.value = code.html;
+				cssBox.value = code.css;
+				if (jsBox) jsBox.value = code.js ?? '';
+			};
+			const modeStarter = () => variants ? variants[difficulty] : starter;
+			const showMode = () => {
+				draftKey = difficulty === 'easy' ? id : id + ':' + difficulty;
+				const code = modeStarter();
+				const draft = load().drafts[draftKey];
+				putCode({ ...code, ...draft });
+				if (draftNote) draftNote.hidden = !draft;
+				if (answer) {
+					answer.hidden = difficulty !== 'easy';
+					answer.open = false;
+				}
+				if (variants) {
+					this.dataset.difficulty = difficulty;
+					this.querySelector('.sandbox__task span')!.textContent = variants[difficulty].task;
+					this.querySelector('.sandbox__difficulty b')!.textContent = DIFFICULTIES[difficulty];
+					this.querySelector<HTMLElement>('.sandbox__theory')!.hidden = difficulty !== 'normal';
+				}
+			};
 
 			// Консоль: сообщения приходят из превью через postMessage
 			window.addEventListener('message', (e) => {
@@ -217,7 +264,7 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 			if (button) {
 				button.disabled = false;
 				button.addEventListener('click', async () => {
-					if (answerField?.value.includes('___')) {
+					if (difficulty === 'easy' && answerField?.value.includes('___')) {
 						showResults([{ ok: false, message: 'Заполни пропуск ___ или нажми «Показать полный ответ».' }]);
 						return;
 					}
@@ -248,21 +295,22 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 				});
 			}
 
-			let timer: number;
+			let timer: number | undefined;
+			const saveDraft = () => {
+				timer = undefined;
+				update(p => { p.drafts[draftKey] = { html: htmlBox.value, css: cssBox.value, js: jsBox?.value }; });
+			};
 			const onInput = () => {
 				invalidate();
 				clearTimeout(timer);
 				timer = window.setTimeout(
 					() => {
 						render();
-						update((p) => (p.drafts[id] = { html: htmlBox.value, css: cssBox.value, js: jsBox?.value }));
+						saveDraft();
 					},
 					hasJs ? 800 : 400 // JS ждём дольше: недописанный код почти всегда с ошибкой
 				);
 			};
-			const answer = this.querySelector<HTMLDetailsElement>('.sandbox__answer');
-			const draftNote = this.querySelector<HTMLElement>('.sandbox__draft-note');
-			if (draftNote && draft) draftNote.hidden = fields.some(box => box.value.includes('___'));
 			const markHint = () => {
 				if (!load().hints.includes(id)) update(p => p.hints.push(id));
 			};
@@ -272,9 +320,7 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 			if (answer && answerField) {
 				answer.querySelector('button')!.addEventListener('click', () => {
 					markHint();
-					htmlBox.value = html;
-					cssBox.value = css;
-					if (jsBox) jsBox.value = js ?? '';
+					putCode(starter);
 					answerField.value = answer.querySelector('pre code')!.textContent!;
 					onInput();
 					if (draftNote) draftNote.hidden = true;
@@ -297,15 +343,27 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 
 			this.querySelector('.sandbox__reset')!.addEventListener('click', () => {
 				clearTimeout(timer);
+				timer = undefined;
 				invalidate();
-				htmlBox.value = html;
-				cssBox.value = css;
-				if (jsBox) jsBox.value = js ?? '';
+				putCode(modeStarter());
 				if (draftNote) draftNote.hidden = true;
-				update((p) => delete p.drafts[id]);
+				update((p) => delete p.drafts[draftKey]);
 				render();
 			});
 
+			if (variants) window.addEventListener('nav-progress', () => {
+				const next = difficultyOf(load().profile?.difficulty);
+				if (next === difficulty) return;
+				difficulty = next;
+				if (timer !== undefined) {
+					clearTimeout(timer);
+					saveDraft();
+				}
+				invalidate();
+				showMode();
+				render();
+			});
+			showMode();
 			render();
 		}
 	}
@@ -342,6 +400,15 @@ if (answer && (!example || w?.[answer.field]?.split('___').length !== 2)) {
 		max-height: 16rem;
 		padding: .65rem;
 		background: var(--a-bg);
+	}
+	.sandbox__theory pre {
+		overflow: auto;
+		padding: .65rem;
+		background: var(--a-bg);
+	}
+	.sandbox__difficulty button {
+		color: var(--sl-color-text-accent);
+		text-decoration: underline;
 	}
 	.sandbox__grid {
 		display: grid;

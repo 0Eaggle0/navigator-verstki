@@ -36,6 +36,18 @@ const step = z.object({
 				field: z.enum(['html', 'css', 'js']),
 				missing: z.string().min(1),
 			}).optional(),
+			normal: z.object({
+				task: z.string(),
+				explanation: z.string(),
+				example: z.string(),
+				replacement: z.string(),
+			}).optional(),
+			hard: z.object({
+				task: z.string(),
+				html: z.string().default(''),
+				css: z.string().default(''),
+				js: z.string().optional(),
+			}).optional(),
 			width: z.number().optional(), // ширина превью в px, например 375 — «как на телефоне»
 			checkStorage: z.record(z.string(), z.string()).optional(),
 			checks: z.array(check).default([]),

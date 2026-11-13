@@ -51,6 +51,39 @@ warmup:
   answer:
     field: css
     missing: "24px"
+  normal:
+    task: На телефоне заголовок h1 должен быть 24 пикселя. Измени размер внутри медиазапроса.
+    explanation: Правила внутри @media действуют только на подходящих экранах. Размер букв задаёт font-size.
+    example: '@media (max-width: 600px) { h2 { font-size: 20px; } }'
+    replacement: "36px"
+  hard:
+    task: 'Превью шириной 375 px, как телефон. Добавь медиазапрос @media (max-width: 768px): в нём заголовок h1 — 24px, а .row — столбиком (flex-direction: column).'
+    html: |
+      <h1>Куда сходить в Омске</h1>
+      <div class="row">
+        <a class="button" href="#">Афиша</a>
+        <a class="button" href="#">Бесплатно</a>
+      </div>
+    css: |
+      h1 {
+        font-size: 40px;
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+      }
+
+      .button {
+        padding: 12px;
+        background: #111827;
+        color: #fff;
+        text-align: center;
+        text-decoration: none;
+        border-radius: 8px;
+      }
+
+      /* медиазапрос для телефона */
   checks:
     - selector: "h1"
       style: { font-size: "24px" }

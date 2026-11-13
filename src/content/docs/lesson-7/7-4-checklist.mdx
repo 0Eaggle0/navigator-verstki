@@ -27,6 +27,24 @@ warmup:
   answer:
     field: html
     missing: "alt=\"Серая кошка Мурка\""
+  normal:
+    task: Добавь картинке текстовое описание, чтобы его можно было прочитать, даже если картинка не видна.
+    explanation: Атрибут alt у тега img описывает, что изображено. Текст атрибута пишут в кавычках.
+    example: <img src="dog.svg" alt="Рыжий пёс">
+    replacement: ""
+  hard:
+    task: На этой странице четыре ошибки из чек-листа сдачи. Замени div.header на тег header, оставь один h1 (второй сделай h2), добавь картинке alt и дай ссылке href.
+    html: |
+      <div class="header">
+        <h1>КУДА_СХОДИТЬ</h1>
+      </div>
+      <main>
+        <h1>Афиша на выходные</h1>
+        <img src="img/murka.svg" width="150">
+        <p><a>Все события</a></p>
+      </main>
+    css: |
+      .header { padding: 8px; background: #EEF2FF; }
   checks:
     - exists: "header"
       fail: "Шапка сделана через div. Нужен семантический тег <header>"

@@ -32,6 +32,29 @@ warmup:
   answer:
     field: css
     missing: "center"
+  normal:
+    task: Передвинь кружок в центр по горизонтали. По вертикали он уже отцентрирован.
+    explanation: У flex-строки justify-content управляет положением по горизонтали. Значение center означает центр.
+    example: '.toolbar { display: flex; justify-content: center; }'
+    replacement: "flex-start"
+  hard:
+    task: Поставь кружок .dot ровно в центр .box по горизонтали и по вертикали с помощью Flexbox.
+    html: |
+      <div class="box">
+        <div class="dot"></div>
+      </div>
+    css: |
+      .box {
+        height: 200px;
+        background: #EEF2FF;
+      }
+
+      .dot {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #4F46E5;
+      }
   checks:
     - selector: ".box"
       style: { display: "flex" }

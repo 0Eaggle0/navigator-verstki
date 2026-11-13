@@ -3,6 +3,10 @@
 
 const KEY = 'nav-v1';
 export const PRACTICE_VERSION = 1;
+export const DIFFICULTIES = { easy: 'Лёгкий', normal: 'Обычный', hard: 'Сложный' } as const;
+export type Difficulty = keyof typeof DIFFICULTIES;
+export const difficultyOf = (value: unknown): Difficulty =>
+	value === 'easy' || value === 'hard' ? value : 'normal';
 let temporary: Progress | undefined;
 
 export function canSaveProgress() {
@@ -22,6 +26,7 @@ export type Profile = {
 	name: string; // имя или ник
 	team: string; // номер или название команды
 	role: 'student' | 'moderator';
+	difficulty?: Difficulty;
 	part?: number; // какую часть сайта делает ученик (1–4, см. src/data/parts.json)
 };
 

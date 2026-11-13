@@ -19,6 +19,19 @@ warmup:
   answer:
     field: css
     missing: "600px"
+  normal:
+    task: Ограничь ширину .container до 600 пикселей. На телефоне контейнер должен сжиматься.
+    explanation: max-width задаёт верхний предел ширины и позволяет блоку стать уже. Обычное width с числом в px задаёт фиксированную ширину.
+    example: '.article { max-width: 480px; }'
+    replacement: "1200px"
+  hard:
+    task: 'Объяви переменную --accent со значением #265846 и используй её для цвета заголовка. Задай странице шрифт system-ui с запасным sans-serif. Ограничь ширину контейнера 600 px и выровняй его по центру автоматическими боковыми отступами.'
+    html: |
+      <main class="container">
+        <h1>Клуб настольных игр</h1>
+        <p>Встречаемся по выходным.</p>
+      </main>
+    css: ''
   checks:
     - js: |
         const root = doc.documentElement;

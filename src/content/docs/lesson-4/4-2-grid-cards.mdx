@@ -104,6 +104,48 @@ warmup:
   answer:
     field: css
     missing: "cover"
+  normal:
+    task: 'Настрой картинки карточек: они должны заполнить рамку целиком без растяжения. Края можно обрезать.'
+    explanation: Свойство object-fit управляет вписыванием изображения. Режим cover сохраняет пропорции и обрезает лишнее.
+    example: '.photo img { object-fit: cover; }'
+    replacement: "fill"
+  hard:
+    task: 'Поставь карточки в сетку: у .cards — grid, колонки через repeat(auto-fill, minmax(140px, 1fr)) и промежуток 16px. Картинкам карточек задай object-fit: cover, чтобы они не сплющивались.'
+    html: |
+      <div class="cards">
+        <article class="card">
+          <img src="img/barsik.svg" alt="Рыжий кот Барсик">
+          <h3>Барсик</h3>
+        </article>
+        <article class="card">
+          <img src="img/sharik.svg" alt="Пёс Шарик">
+          <h3>Шарик</h3>
+        </article>
+        <article class="card">
+          <img src="img/murka.svg" alt="Серая кошка Мурка">
+          <h3>Мурка</h3>
+        </article>
+      </div>
+    css: |
+      .cards {
+        /* сетка */
+      }
+
+      .card {
+        padding: 8px;
+        background: #FFF8F0;
+        border-radius: 12px;
+      }
+
+      .card img {
+        width: 100%;
+        height: 100px;
+        /* картинка без искажений */
+      }
+
+      .card h3 {
+        margin: 8px 0 0;
+      }
   checks:
     - selector: ".cards"
       style: { display: "grid" }

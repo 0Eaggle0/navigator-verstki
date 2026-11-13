@@ -25,6 +25,19 @@ warmup:
   answer:
     field: css
     missing: "8px"
+  normal:
+    task: Скругли углы кнопки .button на 8 пикселей.
+    explanation: Свойство border-radius задаёт радиус скругления. Число с px — это радиус в пикселях.
+    example: '.card { border-radius: 12px; }'
+    replacement: "0"
+  hard:
+    task: 'Оформи ссылку .button как кнопку: display: inline-block, padding 12px 24px, фон #4F46E5, белый текст без подчёркивания, скругление 8px.'
+    html: |
+      <a class="button" href="#">Найти команду</a>
+    css: |
+      .button {
+
+      }
   checks:
     - selector: ".button"
       style: { display: "inline-block" }

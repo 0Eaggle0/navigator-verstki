@@ -62,6 +62,52 @@ warmup:
   answer:
     field: js
     missing: "all"
+  normal:
+    task: Почини кнопку «Все». Посмотри её data-filter в HTML и используй это значение в исключении внутри фильтра.
+    explanation: dataset.filter читает значение атрибута data-filter. Сравнивай его с точной строкой из HTML.
+    example: |-
+      // Для <button data-filter="free"> значение будет 'free'.
+      if (button.dataset.filter === 'free') { /* только бесплатные */ }
+    replacement: "everything"
+  hard:
+    task: Сделай фильтр. У каждой кнопки есть data-filter, у каждой карточки — data-type. По клику на кнопку покажи только карточки с тем же типом (остальным поставь hidden = true). Кнопка «Все» (data-filter="all") показывает все карточки.
+    html: |
+      <div class="filters">
+        <button type="button" data-filter="all">Все</button>
+        <button type="button" data-filter="cat">Кошки</button>
+        <button type="button" data-filter="dog">Собаки</button>
+      </div>
+
+      <div class="cards">
+        <article class="card" data-type="cat">Барсик</article>
+        <article class="card" data-type="dog">Шарик</article>
+        <article class="card" data-type="cat">Мурка</article>
+        <article class="card" data-type="dog">Бобик</article>
+      </div>
+    css: |
+      .filters {
+        display: flex;
+        gap: 8px;
+        margin-bottom: 12px;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .card {
+        padding: 16px;
+        background: #FFF8F0;
+        border-radius: 8px;
+      }
+    js: |
+      const buttons = document.querySelectorAll('[data-filter]');
+      const cards = document.querySelectorAll('.card');
+
+      // Для каждой кнопки: по клику пройди по карточкам
+      // и спрячь те, у которых другой data-type
   checks:
     - js: "const cards = [...doc.querySelectorAll('.cards > .card')]; return ['cat', 'dog'].every(type => cards.some(c => c.dataset.type === type)) && cards.length === 4 && cards.every(c => c.checkVisibility({ visibilityProperty: true, opacityProperty: true }))"
       fail: "До фильтрации должны быть видны все четыре карточки."

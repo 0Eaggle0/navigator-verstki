@@ -34,6 +34,31 @@ warmup:
   answer:
     field: js
     missing: "dark"
+  normal:
+    task: Настрой кнопку так, чтобы она добавляла и убирала класс, который включает тёмные цвета. Посмотри имя класса в CSS.
+    explanation: classList.toggle принимает имя класса без точки. Оно должно совпасть с именем после точки в CSS.
+    example: |-
+      // CSS: body.compact { padding: 4px; }
+      document.body.classList.toggle('compact');
+    replacement: "night"
+  hard:
+    task: 'По клику на кнопку .theme-button переключай у body класс dark: первый клик — тёмная тема, второй — обратно светлая. Используй querySelector, addEventListener и classList.toggle.'
+    html: |
+      <h1>Тёмная тема</h1>
+      <button class="theme-button" type="button">Переключить тему</button>
+    css: |
+      body {
+        transition: 0.3s;
+      }
+
+      body.dark {
+        background: #111827;
+        color: #F9FAFB;
+      }
+    js: |
+      // Найди кнопку
+
+      // По клику переключай класс dark у document.body
   checks:
     - js: "return !doc.body.classList.contains('dark')"
       fail: "Тема тёмная сразу при загрузке. Класс dark должен появляться только по клику"

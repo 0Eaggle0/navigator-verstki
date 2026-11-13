@@ -92,6 +92,44 @@ warmup:
   answer:
     field: css
     missing: "white"
+  normal:
+    task: Сделай текст в подвале .footer белым, чтобы его было видно на тёмном фоне.
+    explanation: Свойство color задаёт цвет текста. В CSS можно писать имена цветов, например black и white.
+    example: '.notice { color: black; }'
+    replacement: "#333"
+  hard:
+    task: 'Сверстай подвал: тёмный фон, светлый текст, отступы 24px. Колонки .footer__cols разложи сеткой на 3 колонки (repeat(3, 1fr)) с промежутком 24px.'
+    html: |
+      <footer class="footer">
+        <div class="footer__cols">
+          <div>
+            <b>СКИНЕМСЯ</b>
+            <p>Честно делим общие траты</p>
+          </div>
+          <div>
+            <b>Разделы</b>
+            <p>Сборы · Как это работает</p>
+          </div>
+          <div>
+            <b>Контакты</b>
+            <p>hello@skinemsya.ru</p>
+          </div>
+        </div>
+      </footer>
+    css: |
+      body { margin: 0; }
+
+      .footer {
+        /* фон, цвет текста, отступы */
+      }
+
+      .footer__cols {
+        /* три колонки */
+      }
+
+      .footer p {
+        margin: 4px 0 0;
+      }
   checks:
     - js: "const s = getComputedStyle(doc.querySelector('.footer')); const luminance = color => { const ctx = doc.createElement('canvas').getContext('2d'); ctx.fillStyle = color; ctx.fillRect(0, 0, 1, 1); const [r,g,b,a] = ctx.getImageData(0, 0, 1, 1).data; const channels = [r,g,b].map(n => (n / 255) ** 2.2); return (0.2126*channels[0] + 0.7152*channels[1] + 0.0722*channels[2]) * a/255 + (1-a/255); }; const bg = luminance(s.backgroundColor), fg = luminance(s.color); return bg < 0.18 && (fg + 0.05) / (bg + 0.05) >= 4.5"
       fail: "Светлый текст должен хорошо читаться на тёмном фоне."

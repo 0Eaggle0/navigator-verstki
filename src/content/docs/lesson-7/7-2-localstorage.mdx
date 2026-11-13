@@ -78,6 +78,55 @@ warmup:
   answer:
     field: js
     missing: "favorites"
+  normal:
+    task: Почини восстановление избранного. Сделай так, чтобы чтение использовало тот же ключ, что и сохранение.
+    explanation: Хранилище находит запись по имени ключа. В setItem и getItem для одной записи имя должно совпадать.
+    example: |-
+      localStorage.setItem('theme', 'dark');
+      localStorage.getItem('theme');
+    replacement: "saved"
+  hard:
+    task: Сделай «избранное». По клику на ♥ (.fav) у карточки переключай класс active и сохраняй в localStorage под ключом favorites список id избранных карточек (JSON). При загрузке страницы отметь сохранённые. Внутри клика каждый раз читай список из localStorage заново.
+    html: |
+      <article class="card" data-id="barsik">
+        Барсик <button class="fav" type="button" aria-label="В избранное">♥</button>
+      </article>
+      <article class="card" data-id="sharik">
+        Шарик <button class="fav" type="button" aria-label="В избранное">♥</button>
+      </article>
+    css: |
+      .card {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px;
+        margin-bottom: 8px;
+        background: #FFF8F0;
+        border-radius: 8px;
+      }
+
+      .fav {
+        border: 0;
+        background: none;
+        font-size: 20px;
+        color: #D1D5DB;
+        cursor: pointer;
+      }
+
+      .fav.active {
+        color: #EF4444;
+      }
+    js: |
+      // Прочитать список: JSON.parse(localStorage.getItem('favorites') || '[]')
+      // Сохранить список: localStorage.setItem('favorites', JSON.stringify(list))
+
+      document.querySelectorAll('.card').forEach(function (card) {
+        const button = card.querySelector('.fav');
+        const id = card.dataset.id;
+
+        // 1. При загрузке: если id есть в списке — добавь button класс active
+
+        // 2. По клику: добавь или убери id из списка, сохрани, переключи класс
+      });
   checks:
     - js: "const a = doc.querySelector('[data-id=barsik] .fav'), b = doc.querySelector('[data-id=sharik] .fav'); return !a.classList.contains('active') && b.classList.contains('active')"
       fail: "При загрузке должно восстановиться сохранённое избранное."

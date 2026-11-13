@@ -62,7 +62,7 @@ const type = g?.type;
 							</button>
 						)}
 						{type === 'ghost' && (entry.data.lesson ?? 0) >= 3 && (
-							<button type="button" class="game__answer a-btn--sky">Вставить готовый CSS</button>
+							<button type="button" class="game__answer a-btn--sky" hidden>Вставить готовый CSS</button>
 						)}
 					</div>
 					<p class="game__hint" hidden />
@@ -87,7 +87,7 @@ const type = g?.type;
 }
 
 <script>
-	import { load, update } from '~/lib/storage';
+	import { difficultyOf, load, update } from '~/lib/storage';
 	import { ghostDoc, score, type GhostLevel } from '~/lib/games/ghost';
 	import { srcdoc } from '~/lib/srcdoc';
 	import { spriteCss } from '~/lib/sprites';
@@ -159,10 +159,20 @@ const type = g?.type;
 					clearTimeout(timer);
 					timer = window.setTimeout(render, 250);
 				});
-				this.querySelector('.game__answer')?.addEventListener('click', () => {
-					box.value = levels[n].target;
-					box.dispatchEvent(new Event('input'));
-				});
+				const answer = this.querySelector<HTMLButtonElement>('.game__answer');
+				if (answer) {
+					const showAnswer = () => {
+						const hidden = difficultyOf(load().profile?.difficulty) !== 'easy';
+						if (hidden !== answer.hidden) hint.hidden = true;
+						answer.hidden = hidden;
+					};
+					showAnswer();
+					window.addEventListener('nav-progress', showAnswer);
+					answer.addEventListener('click', () => {
+						box.value = levels[n].target;
+						box.dispatchEvent(new Event('input'));
+					});
+				}
 				show = (l) => {
 					$('.game__lock').textContent = `${l.selector ?? '.board'} {`;
 					box.value = codes[n];
@@ -243,7 +253,6 @@ const type = g?.type;
 				const l = levels[n];
 				$('.game__task').textContent = l.task;
 				hint.hidden = true;
-				hint.textContent = l.hint ?? 'Сравни, где стоят фигурки и где их призраки. Какое свойство это меняет?';
 				pips.forEach((p, k) => {
 					p.classList.toggle('is-on', k === n);
 					p.classList.toggle('is-done', passed.has(k));
@@ -255,6 +264,9 @@ const type = g?.type;
 
 			next.addEventListener('click', () => open(n + 1));
 			this.querySelector('.game__hint-btn')?.addEventListener('click', () => {
+				const showExact = !this.querySelector('.game__answer') || difficultyOf(load().profile?.difficulty) === 'easy';
+				hint.textContent = (showExact ? levels[n].hint : undefined)
+					?? 'Сравни, где стоят фигурки и где их призраки. Какое свойство из теории меняет их положение?';
 				hint.hidden = !hint.hidden;
 				if (!hint.hidden) shake(hint);
 			});
@@ -464,6 +476,7 @@ const type = g?.type;
 		background: #25244f;
 	}
 	.game__hint[hidden],
+	.game__answer[hidden],
 	.game__next[hidden] {
 		display: none;
 	}

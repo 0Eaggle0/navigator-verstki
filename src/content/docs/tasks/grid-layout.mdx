@@ -27,6 +27,24 @@ warmup:
   answer:
     field: css
     missing: "16px"
+  normal:
+    task: Сделай промежуток между колонками .layout равным 16 пикселям.
+    explanation: У сетки расстояние между колонками и рядами можно задать одним свойством gap.
+    example: '.grid { display: grid; gap: 10px; }'
+    replacement: "4px"
+  hard:
+    task: 'Сделай у .layout сетку из двух колонок: левая вдвое шире правой (2fr 1fr), промежуток 16px.'
+    html: |
+      <div class="layout">
+        <div class="main">Описание события</div>
+        <div class="side">Купить билет</div>
+      </div>
+    css: |
+      .main, .side {
+        padding: 16px;
+        background: #DBEAFE;
+        border-radius: 8px;
+      }
   checks:
     - selector: ".layout"
       style: { display: "grid", column-gap: "16px" }

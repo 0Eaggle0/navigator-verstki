@@ -89,6 +89,33 @@ warmup:
   answer:
     field: css
     missing: "12px"
+  normal:
+    task: Увеличь промежуток между плитками .grid до 12 пикселей.
+    explanation: В сетке одно значение gap задаёт расстояние сразу между рядами и колонками.
+    example: '.gallery { gap: 8px; }'
+    replacement: "4px"
+  hard:
+    task: 'Разложи шесть плиток в сетку из трёх одинаковых колонок: у .grid включи grid, задай три колонки через repeat(3, 1fr) и промежуток 12px.'
+    html: |
+      <div class="grid">
+        <div class="tile">1</div>
+        <div class="tile">2</div>
+        <div class="tile">3</div>
+        <div class="tile">4</div>
+        <div class="tile">5</div>
+        <div class="tile">6</div>
+      </div>
+    css: |
+      .grid {
+        /* сетка */
+      }
+
+      .tile {
+        padding: 20px;
+        background: #DBEAFE;
+        border-radius: 8px;
+        text-align: center;
+      }
   checks:
     - selector: ".grid"
       style: { display: "grid" }

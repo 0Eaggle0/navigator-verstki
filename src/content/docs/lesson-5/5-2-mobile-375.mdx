@@ -108,6 +108,64 @@ warmup:
   answer:
     field: css
     missing: "1fr"
+  normal:
+    task: На телефоне поставь карточки .cards в одну колонку. Настрой мобильное правило.
+    explanation: 'grid-template-columns описывает колонки: одно значение на колонку. Единица fr делит свободное место.'
+    example: '.grid { grid-template-columns: 1fr 1fr; } /* две колонки */'
+    replacement: "1fr 1fr"
+  hard:
+    task: 'На телефоне страница уехала вбок. В медиазапросе @media (max-width: 768px) поставь шапку столбиком (flex-direction: column), а карточкам сделай одну колонку (grid-template-columns: 1fr). Горизонтальной прокрутки быть не должно.'
+    html: |
+      <header class="header">
+        <a class="logo" href="#">ТИММЕЙТ</a>
+        <nav>
+          <ul class="menu">
+            <li><a href="#">Анкеты</a></li>
+            <li><a href="#">Рейтинг</a></li>
+            <li><a href="#">Отзывы</a></li>
+            <li><a href="#">Войти</a></li>
+          </ul>
+        </nav>
+      </header>
+      <div class="cards">
+        <div class="card">Аня · дизайн</div>
+        <div class="card">Петя · код</div>
+        <div class="card">Оля · тексты</div>
+      </div>
+    css: |
+      body { margin: 0; }
+
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        padding: 12px;
+        background: #EEF2FF;
+      }
+
+      .menu {
+        display: flex;
+        gap: 32px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(3, 200px);
+        gap: 12px;
+        padding: 12px;
+      }
+
+      .card {
+        padding: 24px;
+        background: #DBEAFE;
+        border-radius: 8px;
+      }
+
+      /* медиазапрос для телефона */
   checks:
     - selector: ".header"
       style: { flex-direction: "column" }

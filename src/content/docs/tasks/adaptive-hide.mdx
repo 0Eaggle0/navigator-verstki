@@ -39,6 +39,33 @@ warmup:
   answer:
     field: css
     missing: "none"
+  normal:
+    task: Спрячь .desktop-only на телефоне. На широком экране этот элемент должен остаться.
+    explanation: 'Чтобы убрать элемент из раскладки, используют display: none. Ограничить действие узким экраном можно через @media.'
+    example: '@media (max-width: 500px) { .sidebar { display: none; } }'
+    replacement: "block"
+  hard:
+    task: 'Превью шириной 375 px. В медиазапросе @media (max-width: 768px) спрячь .desktop-only (display: none), а карточки .cards поставь в одну колонку.'
+    html: |
+      <p class="desktop-only">Самая большая афиша бесплатных событий Омска для подростков</p>
+      <div class="cards">
+        <div class="card">Концерт</div>
+        <div class="card">Квиз</div>
+      </div>
+    css: |
+      .cards {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 8px;
+      }
+
+      .card {
+        padding: 16px;
+        background: #EDE9FE;
+        border-radius: 8px;
+      }
+
+      /* медиазапрос */
   checks:
     - selector: ".desktop-only"
       style: { display: "none" }

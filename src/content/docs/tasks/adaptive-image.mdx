@@ -25,6 +25,22 @@ warmup:
   answer:
     field: css
     missing: "100%"
+  normal:
+    task: Сделай так, чтобы картинка не становилась шире своего контейнера.
+    explanation: max-width ограничивает ширину. Значение 100% означает всю ширину контейнера, 50% — половину.
+    example: '.logo { max-width: 50%; }'
+    replacement: "150%"
+  hard:
+    task: 'Превью шириной 375 px. Картинка шириной 600 px ломает страницу. Сделай так, чтобы она не выходила за экран (max-width: 100%) и сохраняла пропорции (height: auto).'
+    html: |
+      <h1>Шарик ищет дом</h1>
+      <img src="img/sharik.svg" width="600" height="400" alt="Пёс Шарик">
+    css: |
+      body { margin: 16px; }
+
+      img {
+
+      }
   checks:
     - js: "return doc.documentElement.scrollWidth <= doc.documentElement.clientWidth"
       fail: "Есть горизонтальная прокрутка — картинка шире экрана. Нужно: max-width: 100%"

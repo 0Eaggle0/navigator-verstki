@@ -86,6 +86,41 @@ warmup:
   answer:
     field: css
     missing: "32px"
+  normal:
+    task: Сделай промежуток между текстом и картинкой .hero равным 32 пикселям.
+    explanation: Свойство gap задаёт промежуток между соседями в flex-контейнере.
+    example: '.intro { gap: 20px; }'
+    replacement: "8px"
+  hard:
+    task: 'Поставь текст и картинку первого экрана рядом: у .hero — flex, по центру по вертикали, промежуток 32px. Колонки .hero__text и .hero__img сделай одинаковой ширины через flex: 1.'
+    html: |
+      <section class="hero">
+        <div class="hero__text">
+          <h1>Найди друга в приюте</h1>
+          <p>Пройди тест — подскажем, какой питомец тебе подходит.</p>
+          <a class="button" href="#">Пройти тест</a>
+        </div>
+        <img class="hero__img" src="img/sharik.svg" alt="Пёс Шарик">
+      </section>
+    css: |
+      .hero {
+        padding: 16px;
+        background: #FFF8F0;
+        /* две колонки */
+      }
+
+      .hero__img {
+        max-width: 100%;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 10px 20px;
+        background: #FF6B35;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+      }
   checks:
     - selector: ".hero"
       style: { display: "flex" }

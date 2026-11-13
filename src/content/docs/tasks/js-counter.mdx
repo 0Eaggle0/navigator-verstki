@@ -23,6 +23,22 @@ warmup:
   answer:
     field: js
     missing: "1"
+  normal:
+    task: Исправь счётчик. Один клик должен прибавлять один, сейчас прибавляется больше.
+    explanation: Выражение справа от знака = вычисляется, затем результат записывается в переменную слева.
+    example: total = total + 5; // прибавляет 5
+    replacement: "2"
+  hard:
+    task: По клику на кнопку .plus увеличивай число в .count на 1. Храни значение в переменной let count.
+    html: |
+      <p>Идут: <span class="count">0</span></p>
+      <button class="plus" type="button">Я тоже иду</button>
+    css: |
+      .count { font-weight: 700; }
+    js: |
+      let count = 0;
+
+      // по клику: count + 1 и записать в .count
   checks:
     - js: "const b = doc.querySelector('.plus'), counter = doc.querySelector('.count'); if (counter.textContent.trim() !== '0') return false; return [1,2,3,4].every(n => { b.click(); return counter.textContent.trim() === String(n); })"
       fail: "Число должно начинаться с нуля и увеличиваться на один за каждое нажатие."

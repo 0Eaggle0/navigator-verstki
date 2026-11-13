@@ -90,6 +90,44 @@ warmup:
   answer:
     field: css
     missing: "24px"
+  normal:
+    task: Увеличь расстояние между пунктами .menu до 24 пикселей.
+    explanation: Внутри flex-контейнера gap задаёт расстояние между соседними элементами. Пиксели записывают с px.
+    example: '.links { gap: 16px; }'
+    replacement: "8px"
+  hard:
+    task: 'Поставь шапку в строку: у .header — flex, логотип слева, кнопка справа, всё по центру по вертикали. Пункты меню (ul) тоже поставь в строку с промежутком 24px и убери у списка точки.'
+    html: |
+      <header class="header">
+        <a class="logo" href="#">КУДА_СХОДИТЬ</a>
+        <nav>
+          <ul class="menu">
+            <li><a href="#">Афиша</a></li>
+            <li><a href="#">Бесплатно</a></li>
+            <li><a href="#">Избранное</a></li>
+          </ul>
+        </nav>
+        <a class="button" href="#">Войти</a>
+      </header>
+    css: |
+      body { margin: 0; }
+
+      .header {
+        padding: 16px 24px;
+        background: #111827;
+        /* строка */
+      }
+
+      .menu {
+        margin: 0;
+        padding: 0;
+        /* строка и промежутки */
+      }
+
+      .header a {
+        color: #fff;
+        text-decoration: none;
+      }
   checks:
     - selector: ".header"
       style: { display: "flex" }

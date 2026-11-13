@@ -33,6 +33,28 @@ warmup:
   answer:
     field: js
     missing: "Напиши своё имя"
+  normal:
+    task: Если имя пустое, форма должна подсказать человеку, что сделать. Измени сообщение на «Напиши своё имя».
+    explanation: textContent заменяет текст элемента. Сам текст пишут внутри кавычек.
+    example: status.textContent = 'Заявка сохранена';
+    replacement: "Ошибка"
+  hard:
+    task: При отправке формы отмени перезагрузку (preventDefault). Если имя пустое — напиши в .error «Напиши своё имя». Если заполнено — очисти .error и замени содержимое формы на «Спасибо!».
+    html: |
+      <form class="form">
+        <label>Имя <input name="name"></label>
+        <p class="error"></p>
+        <button type="submit">Отправить</button>
+      </form>
+    css: |
+      .error { color: #DC2626; min-height: 1em; }
+    js: |
+      const form = document.querySelector('.form');
+
+      form.addEventListener('submit', function (event) {
+        // 1. отменить отправку
+        // 2. проверить form.elements.name.value
+      });
   checks:
     - js: "const f = doc.querySelector('.form'); f.elements.name.value = '   '; const event = new Event('submit', { bubbles: true, cancelable: true }); f.dispatchEvent(event); return event.defaultPrevented && f.querySelector('.error')?.textContent.trim() === 'Напиши своё имя'"
       fail: "Пустое имя должно вызывать понятную ошибку без отправки формы."

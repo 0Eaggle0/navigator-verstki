@@ -15,6 +15,19 @@ warmup:
   answer:
     field: html
     missing: "8400"
+  normal:
+    task: Полоска должна показывать собранные 8 400 из 12 000. Исправь текущее значение, максимум уже указан.
+    explanation: У progress атрибут value — текущее число, max — максимум. Суммы записывают цифрами без пробелов и валюты.
+    example: <progress value="3" max="5"></progress>
+    replacement: "0"
+  hard:
+    task: Покажи, что собрано 8 400 ₽ из 12 000 ₽. Добавь в карточку тег progress с текущей и максимальной суммой. Свяжи полоску с заголовком через aria-labelledby.
+    html: |
+      <article class="goal">
+        <h2 id="goal-title">Поездка за город</h2>
+        <p>Собрано 8 400 ₽ из 12 000 ₽</p>
+      </article>
+    css: ''
   checks:
     - js: |
         const bar = doc.querySelector('.goal progress');

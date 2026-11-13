@@ -32,6 +32,23 @@ warmup:
   answer:
     field: css
     missing: "999px"
+  normal:
+    task: 'Сделай бейдж .badge в форме капсулы: радиус скругления 999 пикселей.'
+    explanation: Свойство border-radius скругляет углы. Значение задают, например, в пикселях.
+    example: '.tag { border-radius: 20px; }'
+    replacement: "0"
+  hard:
+    task: 'В :root создай переменную --accent: #16A34A. Сделай .badge: фон var(--accent), белый текст, padding 4px 12px, border-radius 999px, размер шрифта 14px.'
+    html: |
+      <p>Концерт в парке <span class="badge">Бесплатно</span></p>
+    css: |
+      :root {
+
+      }
+
+      .badge {
+
+      }
   checks:
     - js: "return getComputedStyle(doc.documentElement).getPropertyValue('--accent').trim().toLowerCase() === '#16a34a'"
       fail: "В :root нет переменной --accent: #16A34A"

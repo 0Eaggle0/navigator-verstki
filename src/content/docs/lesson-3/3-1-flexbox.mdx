@@ -91,6 +91,37 @@ warmup:
   answer:
     field: css
     missing: "flex"
+  normal:
+    task: Поставь кружки в один ряд. Измени способ раскладки в правиле .row.
+    explanation: Свойство display задаёт способ раскладки. Flexbox ставит дочерние элементы в ряд.
+    example: 'nav { display: flex; }'
+    replacement: "block"
+  hard:
+    task: 'Поставь три кружка в ряд: у .row включи flex, разнеси кружки по краям (space-between) и выровняй по центру по вертикали.'
+    html: |
+      <div class="row">
+        <div class="dot small"></div>
+        <div class="dot"></div>
+        <div class="dot small"></div>
+      </div>
+    css: |
+      .row {
+        height: 120px;
+        background: #EEF2FF;
+        /* включи flex и выровняй */
+      }
+
+      .dot {
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background: #4F46E5;
+      }
+
+      .small {
+        width: 30px;
+        height: 30px;
+      }
   checks:
     - selector: ".row"
       style: { display: "flex" }

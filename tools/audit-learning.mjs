@@ -61,7 +61,7 @@ async function open(p, initialStorage = {}, disableStorage = false) {
   await context.route(/^https?:/, route => new URL(route.request().url()).origin === new URL(base).origin ? route.continue() : route.abort());
   await context.addInitScript(({ initialStorage, disableStorage }) => {
     if (window !== window.top) return;
-    if (!localStorage.getItem('nav-v1')) localStorage.setItem('nav-v1', JSON.stringify({ profile: { name: 'Аудит', team: 'Тест', role: 'student' } }));
+    if (!localStorage.getItem('nav-v1')) localStorage.setItem('nav-v1', JSON.stringify({ profile: { name: 'Аудит', team: 'Тест', role: 'student', difficulty: 'easy' } }));
     if (!sessionStorage.getItem('audit-seeded')) {
       for (const [key, value] of Object.entries(initialStorage)) localStorage.setItem(key, value);
       sessionStorage.setItem('audit-seeded', '1');
@@ -327,7 +327,7 @@ try {
       await page.locator('.block__theme').waitFor();
       assert.equal(await page.locator('.profile__dialog[open]').count(), 0);
       const progress = await page.evaluate(() => JSON.parse(localStorage.getItem('nav-v1')));
-      assert.deepEqual(progress.profile, { name: 'Новый ученик', team: 'Команда 7', role: 'student' });
+      assert.deepEqual(progress.profile, { name: 'Новый ученик', team: 'Команда 7', role: 'student', difficulty: 'normal' });
       assert.equal(progress.caseTitle, 'Настольные игры');
       await page.goto(base + '/tasks/site-base/');
       const editor = page.locator('textarea[name=css]');
@@ -369,7 +369,7 @@ try {
     } finally { await context.close(); }
   } else if (phase === 'block-library') {
     const practices = JSON.parse(fs.readFileSync('src/data/block-practices.json', 'utf8'));
-    const seed = { profile: { name: 'Аудит', role: 'student' }, case: 'tail', solved: Object.values(practices), hints: ['old'] };
+    const seed = { profile: { name: 'Аудит', role: 'student', difficulty: 'easy' }, case: 'tail', solved: Object.values(practices), hints: ['old'] };
     const { page, context } = await open({ id: 'blocks/header' }, { 'nav-v1': JSON.stringify(seed) });
     try {
       for (const block of Object.keys(practices)) {
@@ -439,6 +439,78 @@ try {
       assert.equal(await page.locator('.block__code').isVisible(), false);
       assert(await page.locator('nav-block noscript').isVisible());
     } finally { await noJs.close(); }
+  } else if (phase === 'difficulty') {
+    const seed = { profile: { name: 'Аудит', team: 'Тест', role: 'student' } };
+    const { page, context, errors } = await open({ id: 'tasks/site-base' }, { 'nav-v1': JSON.stringify(seed) });
+    try {
+      const sandbox = page.locator('nav-sandbox');
+      const choose = async value => {
+        await page.locator('.sandbox__difficulty button').click();
+        await page.locator('.profile__form [name=difficulty]').selectOption(value);
+        await page.locator('.profile__form button[value=save]').click();
+        assert.equal(await sandbox.getAttribute('data-difficulty'), value);
+      };
+      assert.equal(await sandbox.getAttribute('data-difficulty'), 'normal');
+      const css = sandbox.locator('textarea[name=css]');
+      await css.fill('/* обычный черновик */');
+      await choose('hard');
+      assert.equal(await css.inputValue(), '');
+      await css.fill('/* сложный черновик */');
+      await choose('easy');
+      assert.match(await css.inputValue(), /___/);
+      await choose('normal');
+      assert.equal(await css.inputValue(), '/* обычный черновик */');
+      await choose('hard');
+      assert.equal(await css.inputValue(), '/* сложный черновик */');
+      await page.reload();
+      await page.locator('nav-sandbox[data-difficulty=hard]').waitFor();
+      assert.equal(await css.inputValue(), '/* сложный черновик */');
+      const p = pages.find(p => p.id === 'tasks/site-base');
+      assert((await setCode(page, p.solution)).accepted);
+      await choose('normal');
+      await page.goto(base + '/blocks/base/');
+      await page.locator('.block__code').waitFor();
+      await page.goto(base + '/lesson-3/3-1-flexbox/');
+      await page.locator('nav-sandbox[data-difficulty=normal]').waitFor();
+      const gameAnswer = page.locator('.game__answer');
+      const gameHint = page.locator('.game__hint');
+      await page.locator('.game__hint-btn').click();
+      assert.match(await gameHint.textContent(), /из теории/);
+      assert.equal(await gameAnswer.isVisible(), false);
+      await choose('easy');
+      assert.equal(await gameAnswer.isVisible(), true);
+      await choose('hard');
+      assert.equal(await gameAnswer.isVisible(), false);
+      assert.deepEqual(errors, []);
+    } finally { await context.close(); }
+  } else if (phase === 'practice-variants') {
+    for (const p of pages) {
+      const w = p.warmup;
+      for (const mode of ['normal', 'hard']) {
+        const profile = { name: 'Аудит', role: 'student', difficulty: mode };
+        const { page, context } = await open(p, { 'nav-v1': JSON.stringify({ profile }) });
+        try {
+          const sandbox = page.locator('nav-sandbox');
+          assert.equal(await sandbox.getAttribute('data-difficulty'), mode);
+          assert.equal(await sandbox.locator('.sandbox__task span').textContent(), w[mode].task);
+          assert.equal(await sandbox.locator('.sandbox__answer').isVisible(), false);
+          assert.equal(await sandbox.locator('.sandbox__theory').isVisible(), mode === 'normal');
+          const start = mode === 'hard'
+            ? w.hard
+            : { html: w.html ?? '', css: w.css ?? '', js: w.js, [w.answer.field]: w[w.answer.field].replace('___', () => w.normal.replacement) };
+          for (const field of await sandbox.locator('textarea').all()) {
+            assert.equal(await field.inputValue(), start[await field.getAttribute('name')] ?? '', p.id + ' ' + mode);
+          }
+          assert.equal((await setCode(page, start)).accepted, false, p.id + ' ' + mode + ': стартовый код уже засчитан');
+          const check = await setCode(page, p.solution);
+          assert(check.accepted && check.recorded, p.id + ' ' + mode + ': ' + check.feedback);
+          assert.equal(await sandbox.locator('.sandbox__answer').isVisible(), false);
+          assert.equal(await page.locator('.game__answer:visible').count(), 0);
+          results.push({ id: p.id, mode, accepted: true });
+          console.log('PASS ' + p.id + ' ' + mode);
+        } finally { await context.close(); }
+      }
+    }
   } else if (phase === 'practice-content') {
     for (const p of pages) {
       const { page, context } = await open(p);
@@ -467,7 +539,7 @@ try {
     }
   } else if (phase === 'check-button') {
     const p = pages.find(p => p.id === 'tasks/js-counter');
-    const old = { profile: { name: 'Аудит', role: 'student' }, drafts: { [p.id]: { js: '// Мой старый черновик' } } };
+    const old = { profile: { name: 'Аудит', role: 'student', difficulty: 'easy' }, drafts: { [p.id]: { js: '// Мой старый черновик' } } };
     const { page, context } = await open(p, { 'nav-v1': JSON.stringify(old) });
     try {
       assert.equal(await page.locator('textarea[name=js]').inputValue(), old.drafts[p.id].js);

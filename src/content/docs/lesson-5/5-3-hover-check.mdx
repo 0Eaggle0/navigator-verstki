@@ -50,6 +50,27 @@ warmup:
   answer:
     field: css
     missing: "0.2s"
+  normal:
+    task: Сделай смену фона кнопки плавной. Переход должен длиться две десятых секунды.
+    explanation: В transition время записывают в секундах. Запись 0.5s означает полсекунды.
+    example: '.link { transition: 0.5s; }'
+    replacement: "0s"
+  hard:
+    task: 'Сделай, чтобы кнопка реагировала на наведение: добавь правило .button:hover с другим цветом фона и плавный переход transition: 0.2s у .button. Наведи мышку на превью и проверь.'
+    html: |
+      <a class="button" href="#">Стать волонтёром</a>
+    css: |
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background: #FF6B35;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        /* плавный переход */
+      }
+
+      /* правило для наведения */
   checks:
     - js: "return getComputedStyle(doc.querySelector('.button')).transitionDuration.split(',').some(n => Math.abs(parseFloat(n) - 0.2) < 0.001)"
       fail: "У кнопки должен быть плавный переход длительностью 0,2 секунды."

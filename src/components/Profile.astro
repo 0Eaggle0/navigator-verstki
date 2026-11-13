@@ -3,6 +3,7 @@
 // При первом заходе окно открывается само. Всё хранится в браузере (src/lib/storage.ts → profile).
 import cases from '~/data/cases.json';
 import { svg } from '~/lib/sprites';
+import { DIFFICULTIES } from '~/lib/storage';
 ---
 
 <nav-profile class="profile">
@@ -51,6 +52,14 @@ import { svg } from '~/lib/sprites';
 				<input name="caseTitle" maxlength="40" placeholder="Например, «Клуб настолок»" />
 			</label>
 
+			<label>
+				Сложность разминок
+				<select name="difficulty" aria-describedby="profile-difficulty-help">
+					{Object.entries(DIFFICULTIES).map(([value, label]) => <option value={value}>{label}</option>)}
+				</select>
+			</label>
+			<p id="profile-difficulty-help">Лёгкий — один пропуск. Обычный — одна правка по примеру. Сложный — полная задача.</p>
+
 			<p class="profile__error" role="alert" hidden>Напиши имя или ник — так модератор поймёт, чей это компьютер.</p>
 
 			<div class="profile__btns">
@@ -62,7 +71,7 @@ import { svg } from '~/lib/sprites';
 </nav-profile>
 
 <script>
-	import { load, update, type Profile } from '~/lib/storage';
+	import { difficultyOf, load, update, type Profile } from '~/lib/storage';
 
 	class ProfileBox extends HTMLElement {
 		connectedCallback() {
@@ -91,6 +100,7 @@ import { svg } from '~/lib/sprites';
 				f('team').value = pr?.team ?? '';
 				f('case').value = p.case ?? '';
 				f('caseTitle').value = p.caseTitle ?? '';
+				f('difficulty').value = difficultyOf(pr?.difficulty);
 				form.querySelector<HTMLInputElement>(`input[name=role][value=${pr?.role ?? 'student'}]`)!.checked = true;
 				error.hidden = true;
 				$('#profile-title').textContent = pr ? 'Твой профиль' : 'Создай профиль';
@@ -111,7 +121,7 @@ import { svg } from '~/lib/sprites';
 				}
 				const role = (form.querySelector<HTMLInputElement>('input[name=role]:checked')?.value ?? 'student') as Profile['role'];
 				update((p) => {
-					p.profile = { ...p.profile, name, team: f('team').value.trim(), role };
+					p.profile = { ...p.profile, name, team: f('team').value.trim(), role, difficulty: difficultyOf(f('difficulty').value) };
 					p.case = f('case').value || undefined;
 					p.caseTitle = p.case === 'own' ? f('caseTitle').value.trim() : undefined;
 				});

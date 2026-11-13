@@ -103,6 +103,39 @@ warmup:
   answer:
     field: css
     missing: "16px"
+  normal:
+    task: Сделай промежуток между карточками .features равным 16 пикселям.
+    explanation: У общего контейнера свойство gap задаёт промежуток между карточками.
+    example: '.tiles { gap: 10px; }'
+    replacement: "4px"
+  hard:
+    task: 'Сделай ряд преимуществ: у .features — flex с переносом (wrap) и промежутком 16px. Каждый .feature — столбик (flex-direction: column), всё по центру.'
+    html: |
+      <div class="features">
+        <div class="feature"><span class="icon">🎬</span><p>Создай комнату</p></div>
+        <div class="feature"><span class="icon">👆</span><p>Свайпай фильмы</p></div>
+        <div class="feature"><span class="icon">🍿</span><p>Смотрите вместе</p></div>
+      </div>
+    css: |
+      .features {
+        /* ряд с переносом */
+      }
+
+      .feature {
+        width: 120px;
+        padding: 12px;
+        background: #F3E8FF;
+        border-radius: 12px;
+        /* столбик по центру */
+      }
+
+      .feature p {
+        margin: 8px 0 0;
+      }
+
+      .icon {
+        font-size: 32px;
+      }
   checks:
     - selector: ".features"
       style: { display: "flex", flex-wrap: "wrap" }

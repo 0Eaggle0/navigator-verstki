@@ -73,6 +73,67 @@ warmup:
   answer:
     field: js
     missing: "open"
+  normal:
+    task: Почини кнопку меню. Она должна переключать класс, с которым .menu становится видимым. Найди его в CSS.
+    explanation: Запись .menu.some-class означает, что у одного элемента есть оба класса. В toggle передают второй класс без точки.
+    example: |-
+      // CSS: .panel.expanded { display: block; }
+      panel.classList.toggle('expanded');
+    replacement: "visible"
+  hard:
+    task: 'Превью шириной с телефон. По клику на кнопку .burger переключай у .menu класс open (меню показывается). Заодно меняй у кнопки aria-expanded: "true", когда меню открыто, и "false", когда закрыто.'
+    html: |
+      <header class="header">
+        <a class="logo" href="#">СКИНЕМСЯ</a>
+        <button class="burger" type="button" aria-expanded="false" aria-label="Открыть меню">☰</button>
+        <nav>
+          <ul class="menu">
+            <li><a href="#">Мои сборы</a></li>
+            <li><a href="#">Как это работает</a></li>
+            <li><a href="#">Войти</a></li>
+          </ul>
+        </nav>
+      </header>
+    css: |
+      body { margin: 0; }
+
+      .header {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        padding: 12px 16px;
+        background: #ECFDF5;
+      }
+
+      .burger {
+        font-size: 24px;
+        background: none;
+        border: 0;
+        cursor: pointer;
+      }
+
+      nav {
+        width: 100%;              /* меню — отдельной строкой под логотипом */
+      }
+
+      .menu {
+        display: none;            /* на телефоне меню спрятано */
+        flex-direction: column;
+        gap: 8px;
+        margin: 0;
+        padding: 12px 0 0;
+        list-style: none;
+      }
+
+      .menu.open {
+        display: flex;            /* класс open его показывает */
+      }
+    js: |
+      // Найди кнопку и меню
+
+      // По клику: переключи класс open у меню
+      // и поставь aria-expanded у кнопки
   checks:
     - js: "return getComputedStyle(doc.querySelector('.menu')).display === 'none'"
       fail: "Меню должно быть скрыто, пока не нажали на бургер"
